@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bike Challenge – Race Live</title>
+    <link rel="stylesheet" href="../css/race.css">
+</head>
+<body class="race-page">
+    <div class="page">
+        <div class="race-topbar">
+            <div class="badge">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/>
+                    <path d="M15 6a1 1 0 0 0-1-1h-4"/><path d="M5.5 17.5 8 11l4 2 3-6"/><path d="m18.5 17.5-3-6"/>
+                </svg>
+                BIKE B
+            </div>
+            <div class="timer-block">
+                <div class="timer-block__label">Verbleibend</div>
+                <div class="timer-block__value" id="timer">87.9s</div>
+            </div>
+        </div>
+
+        <div class="race-bar">
+            <div class="race-bar__track">
+                <div class="race-bar__bike" id="bikePos" style="left:5%;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/>
+                        <path d="M15 6a1 1 0 0 0-1-1h-4"/><path d="M5.5 17.5 8 11l4 2 3-6"/><path d="m18.5 17.5-3-6"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="race-cards">
+            <div class="stat-card">
+                <div class="stat-card__label">Aktuelle Geschwindigkeit</div>
+                <div class="stat-card__value" id="speed">19.9</div>
+                <div class="stat-card__unit">km/h</div>
+                <div class="stat-card__meta">
+                    <div class="stat-card__meta-item">
+                        <div class="stat-card__meta-label">Distanz</div>
+                        <div class="stat-card__meta-value">0.01 km</div>
+                    </div>
+                    <div class="stat-card__meta-item">
+                        <div class="stat-card__meta-label" style="color:var(--color-blue)">Top Speed</div>
+                        <div class="stat-card__meta-value" style="color:var(--color-blue)">21.0 km/h</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-card--dark">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md)">
+                    <div class="stat-card__label">Duell</div>
+                    <div class="duel-lead">Du führst!</div>
+                </div>
+                <div class="duel-row">
+                    <div class="duel-row__header">
+                        <span>Bike B · Danino</span>
+                        <span class="duel-row__distance">0.01 km</span>
+                    </div>
+                    <div class="duel-bar"><div class="duel-bar__fill duel-bar__fill--b" style="width:55%"></div></div>
+                </div>
+                <div class="duel-row">
+                    <div class="duel-row__header">
+                        <span>Bike A · Kai</span>
+                        <span class="duel-row__distance">0.01 km</span>
+                    </div>
+                    <div class="duel-bar"><div class="duel-bar__fill duel-bar__fill--a" style="width:40%"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mini-stats-row">
+            <div class="mini-stat">
+                <div class="mini-stat__label">Tagesdistanz</div>
+                <div class="mini-stat__value">4 km</div>
+            </div>
+            <div class="mini-stat">
+                <div class="mini-stat__label">Live Rang</div>
+                <div class="mini-stat__value">#5</div>
+            </div>
+        </div>
+
+        <div class="bottom-actions">
+            <a href="../index.html" class="btn btn-danger-outline">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#e02020">
+                    <rect x="3" y="3" width="18" height="18" rx="3"/>
+                </svg>
+                Challenge stoppen
+            </a>
+        </div>
+    </div>
+
+    <script src="../js/main.js"></script>
+    <script>
+        let remaining = 87.9;
+        const timerEl = document.getElementById('timer');
+        const tick = setInterval(() => {
+            remaining -= 0.1;
+            if (remaining <= 0) { clearInterval(tick); timerEl.textContent = '0.0s'; return; }
+            timerEl.textContent = remaining.toFixed(1) + 's';
+        }, 100);
+    </script>
+</body>
+</html>
