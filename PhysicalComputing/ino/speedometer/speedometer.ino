@@ -1,4 +1,7 @@
 #include <Wire.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include <Arduino_JSON.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH110X.h>
 #include <Adafruit_NeoPixel.h>
@@ -36,17 +39,30 @@ Adafruit_NeoPixel strip(
 #define REED_PIN 4
 
 // =====================================================
+// WiFi / Database
+// =====================================================
+
+const char* ssid = "tinkergarden";
+const char* pass = "strenggeheim";
+const char* serverURL = "https://provelo-allegra.piltoverprints.ch/PhysicalComputing/api/load.php";
+
+#define WIFI_RECONNECT_INTERVAL 5000
+
+// =====================================================
 // Wheel settings
 // =====================================================
 
 // Wheel circumference in meters
-#define WHEEL_CIRCUMFERENCE 2.2
+#define WHEEL_CIRCUMFERENCE 2.1
+
+// Unique bike identifier for database writes
+#define VELO_ID 1
 
 // LED ring full scale speed
 #define MAX_RING_SPEED 50.0
 
-// Maximum displayed speed
-#define MAX_DISPLAY_SPEED 99.0
+// Maximum speed on display
+#define MAX_DISPLAY_SPEED 60.0
 
 // =====================================================
 // Variables
@@ -54,10 +70,27 @@ Adafruit_NeoPixel strip(
 
 unsigned long lastPulseTime = 0;
 unsigned long lastDisplayUpdate = 0;
+unsigned long lastWiFiReconnectAttempt = 0;
 
 float speedKmh = 0.0;
 
 bool lastReedState = HIGH;
+bool wifiConnected = false;
+
+String displayErrorMessage = "";
+
+// =====================================================
+// Function declarations
+// =====================================================
+
+void connectWiFi();
+bool ensureWiFiConnected();
+bool sendSpeedToDatabase(float speedValue);
+void setDisplayError(const String& message);
+void clearDisplayError();
+void showStartupAnimation();
+void updateLedRing();
+void updateDisplay();
 
 // =====================================================
 // Setup
@@ -87,6 +120,9 @@ void setup() {
   strip.begin();
   strip.setBrightness(BRIGHTNESS);
   strip.show();
+
+  showStartupAnimation();
+  connectWiFi();
 
   Serial.println("System started");
 }
@@ -127,6 +163,8 @@ void loop() {
         Serial.print("Speed: ");
         Serial.print(speedKmh);
         Serial.println(" km/h");
+
+        sendSpeedToDatabase(speedKmh);
       }
     }
 
@@ -143,10 +181,121 @@ void loop() {
     speedKmh = 0;
   }
 
-  // =====================================================
-  // LED Ring Speedometer
-  // =====================================================
+  ensureWiFiConnected();
+  updateLedRing();
+  updateDisplay();
+}
 
+void connectWiFi() {
+  Serial.printf("Verbinde mit WLAN %s\n", ssid);
+  WiFi.begin(ssid, pass);
+  int attempts = 0;
+  while (WiFi.status() != WL_CONNECTED && attempts < 40) {
+    delay(500);
+    Serial.print(".");
+    attempts++;
+  }
+
+  if (WiFi.status() == WL_CONNECTED) {
+    wifiConnected = true;
+    clearDisplayError();
+    Serial.printf("\nWiFi verbunden. IP: %s\n", WiFi.localIP().toString().c_str());
+    return;
+  }
+
+  wifiConnected = false;
+  setDisplayError("Keine WLAN\nVerbindung");
+  Serial.println("\nWiFi Verbindung fehlgeschlagen");
+}
+
+bool ensureWiFiConnected() {
+  if (WiFi.status() == WL_CONNECTED) {
+    wifiConnected = true;
+    if (displayErrorMessage == "Keine WLAN\nVerbindung") {
+      clearDisplayError();
+    }
+    return true;
+  }
+
+  if (wifiConnected) {
+    Serial.println("WiFi-Verbindung verloren");
+  }
+
+  wifiConnected = false;
+  setDisplayError("Keine WLAN\nVerbindung");
+  if (millis() - lastWiFiReconnectAttempt >= WIFI_RECONNECT_INTERVAL) {
+    lastWiFiReconnectAttempt = millis();
+    connectWiFi();
+  }
+  return WiFi.status() == WL_CONNECTED;
+}
+
+bool sendSpeedToDatabase(float speedValue) {
+  if (!ensureWiFiConnected()) {
+    return false;
+  }
+
+  JSONVar dataObject;
+  dataObject["velo_id"] = VELO_ID;
+  dataObject["wert"] = speedValue;
+  String jsonString = JSON.stringify(dataObject);
+
+  HTTPClient http;
+  http.begin(serverURL);
+  http.addHeader("Content-Type", "application/json");
+
+  int httpResponseCode = http.POST(jsonString);
+
+  if (httpResponseCode > 0 && httpResponseCode < 400) {
+    if (displayErrorMessage == "Kein Zugriff\nauf Datenbank") {
+      clearDisplayError();
+    }
+    Serial.printf("HTTP Response code: %d\n", httpResponseCode);
+    String response = http.getString();
+    if (response.length() > 0) {
+      Serial.println("Response: " + response);
+    }
+    http.end();
+    return true;
+  }
+
+  setDisplayError("Kein Zugriff\nauf Datenbank");
+
+  if (httpResponseCode > 0) {
+    Serial.printf("HTTP Fehler: %d\n", httpResponseCode);
+  } else {
+    Serial.printf("POST Fehler: %d\n", httpResponseCode);
+  }
+
+  http.end();
+  return false;
+}
+
+void setDisplayError(const String& message) {
+  displayErrorMessage = message;
+}
+
+void clearDisplayError() {
+  displayErrorMessage = "";
+}
+
+void showStartupAnimation() {
+  strip.clear();
+
+  for (int i = 0; i < STRIP_COUNT; i++) {
+    int red = map(i, 0, STRIP_COUNT - 1, 0, 255);
+    int green = map(i, 0, STRIP_COUNT - 1, 255, 0);
+    strip.setPixelColor(i, strip.Color(red, green, 0));
+    strip.show();
+    delay(80);
+  }
+
+  delay(250);
+  strip.clear();
+  strip.show();
+}
+
+void updateLedRing() {
   int ledsToLight = map(
     constrain(speedKmh, 0, MAX_RING_SPEED),
     0,
@@ -158,63 +307,50 @@ void loop() {
   strip.clear();
 
   for (int i = 0; i < ledsToLight; i++) {
-
-    // Green -> Red gradient
-
-    int red = map(
-      i,
-      0,
-      STRIP_COUNT - 1,
-      0,
-      255
-    );
-
-    int green = map(
-      i,
-      0,
-      STRIP_COUNT - 1,
-      255,
-      0
-    );
-
-    strip.setPixelColor(
-      i,
-      strip.Color(red, green, 0)
-    );
+    int red = map(i, 0, STRIP_COUNT - 1, 0, 255);
+    int green = map(i, 0, STRIP_COUNT - 1, 255, 0);
+    strip.setPixelColor(i, strip.Color(red, green, 0));
   }
 
   strip.show();
+}
 
-  // =====================================================
-  // Display update
-  // =====================================================
+void updateDisplay() {
+  if (millis() - lastDisplayUpdate <= 200) {
+    return;
+  }
 
-  if (millis() - lastDisplayUpdate > 200) {
+  display.clearDisplay();
 
-    display.clearDisplay();
-
-    // Title
+  if (displayErrorMessage.length() > 0) {
     display.setTextSize(1);
     display.setCursor(0, 0);
-    display.println("Speed");
-
-    // Big speed number
-    display.setTextSize(5);
-    display.setCursor(0, 18);
-
-    if (speedKmh < 10) {
-      display.print(" ");
-    }
-
-    display.print((int)speedKmh);
-
-    // Unit
+    display.println("Fehler");
     display.setTextSize(2);
-    display.setCursor(95, 45);
-    display.print("km");
-
+    display.setCursor(0, 20);
+    display.println(displayErrorMessage);
     display.display();
-
     lastDisplayUpdate = millis();
+    return;
   }
+
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.println("Speed");
+
+  display.setTextSize(5);
+  display.setCursor(0, 18);
+
+  if (speedKmh < 10) {
+    display.print(" ");
+  }
+
+  display.print((int)speedKmh);
+
+  display.setTextSize(2);
+  display.setCursor(95, 45);
+  display.print("km");
+
+  display.display();
+  lastDisplayUpdate = millis();
 }
