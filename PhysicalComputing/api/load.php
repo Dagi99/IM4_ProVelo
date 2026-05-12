@@ -22,7 +22,7 @@ $velo_id = $input["velo_id"]; // z.B. "velo_1" oder "velo_2"
 
 ###################################### Datenbankeintrag
 
-$sql = "INSERT INTO sensordata (velo_id, wert) VALUES (?, ?)";
+$sql = "INSERT INTO speed (velo_id, speed) VALUES (?, ?)";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$velo_id, $wert]);
