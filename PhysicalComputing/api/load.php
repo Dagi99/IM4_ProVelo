@@ -7,7 +7,7 @@
 **************************/
 
 
-require_once("../sys/config.php");
+require_once("../system/config.php"); // Einbinden der Datenbank-Verbindungsdaten
 // echo "This script receives HTTP POST messages and pushes their content into the database.";
 
 
@@ -22,7 +22,7 @@ $input = json_decode($inputJSON, true);
 
 $wert = $input["wert"];         // Hol den Wert an der Stelle "wert" aus dem JS-Objekt (ehemals JSON-String)
 # insert new user into db
-$sql = "INSERT INTO sensordata (wert) VALUES (?)";
+$sql = "INSERT INTO speed (speed) VALUES (?)";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$wert]);
 
