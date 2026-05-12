@@ -47,6 +47,8 @@ const char* pass = "strenggeheim";
 const char* serverURL = "https://provelo-allegra.piltoverprints.ch/PhysicalComputing/api/load.php";
 
 #define WIFI_RECONNECT_INTERVAL 5000
+#define DATABASE_SEND_INTERVAL 2000
+#define REED_DEBOUNCE_TIME 100
 
 // =====================================================
 // Wheel settings
@@ -71,6 +73,8 @@ const char* serverURL = "https://provelo-allegra.piltoverprints.ch/PhysicalCompu
 unsigned long lastPulseTime = 0;
 unsigned long lastDisplayUpdate = 0;
 unsigned long lastWiFiReconnectAttempt = 0;
+unsigned long lastDatabaseSend = 0;
+unsigned long lastDebounceTime = 0;
 
 float speedKmh = 0.0;
 
@@ -163,8 +167,6 @@ void loop() {
         Serial.print("Speed: ");
         Serial.print(speedKmh);
         Serial.println(" km/h");
-
-        sendSpeedToDatabase(speedKmh);
       }
     }
 
@@ -179,6 +181,12 @@ void loop() {
   // Stop detection
   if (millis() - lastPulseTime > 3000) {
     speedKmh = 0;
+  }
+
+  // Send to database at fixed intervals
+  if (millis() - lastDatabaseSend >= DATABASE_SEND_INTERVAL && speedKmh > 0) {
+    sendSpeedToDatabase(speedKmh);
+    lastDatabaseSend = millis();
   }
 
   ensureWiFiConnected();
