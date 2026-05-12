@@ -5,7 +5,7 @@
  * Empfängt JSON-Daten und speichert sie in die DB
  *****************************************************/
 
-require_once("../system/config.php");
+require_once("../../system/config.php");
 
 
 ###################################### JSON empfangen
