@@ -1,92 +1,73 @@
-# Übersicht: Intro, Projekt, Background & Ziel
+# 🔑👤 Authentifizierung Minimal (Boilerplate)
 
-## Intro
+![Static Badge](https://img.shields.io/badge/Sprache-PHP-%23f7df1e)
+![Static Badge](https://img.shields.io/badge/Kurs-MMP_IM4-blue)
+![Last Changed](https://img.shields.io/endpoint?url=https://badges.crazy-internet.ch/im4_example.php)
 
-Im Rahmen von Polenta sowie später auch des Satelfests von Pro Velo erstellen wir eine interaktive Velo-Installation, die Bewegung, Wettbewerb und digitale Visualisierung miteinander verbindet. Besucher*innen können auf einem stationären Fahrrad fahren, während Geschwindigkeit, Distanz und weitere Bewegungsdaten in Echtzeit erfasst und verarbeitet werden. Die gesammelten Daten werden anschliessend live auf einer Webapp visualisiert.
+> 🎨 Dieses Boilerplate kann entweder in einem Code-Along Schritt für Schritt gemeinsam erarbeitet werden oder fixfertig auf einem Webserver installiert werden.
 
-## Background
+Dieses Repository beinhaltet ein vollständiges, minimales Authenzifizierungs-System basierend auf PHP als Backend und HTML/CSS/JS als Frontend.
 
-Das Projekt verbindet Physical Computing mit Webtechnologien und schafft dadurch ein interaktives Erlebnis. Ziel ist es, die körperliche Aktivität der Teilnehmenden sichtbar und vergleichbar zu machen. Durch die Verbindung von Fahrrad, Sensorik und Webapp entsteht eine Installation, die direkt auf die Aktionen der Nutzenden reagiert.
+Es ermöglicht Benutzern das `Registrieren`, `Anmelden`, `Abmelden` und den Zugriff auf eine `geschützte Seite` nach erfolgreicher Authentifizierung.
 
-Vor der Nutzung können sich Teilnehmende mit einem selbst gewählten Namen anmelden. Während der Fahrt werden ihre Werte erfasst und mit anderen verglichen. Die Webapp enthält zusätzlich eine Rangliste, auf der die höchsten erreichten Geschwindigkeiten angezeigt werden. Dadurch entsteht ein Wettbewerb, der Besucher*innen motiviert.
+Eine einfache Erklärung des Login-Ablaufs mit Sessions und Cookies findest du in [`sessions.md`](sessions.md).
 
-Neben dem öffentlichen Bereich verfügt die Webapp auch über einen separaten Administratorbereich mit Login. Dort können Verwaltungsfunktionen, Datenübersichten oder Einstellungen für die Installation zentral gesteuert werden.
+# 🏁 Live - Version
 
-## Ziel
+Du kannst Homely unter folgendem Link testen:
 
-Das Ziel des Projekts ist es, eine interaktive und motivierende Erfahrung zu schaffen, bei der Besucher*innen ihre Leistung direkt erleben können. Die Webapp ermöglicht es, persönliche Werte sowie Ranglisten live einzusehen und sich mit anderen Teilnehmenden zu vergleichen.
+[https://im4.crazy-internet.ch/](https://im4.crazy-internet.ch/)
 
-Zusätzlich soll das Projekt zeigen, wie physische Bewegung mit digitalen Medien, Echtzeitdaten und Sensorik verbunden werden kann. Der Administratorbereich ermöglicht dabei eine einfache Verwaltung der Installation und der erfassten Daten während des Events.
+## ⚙️ Installation
 
-Die Installation dient somit sowohl als spielerische Attraktion als auch als praktisches Beispiel für interaktive Mediengestaltung im öffentlichen Raum.
+Um dieses Boilerplate auf dem eigenen Web-Server zu installieren, führe folgende Schritte aus:
 
+### 1. Download
 
+- [Klone das Repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) über GitHub oder [downloade das Repository als ZIP Datei](https://docs.github.com/en/repositories/working-with-files/using-files/downloading-source-code-archives) auf deinen eigenen Computer.
 
+### 2. Datenbank
 
-Produktlogig (Basic Funktionsweise, Bedienung)
-Entwickler: Namen
+- Erstelle eine neue Datenbank bei deinem Hoster (z.B. [Infomaniak](https://www.infomaniak.com/de/support/faq/1981/mysqlmariadb-benutzer-und-datenbanken-verwalten)).
 
-Inhaltsverzeichnis
+- Importiere die Datei `system/database.sql` in die neue Datenbank, um die `users` Tabelle zu erstellen.
 
-Webapp:
-- UX (Designentscheidung, Benutzerführung)
-- Visualisierung des Screenflow (Flow Diagramm)
+### 3. Code
 
+- Benenne die Datei `system/config.php.blank` in `system/config.php` um.
 
+- Passe die Datenbankverbindungsdaten in der Datei `system/config.php` an.
 
+### 4. FTP Connect
 
-## Physical Computing
+- Erstelle eine neue FTP Verbindung mit dem SFTP Plugin gemäss [Anleitung im MMP 101](https://github.com/Interaktive-Medien/101-MMP/blob/main/resources/sftp.md).
 
-### Komponenten/Bauteile
+# 📁 Struktur
 
-Die Installation besteht aus einem stationären Fahrrad, einem Reed-Kontakt mit Magnet, einem ESP32-C6 sowie einem OLED-Display. Der Reed-Kontakt erkennt die Pedalumdrehungen und sendet die Signale an den ESP32-C6, welcher daraus Geschwindigkeit und Distanz berechnet.
+## 🎨 Frontend
 
-Die Daten werden direkt auf dem Display angezeigt und zusätzlich per WLAN an eine Webapp übertragen. Dort können sich Nutzer*innen mit einem Namen anmelden, ihre Werte live verfolgen und die Rangliste der höchsten Geschwindigkeiten einsehen. Zusätzlich existiert ein Administratorbereich mit Login zur Verwaltung der Installation.
+### root (Basis-Verzeichnis)
 
-### Steckplan
+- beinhaltet alle HTML-Dateien des Frontends.
+- beinhaltet die `.gitignore` Datei, welche die Dateien und Verzeichnisse ausblendet, die nicht auf GitHub hochgeladen werden sollen.
 
-Der ESP32-C6 bildet die zentrale Verbindung aller Komponenten. Der Reed-Kontakt ist mit einem GPIO-Pin verbunden und arbeitet im Input-Pullup-Modus. Jede erkannte Umdrehung erzeugt ein Signal, welches vom ESP32 verarbeitet wird.
+### js
 
-Das OLED-Display ist über die I²C-Schnittstelle mit den SDA- und SCL-Pins angeschlossen und dient zur Anzeige der aktuellen Werte.
+- beinhaltet alle JavaScript-Dateien des Frontends.
 
-### Kommunikationsprozess der Komponenten
+### css
 
-Beim Pedalieren bewegt sich ein Magnet am Reed-Kontakt vorbei und erzeugt elektrische Impulse. Der ESP32-C6 verarbeitet diese Signale und berechnet daraus Geschwindigkeit und Distanz.
+- beinhaltet alle CSS-Dateien des Frontends.
 
-Die Daten werden anschliessend per WLAN an einen Server übertragen und in einer Datenbank gespeichert. Die Webapp greift auf diese Datenbank zu und visualisiert die aktuellen Werte sowie die Rangliste in Echtzeit.
+## 🤖 Backend
 
-Der Ablauf erfolgt in folgenden Schritten:
+### api
 
-1. Pedalbewegung
-2. Erfassung durch Reed-Kontakt
-3. Verarbeitung durch den ESP32-C6
-4. Anzeige auf dem OLED-Display
-5. Übertragung an die Datenbank
-6. Darstellung in der Webapp
+- Beinhaltet alle API-Endpunkte des Backends.
+- Diese Dateien werden von `JavaScript` aufgerufen und geben eine Antwort an `JavaScript` zurück.
 
-### Design Entscheidung Display
+### system
 
-Die Anzeige wurde bewusst einfach und übersichtlich gestaltet. Das OLED-Display direkt an der Installation zeigt die wichtigsten Informationen wie die aktuelle Geschwindigkeit in km/h an. Zusätzlich können dort Status- und Fehlermeldungen dargestellt werden, beispielsweise bei Verbindungsproblemen oder wenn keine Sensordaten erkannt werden.
-
-Für detailliertere Informationen wird zusätzlich eine Webapp verwendet, welche per QR-Code mit dem Smartphone geöffnet werden kann. Nutzer*innen können dadurch ihr eigenes Handy als erweitertes Display verwenden und dort zusätzliche Daten wie Distanz, persönliche Werte oder die Rangliste einsehen.
-
-Diese Aufteilung reduziert die Komplexität der physischen Installation und ermöglicht gleichzeitig eine flexiblere Darstellung auf mobilen Geräten. Zudem bleibt die Installation übersichtlich und einfach bedienbar.
-
-
-
-
-
-Reproduzierbarkeit (Wie kann das Projekt nachgebaut werden?)
-Datei-Komponentenplan (Wo kommuniziert welche Datei mit welchem Protokoll mit welchen Client/Server/Datenbank?)
-Video des Produkts in Aktion
-
-Umsetzungsprozess (Entwicklung, Entscheidungen, Fehler und Probleme)
-Bekannte Probleme mit dem Produkt
-
-Lernerfolg
-
-KI-Einsatz erwähnen
-
-
-
-
+- Beinhaltet die Konfigurationsdatei für die Datenbankverbindung.
+- Beinhaltet die Datei `database.sql`, die die `users` Tabelle erstellt.
+- Beinhaltet die Datei `config.php`, die die Konfiguration des Backends enthält.
