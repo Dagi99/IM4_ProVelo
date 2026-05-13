@@ -1,208 +1,104 @@
-/* name.css */
+/* challengeName.css */
 
-/* ============================================
-   NAME PAGE
-   Nutzt race.css als Basis
-   ============================================ */
-
-.name-page {
-    background: var(--color-bg);
-}
-
-/* ---- Narrow Layout ---- */
-.page--narrow {
+.challenge-name {
     max-width: 760px;
-    padding-top: 48px;
-    padding-bottom: 40px;
+    padding-top: 40px;
 }
 
-/* ---- Back Link ---- */
 .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-
-    margin-bottom: 36px;
-
-    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 32px;
 
     color: var(--color-text);
+    text-decoration: none;
 
     font-size: var(--font-size-lg);
     font-weight: 600;
 }
 
-.back-link svg {
-    width: 18px;
-    height: 18px;
-}
-
-/* ---- Full Width Badge ---- */
-.badge--full {
+.challenge-badge {
     width: 100%;
-
-    justify-content: flex-start;
-
-    padding: 12px 18px;
-
     margin-bottom: 48px;
-
-    border-radius: var(--radius-pill);
-
-    font-size: var(--font-size-lg);
-    letter-spacing: 0.03em;
 }
 
-/* ---- Content ---- */
-.name-section {
-    width: 100%;
-}
-
-.name-title {
+.challenge-name h1 {
     font-size: 56px;
-    line-height: 1.05;
-    font-weight: 700;
-
-    margin-bottom: 14px;
-
-    color: var(--color-text);
+    margin-bottom: 12px;
 }
 
-.name-subtitle {
-    font-size: 30px;
-    line-height: 1.4;
-
+.subtitle {
+    font-size: 28px;
     color: var(--color-text-muted);
-
-    margin-bottom: 42px;
+    margin-bottom: 40px;
 }
 
-/* ---- Input ---- */
-.input-wrapper {
+.input-wrap {
     position: relative;
 }
 
 .name-input {
     width: 100%;
-
     height: 110px;
 
+    border: 3px solid #5f84ff;
     border-radius: 28px;
 
-    border: 3px solid #5f84ff;
+    padding: 0 28px;
 
-    background: var(--color-white);
-
-    padding: 0 30px;
-
-    font-family: var(--font-body);
     font-size: 38px;
-    font-weight: 500;
-
-    color: var(--color-text);
+    font-family: var(--font-body);
 
     outline: none;
-
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
 }
 
-.name-input:focus {
-    border-color: var(--color-blue);
-    box-shadow: 0 0 0 4px rgba(26, 106, 255, 0.12);
-}
-
-.name-input::placeholder {
-    color: #9aa9c2;
-}
-
-/* ---- Counter ---- */
-.char-counter {
+.counter {
     position: absolute;
-
-    right: 10px;
-    bottom: -42px;
-
-    font-size: 28px;
-    font-weight: 500;
+    right: 8px;
+    bottom: -38px;
 
     color: var(--color-text-muted);
+    font-size: 26px;
 }
 
-/* ---- Bottom ---- */
-.bottom-actions {
-    margin-top: auto;
-    padding-top: 120px;
-}
-
-/* ---- Primary Button ---- */
-.btn-primary-large {
-    height: 104px;
+.challenge-btn {
+    height: 100px;
 
     border-radius: 28px;
 
-    border: none;
-
     background: var(--color-blue-grad);
+    color: white;
 
-    color: var(--color-white);
-
-    font-size: 38px;
+    font-size: 36px;
     font-weight: 700;
 
-    box-shadow: 0 10px 30px rgba(26, 106, 255, 0.22);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
+    margin-top: 140px;
 }
 
-.btn-primary-large svg {
-    width: 24px;
-    height: 24px;
-}
-
-/* ---- Responsive ---- */
 @media (max-width: 768px) {
 
-    .page--narrow {
-        padding: 28px 22px 36px;
-    }
-
-    .badge--full {
-        margin-bottom: 36px;
-    }
-
-    .name-title {
+    .challenge-name h1 {
         font-size: 34px;
     }
 
-    .name-subtitle {
+    .subtitle {
         font-size: 18px;
-        margin-bottom: 28px;
     }
 
     .name-input {
-        height: 76px;
+        height: 74px;
         font-size: 24px;
         border-radius: 20px;
-        padding: 0 22px;
     }
 
-    .char-counter {
+    .counter {
         font-size: 16px;
-        bottom: -30px;
+        bottom: -28px;
     }
 
-    .bottom-actions {
-        padding-top: 90px;
-    }
-
-    .btn-primary-large {
+    .challenge-btn {
         height: 72px;
-        border-radius: 22px;
         font-size: 24px;
+        border-radius: 20px;
+        margin-top: 100px;
     }
 }

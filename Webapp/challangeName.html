@@ -1,102 +1,63 @@
-<!-- name.html -->
+<!-- challengeName.html -->
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bike Challenge – Name</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenge Name</title>
 
-    <!-- Bestehendes CSS -->
     <link rel="stylesheet" href="../css/race.css">
-
-    <!-- Neues Seiten-CSS -->
     <link rel="stylesheet" href="../css/challengeName.css">
 </head>
-<body class="name-page">
 
-    <div class="page page--narrow">
+<body class="challenge-name-page">
 
-        <!-- Back -->
-        <a href="../index.html" class="back-link">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2.5"
-                 stroke-linecap="round" stroke-linejoin="round">
-                <path d="M15 18l-6-6 6-6"/>
-            </svg>
-            Zurück
-        </a>
+<div class="page challenge-name">
 
-        <!-- Badge -->
-        <div class="badge badge--full">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="5.5" cy="17.5" r="3.5"/>
-                <circle cx="18.5" cy="17.5" r="3.5"/>
-                <path d="M15 6a1 1 0 0 0-1-1h-4"/>
-                <path d="M5.5 17.5 8 11l4 2 3-6"/>
-                <path d="m18.5 17.5-3-6"/>
-            </svg>
+    <a href="../index.html" class="back-link">
+        ← Zurück
+    </a>
 
-            BIKE B
-        </div>
-
-        <!-- Content -->
-        <section class="name-section">
-
-            <h1 class="name-title">
-                Wie heisst du?
-            </h1>
-
-            <p class="name-subtitle">
-                Erscheint auf der Rangliste.
-            </p>
-
-            <!-- Input -->
-            <div class="input-wrapper">
-
-                <input
-                    type="text"
-                    class="name-input"
-                    maxlength="16"
-                    id="playerName"
-                    placeholder="Dein Name"
-                    value="Danino"
-                />
-
-                <div class="char-counter">
-                    <span id="currentCount">6</span>/16
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- Bottom -->
-        <div class="bottom-actions">
-            <button class="btn btn-primary-large">
-                Weiter
-
-                <svg width="22" height="22" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor"
-                     stroke-width="2.5" stroke-linecap="round"
-                     stroke-linejoin="round">
-                    <path d="M5 12h14"/>
-                    <path d="m13 5 7 7-7 7"/>
-                </svg>
-            </button>
-        </div>
-
+    <div class="badge challenge-badge">
+        BIKE B
     </div>
 
-    <script>
-        const input = document.getElementById('playerName');
-        const counter = document.getElementById('currentCount');
+    <h1>Wie heisst du?</h1>
 
-        input.addEventListener('input', () => {
-            counter.textContent = input.value.length;
-        });
-    </script>
+    <p class="subtitle">
+        Erscheint auf der Rangliste.
+    </p>
+
+    <div class="input-wrap">
+        <input
+            id="nameInput"
+            type="text"
+            maxlength="16"
+            value="Danino"
+            class="name-input"
+        >
+
+        <span class="counter">
+            <span id="count">6</span>/16
+        </span>
+    </div>
+
+    <div class="bottom-actions">
+        <button class="btn challenge-btn">
+            Weiter →
+        </button>
+    </div>
+
+</div>
+
+<script>
+    const input = document.getElementById('nameInput');
+    const count = document.getElementById('count');
+
+    input.addEventListener('input', () => {
+        count.textContent = input.value.length;
+    });
+</script>
 
 </body>
 </html>
