@@ -24,8 +24,6 @@ async function loadProfile () {
 loadProfile();
 
 
-
-
 document
   .getElementById("profilForm")
   .addEventListener("submit", async (e) => {
