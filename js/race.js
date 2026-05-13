@@ -12,4 +12,4 @@ async function loadSpeed () {
     }
 }
 loadSpeed();
-setInterval(loadSpeed, 5000);
+setInterval(loadSpeed, 1000);

@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-include_once("../../system/config.php");
+include_once("../system/config.php");
 
 $velo_id = "2";
 
