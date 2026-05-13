@@ -5,6 +5,7 @@ include_once("../system/config.php");
 $velo_id = "2";
 
 try {
+    $pdo->query("DELETE FROM speed WHERE time < NOW() - INTERVAL 15 MINUTE");
     $stmt = $pdo ->prepare("SELECT speed FROM speed WHERE velo_id = :velo_id ORDER BY time DESC LIMIT 1");
     $stmt->execute([':velo_id' => $velo_id]);
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
