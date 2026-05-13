@@ -1,104 +1,147 @@
-/* challengeName.css */
+/* ============================================
+   CHALLENGE NAME
+   basiert vollständig auf race.css
+   ============================================ */
 
-.challenge-name {
-    max-width: 760px;
-    padding-top: 40px;
+.challenge-name-page {
+    justify-content: space-between;
 }
 
-.back-link {
-    display: inline-block;
-    margin-bottom: 32px;
+/* ---- Back ---- */
+
+.challenge-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+
+    margin-bottom: var(--space-xl);
+
+    text-decoration: none;
 
     color: var(--color-text);
-    text-decoration: none;
 
     font-size: var(--font-size-lg);
     font-weight: 600;
 }
 
+/* ---- Badge ---- */
+
 .challenge-badge {
     width: 100%;
-    margin-bottom: 48px;
+
+    justify-content: flex-start;
+
+    margin-bottom: var(--space-xl);
 }
 
-.challenge-name h1 {
-    font-size: 56px;
-    margin-bottom: 12px;
+/* ---- Content ---- */
+
+.challenge-content {
+    width: 100%;
 }
 
-.subtitle {
-    font-size: 28px;
+/* ---- Title ---- */
+
+.challenge-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+
+    line-height: 1.1;
+
+    margin-bottom: var(--space-sm);
+
+    color: var(--color-text);
+}
+
+.challenge-subtitle {
+    font-size: var(--font-size-lg);
+
     color: var(--color-text-muted);
-    margin-bottom: 40px;
+
+    margin-bottom: var(--space-xl);
 }
 
-.input-wrap {
+/* ---- Input ---- */
+
+.challenge-input-wrap {
     position: relative;
 }
 
-.name-input {
+.challenge-input {
     width: 100%;
-    height: 110px;
+    height: 88px;
 
-    border: 3px solid #5f84ff;
-    border-radius: 28px;
+    padding: 0 var(--space-lg);
 
-    padding: 0 28px;
+    border: 2px solid var(--color-blue-light);
+    border-radius: var(--radius-lg);
 
-    font-size: 38px;
+    background: var(--color-white);
+
     font-family: var(--font-body);
+    font-size: var(--font-size-xl);
+
+    color: var(--color-text);
 
     outline: none;
+
+    transition: border-color 0.15s ease;
 }
 
-.counter {
+.challenge-input:focus {
+    border-color: var(--color-blue);
+}
+
+/* ---- Counter ---- */
+
+.challenge-counter {
     position: absolute;
-    right: 8px;
-    bottom: -38px;
+
+    right: var(--space-sm);
+    bottom: -28px;
+
+    font-size: var(--font-size-md);
 
     color: var(--color-text-muted);
-    font-size: 26px;
 }
 
-.challenge-btn {
-    height: 100px;
+/* ---- Bottom ---- */
 
-    border-radius: 28px;
+.challenge-actions {
+    margin-top: auto;
+    padding-top: 120px;
+}
 
+/* ---- Button ---- */
+
+.challenge-button {
     background: var(--color-blue-grad);
-    color: white;
 
-    font-size: 36px;
-    font-weight: 700;
+    color: var(--color-white);
 
-    margin-top: 140px;
+    box-shadow:
+        0 10px 24px rgba(26, 106, 255, 0.18);
 }
+
+/* ---- Mobile ---- */
 
 @media (max-width: 768px) {
 
-    .challenge-name h1 {
-        font-size: 34px;
+    .challenge-title {
+        font-size: var(--font-size-xl);
     }
 
-    .subtitle {
-        font-size: 18px;
+    .challenge-subtitle {
+        font-size: var(--font-size-md);
     }
 
-    .name-input {
-        height: 74px;
-        font-size: 24px;
-        border-radius: 20px;
-    }
-
-    .counter {
-        font-size: 16px;
-        bottom: -28px;
-    }
-
-    .challenge-btn {
+    .challenge-input {
         height: 72px;
-        font-size: 24px;
-        border-radius: 20px;
-        margin-top: 100px;
+
+        font-size: var(--font-size-lg);
+    }
+
+    .challenge-actions {
+        padding-top: 80px;
     }
 }
