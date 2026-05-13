@@ -36,7 +36,7 @@
         <div class="race-cards">
             <div class="stat-card">
                 <div class="stat-card__label">Aktuelle Geschwindigkeit</div>
-                <div class="stat-card__value" id="speed"></div>
+                <div class="stat-card__value" id="speed">0.0</div>
                 <div class="stat-card__unit">km/h</div>
                 <div class="stat-card__meta">
                     <div class="stat-card__meta-item">
@@ -95,7 +95,7 @@
 
     <script src="js/race.js"></script>
     <script>
-        let remaining = 87.9;
+        let remaining = 90;
         const timerEl = document.getElementById('timer');
         const tick = setInterval(() => {
             remaining -= 0.1;
