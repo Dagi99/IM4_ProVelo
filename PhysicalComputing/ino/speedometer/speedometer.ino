@@ -6,8 +6,12 @@
 #include <Adafruit_SH110X.h>
 #include <Adafruit_NeoPixel.h>
 
+// Dieser Sketch misst die Anzahl der Kontaktschliessungen des Reed-Sensors,
+// berechnet daraus die Geschwindigkeit und zeigt sie auf dem Display an.
+// Zusaetzlich werden die Geschwindigkeitswerte regelmaessig an die Datenbank geschickt.
+
 // =====================================================
-// OLED Display
+// Init OLED Display
 // =====================================================
 
 #define SCREEN_WIDTH   128
@@ -19,7 +23,7 @@
 Adafruit_SH1106G display(128, 64, &Wire, -1);
 
 // =====================================================
-// NeoPixel Ring
+// Init NeoPixel Ring
 // =====================================================
 
 #define STRIP_PIN       7
@@ -33,41 +37,45 @@ Adafruit_NeoPixel strip(
 );
 
 // =====================================================
-// Reed Sensor
+// Init Reed Sensor
 // =====================================================
 
 #define REED_PIN 4
 
 // =====================================================
-// WiFi / Database
+// Init WiFi / Database
 // =====================================================
 
+//WLAN Zugangsdaten
 const char* ssid = "tinkergarden";
 const char* pass = "strenggeheim";
 const char* serverURL = "https://provelo-allegra.piltoverprints.ch/PhysicalComputing/api/load.php";
 
+// Nach wie vielen Millisekunden erneut WLAN probiert wird
 #define WIFI_RECONNECT_INTERVAL 5000
-#define DATABASE_SEND_INTERVAL 2000
+// Delay wie oft die aktuelle Geschwindigkeit an den Server geschickt wird
+#define DATABASE_SEND_INTERVAL 1000
+// Entprellung des Reed-Sensors
 #define REED_DEBOUNCE_TIME 100
 
 // =====================================================
-// Wheel settings
+// Fahrrad Einstellungen
 // =====================================================
 
-// Wheel circumference in meters
+// Rad Umfang in Metern (Float)
 #define WHEEL_CIRCUMFERENCE 2.1
 
-// Unique bike identifier for database writes
-#define VELO_ID 2
+// ID vom Velo, damit in der DB mehrere Velos unterschieden werden koennen
+#define VELO_ID 1
 
-// LED ring full scale speed
+// Max Skala LED Ring
 #define MAX_RING_SPEED 50.0
 
-// Maximum speed on display
+// Maximal darstellbare Geschwindigkeit auf dem Display
 #define MAX_DISPLAY_SPEED 60.0
 
 // =====================================================
-// Variables
+// Variablen für Funktioun, Debouncing und Troubleshooting
 // =====================================================
 
 unsigned long lastPulseTime = 0;
@@ -76,15 +84,17 @@ unsigned long lastWiFiReconnectAttempt = 0;
 unsigned long lastDatabaseSend = 0;
 unsigned long lastDebounceTime = 0;
 
+// speedKm ist die aktuell berechnete Geschwindigkeit
 float speedKmh = 0.0;
 
 bool lastReedState = HIGH;
 bool wifiConnected = false;
 
-String displayErrorMessage = "";
+// Falls etwas schieflaeuft, wird diese Meldung auf dem OLED angezeigt
+String displayErrorMessage = "Error";
 
 // =====================================================
-// Function declarations
+// Übersicht über verwendeten Funktionen
 // =====================================================
 
 void connectWiFi();
@@ -97,20 +107,20 @@ void updateLedRing();
 void updateDisplay();
 
 // =====================================================
-// Setup
+// Setup/ESP Init
 // =====================================================
 
 void setup() {
 
   Serial.begin(115200);
 
-  // I2C
+  // Protokoll des Displays starten
   Wire.begin(DISPLAY_SDA, DISPLAY_CLOCK);
 
-  // Reed sensor
+  // Reed-Sensor Pin starten
   pinMode(REED_PIN, INPUT_PULLUP);
 
-  // OLED init
+  // Display initialisieren
   if (!display.begin(0x3C, true)) {
     Serial.println("Display error");
     while (true);
@@ -120,46 +130,51 @@ void setup() {
   display.setTextColor(SH110X_WHITE);
   display.display();
 
-  // NeoPixel init
+  // LED-Ring initialisieren
   strip.begin();
   strip.setBrightness(BRIGHTNESS);
   strip.show();
 
+  // Startanimation abspielen
   showStartupAnimation();
+  // Versuch WLAN Verbindung
   connectWiFi();
 
   Serial.println("System started");
 }
 
 // =====================================================
-// Main loop
+// Loop
 // =====================================================
 
 void loop() {
 
+  //Auslesen des Reed-Sensors
   bool reedState = digitalRead(REED_PIN);
 
-  // Detect wheel rotation
+  // Wenn der Reed-Sensor von HIGH auf LOW wechselt, zaehlen wir das als eine Radumdrehung
   if (lastReedState == HIGH && reedState == LOW) {
 
     unsigned long currentTime = millis();
 
-    // Ignore first pulse
+    // Beim ersten Impuls koennen wir noch keine Geschwindigkeit berechnen, weil noch kein Vergleichswert vorhanden ist
     if (lastPulseTime > 0) {
 
       unsigned long deltaTime = currentTime - lastPulseTime;
 
       if (deltaTime > 0) {
 
-        // Speed calculation
+        // Zeitdifferenz in Sekunden umrechnen
         float timeSeconds = deltaTime / 1000.0;
 
+        // Aus Weg / Zeit zuerst m/s berechnen
         float speedMs =
           WHEEL_CIRCUMFERENCE / timeSeconds;
 
+        // Danach von m/s auf km/h umrechnen
         speedKmh = speedMs * 3.6;
 
-        // Limit max display speed
+        // Falls der Wert zu hoch wird, auf Anzeige-Maximum begrenzen
         if (speedKmh > MAX_DISPLAY_SPEED) {
           speedKmh = MAX_DISPLAY_SPEED;
         }
@@ -169,26 +184,28 @@ void loop() {
         Serial.println(" km/h");
       }
     }
-
+    //Festhalten, wann der letzte Impuls war
     lastPulseTime = currentTime;
 
-    // Debounce
+    // Kurze Pause gegen Prellen
     delay(20);
   }
 
+  // Speichern des aktuellen Zustands für den nächsten Durchlauf
   lastReedState = reedState;
 
-  // Stop detection
-  if (millis() - lastPulseTime > 3000) {
+  // Wenn länger nichts kommt, gehen wir davon aus, dass das Velo steht
+  if (millis() - lastPulseTime > 4000) {
     speedKmh = 0;
   }
 
-  // Send to database at fixed intervals
+  // Intervall basiertes schreiben der Geschwindigkeit in die Datenbank
   if (millis() - lastDatabaseSend >= DATABASE_SEND_INTERVAL && speedKmh > 0) {
     sendSpeedToDatabase(speedKmh);
     lastDatabaseSend = millis();
   }
 
+  // Ausgaben aktualisieren
   ensureWiFiConnected();
   updateLedRing();
   updateDisplay();
@@ -198,12 +215,15 @@ void connectWiFi() {
   Serial.printf("Verbinde mit WLAN %s\n", ssid);
   WiFi.begin(ssid, pass);
   int attempts = 0;
+
+  // Mehrere Versuche machen, bevor ein Fehler angezeigt wird
   while (WiFi.status() != WL_CONNECTED && attempts < 40) {
     delay(500);
     Serial.print(".");
     attempts++;
   }
 
+  // Erfolg melden
   if (WiFi.status() == WL_CONNECTED) {
     wifiConnected = true;
     clearDisplayError();
@@ -211,6 +231,7 @@ void connectWiFi() {
     return;
   }
 
+  // Fehler melden
   wifiConnected = false;
   setDisplayError("Keine WLAN\nVerbindung");
   Serial.println("\nWiFi Verbindung fehlgeschlagen");
@@ -226,11 +247,13 @@ bool ensureWiFiConnected() {
   }
 
   if (wifiConnected) {
-    Serial.println("WiFi-Verbindung verloren");
+    Serial.println("WLAN Verbindung verloren");
   }
 
   wifiConnected = false;
   setDisplayError("Keine WLAN\nVerbindung");
+
+  // Nicht in jedem Loop sofort neu verbinden, sonst blockiert der Sketch zu stark
   if (millis() - lastWiFiReconnectAttempt >= WIFI_RECONNECT_INTERVAL) {
     lastWiFiReconnectAttempt = millis();
     connectWiFi();
@@ -238,16 +261,19 @@ bool ensureWiFiConnected() {
   return WiFi.status() == WL_CONNECTED;
 }
 
+// Sende die Geschwindigkeit an die Datenbank
 bool sendSpeedToDatabase(float speedValue) {
   if (!ensureWiFiConnected()) {
     return false;
   }
 
+  // JSON fuer das PHP-Backend zusammenbauen
   JSONVar dataObject;
   dataObject["velo_id"] = VELO_ID;
   dataObject["wert"] = speedValue;
   String jsonString = JSON.stringify(dataObject);
 
+  // HTTP POST an die API schicken
   HTTPClient http;
   http.begin(serverURL);
   http.addHeader("Content-Type", "application/json");
@@ -290,6 +316,7 @@ void clearDisplayError() {
 void showStartupAnimation() {
   strip.clear();
 
+  // LEDs laufen einmal von gruen nach rot hoch
   for (int i = 0; i < STRIP_COUNT; i++) {
     int red = map(i, 0, STRIP_COUNT - 1, 0, 255);
     int green = map(i, 0, STRIP_COUNT - 1, 255, 0);
@@ -304,6 +331,7 @@ void showStartupAnimation() {
 }
 
 void updateLedRing() {
+  // Je schneller das Velo ist, desto mehr LEDs leuchten
   int ledsToLight = map(
     constrain(speedKmh, 0, MAX_RING_SPEED),
     0,
@@ -315,6 +343,7 @@ void updateLedRing() {
   strip.clear();
 
   for (int i = 0; i < ledsToLight; i++) {
+    // Verlauf von gruen zu rot
     int red = map(i, 0, STRIP_COUNT - 1, 0, 255);
     int green = map(i, 0, STRIP_COUNT - 1, 255, 0);
     strip.setPixelColor(i, strip.Color(red, green, 0));
@@ -324,12 +353,14 @@ void updateLedRing() {
 }
 
 void updateDisplay() {
+  // Display nicht in jedem Loop neu zeichnen, damit es ruhiger laeuft
   if (millis() - lastDisplayUpdate <= 200) {
     return;
   }
 
   display.clearDisplay();
 
+  // Anzeige von Fehlermeldungen
   if (displayErrorMessage.length() > 0) {
     display.setTextSize(1);
     display.setCursor(0, 0);
@@ -346,6 +377,7 @@ void updateDisplay() {
   display.setCursor(0, 0);
   display.println("Speed");
 
+  //  Geschwindigkeitsanzeige
   display.setTextSize(5);
   display.setCursor(0, 18);
 
