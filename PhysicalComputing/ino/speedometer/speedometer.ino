@@ -58,7 +58,7 @@ const char* serverURL = "https://provelo-allegra.piltoverprints.ch/PhysicalCompu
 #define WHEEL_CIRCUMFERENCE 2.1
 
 // Unique bike identifier for database writes
-#define VELO_ID 1
+#define VELO_ID 2
 
 // LED ring full scale speed
 #define MAX_RING_SPEED 50.0
