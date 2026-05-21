@@ -82,9 +82,9 @@ Die Installation besteht aus folgenden Komponenten:
 ![Schematic plan of the breadboard with ESP32-C6, Button as Reed-Kontakt, OLED-Display und WS128b 12px LED Ring](/documentation/ressources/Steckplan.png)
 
 * Der Microcontroller ist zentrales Element des Systems und bedient alle anderen Komponenten. Alle untergeordneten Komponenten (OLED-Display, WS128b 12px LED Ring) beziehen Ground, VCC, Daten und ggf. Clock vom Microcontroller. Der Reed-Kontakt wird per Input Pullup-Modus an GPIO erfasst.
-* OLED-Display wird mit SDA an GPIO 21, mit SCL an GPIO 22 angeschlossen.
-* Der Reed-Kontakt wird zwischen 5V und GPIO 4 angeschlossen.
-* Der Datenkontakt des WS128b 12px LED Ring wird an GPIO 7 angeschlossen.
+* OLED-Display wird mit **SDA an GPIO 21, mit SCL an GPIO 22** angeschlossen.
+* Der Reed-Kontakt wird **zwischen 5V und GPIO 4** angeschlossen.
+* Der Datenkontakt des WS128b 12px LED Ring wird an **GPIO 7** angeschlossen.
 
 ---
 
