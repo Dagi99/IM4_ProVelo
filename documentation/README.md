@@ -20,7 +20,7 @@
 
 ### UX & Konzeption
 
-* **Figma:** [Link zum Figma](http://link.zum.figma) `[NOTIZ: Echten Link einfügen]`
+* **Figma:** [Link zum Figma](https://www.figma.com/design/lTifdIONmofy3zx2MQEjBC/IM-4-%E2%80%93-App-Konzeption-Velo-Race?node-id=78-325&t=3EO7N0VVxFRgnQxb-1) `[NOTIZ: Echten Link einfügen]`
 * **User Flow & Screen Flow:**
   `[NOTIZ: Screenshot aus Figma hier einfügen oder verlinken]`
 
@@ -79,6 +79,7 @@ Die Installation besteht aus folgenden Komponenten:
 
 #### Komponentenplan & Steckplan
 * **Komponentenplan:** `[NOTIZ: Schaubild einfügen/verlinken, das Komponenten, Sensoren, Aktoren, Dateinamen der Programme und Kommunikationswege zeigt]`
+![Placeholder Picture](/documentation/ressources/Komponentenplan.png)
 
 * **Steckplan:** 
 ![Schematic plan of the breadboard with ESP32-C6, Button as Reed-Kontakt, OLED-Display und WS128b 12px LED Ring](/documentation/ressources/Steckplan.png)
