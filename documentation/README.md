@@ -73,12 +73,12 @@ Die Installation besteht aus folgenden Komponenten:
 6. **Webapp-Darstellung:** Die Webapp greift auf die Datenbank zu und visualisiert Daten und Ranglisten live.
 
 
-![Not-accurate diagram of the data flow in the project](/IM4_ProVelo/documentation/ressources/Flowdiagramm.png)
+![Not-accurate diagram of the data flow in the project](./ressources/Flowdiagramm.png)
 
 #### Komponentenplan & Steckplan
 * **Komponentenplan:** `[NOTIZ: Schaubild einfügen/verlinken, das Komponenten, Sensoren, Aktoren, Dateinamen der Programme und Kommunikationswege zeigt]`
 * **Steckplan:** 
-![Schematic plan of the breadboard with ESP32-C6, Button as Reed-Kontakt, OLED-Display und WS128b 12px LED Ring](/IM4_ProVelo/documentation/ressources/Steckplan.png)
+![Schematic plan of the breadboard with ESP32-C6, Button as Reed-Kontakt, OLED-Display und WS128b 12px LED Ring](./ressources/Steckplan.png)
 
 ---
 
