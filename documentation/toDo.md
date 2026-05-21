@@ -1,15 +1,24 @@
 # Physical Computing
 
-- Gehäuse/Halterung für Sensor/Magneten
+
 - Handyhalterung
 - Stromversorgung µC
-- Verlöten von Elementen für Velo -> ESP Halterung? (Tasche? 3D Druck?)
 
-- Fehlermeldung aufs Display (Kein WLAN,kein Zugriff auf die Datenbanken, keine Angaben für Reifendurchmesser)
+
 
 
 
 # Webapp
 - Integration Datenbank für Reifendurchmesser
 - Löschung von Datensätzen älter als 1 Stunde außer Highscores
+- Admin-Seite
+- Rangliste
 
+
+
+#Dokumentation
+- Readme Namen eintragen @All
+- Video @Fadri
+- Komponentenplan
+- Dokumentation Texte eintragen @Webapp
+- 
