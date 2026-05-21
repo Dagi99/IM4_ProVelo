@@ -154,28 +154,49 @@ body {
 
 /* ---- Race: progress bar ---- */
 .race-bar {
-    height: 6px;
+    height: 8px;
     background: #dde8f8;
     border-radius: var(--radius-pill);
-    margin: var(--space-md) 0;
-    overflow: hidden;
+    margin: 28px 0 var(--space-md);
+    overflow: visible;
     position: relative;
 }
 
-.race-bar__track { position: absolute; inset: 0; display: flex; align-items: center; }
+.race-bar__fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0%;
+    border-radius: var(--radius-pill);
+    background: var(--color-blue-grad);
+    transition: width 0.1s linear;
+    pointer-events: none;
+}
+
+.race-bar__track {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-pill);
+    overflow: visible;
+}
 
 .race-bar__bike {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     background: var(--color-blue);
+    color: white;
     border-radius: 50%;
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
+    left: 2%;
+    transform: translate(-50%, -50%);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 0 3px white, 0 0 0 5px var(--color-blue-light);
+    transition: left 0.1s linear;
+    box-shadow: 0 2px 8px rgba(26, 106, 255, 0.35), 0 0 0 3px white, 0 0 0 5px var(--color-blue-light);
+    z-index: 2;
 }
 
 /* ---- Race: cards grid ---- */

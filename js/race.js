@@ -4,6 +4,8 @@ const CHALLENGE_DURATION = 90;
 
 const needle = document.querySelector("#gauge-needle");
 const timerEl = document.getElementById("timer");
+const bikePos = document.getElementById("bikePos");
+const raceBarFill = document.getElementById("race-bar-fill");
 
 let distanceA = 0;
 let distanceB = 0;
@@ -74,10 +76,24 @@ function integrateDistances(speedA, speedB) {
     updateDistances();
 }
 
+function updateChallengeProgress() {
+    const elapsed = CHALLENGE_DURATION - remaining;
+    const progressPercent = Math.min(100, (elapsed / CHALLENGE_DURATION) * 100);
+    const bikeLeft = remaining <= 0 ? 100 : 2 + progressPercent * 0.96;
+
+    if (raceBarFill) {
+        raceBarFill.style.width = progressPercent + "%";
+    }
+    if (bikePos) {
+        bikePos.style.left = bikeLeft + "%";
+    }
+}
+
 function startChallengeTimer() {
     if (!timerEl) return;
 
     timerEl.textContent = remaining.toFixed(1) + "s";
+    updateChallengeProgress();
 
     setInterval(() => {
         remaining -= 0.1;
@@ -85,9 +101,11 @@ function startChallengeTimer() {
             remaining = 0;
             challengeActive = false;
             timerEl.textContent = "0.0s";
+            updateChallengeProgress();
             return;
         }
         timerEl.textContent = remaining.toFixed(1) + "s";
+        updateChallengeProgress();
     }, 100);
 }
 
