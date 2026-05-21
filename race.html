@@ -6,7 +6,7 @@
     <title>Bike Challenge – Race Live</title>
     <link rel="stylesheet" href="css/race.css">
 </head>
-<body class="race-page">
+<body class="race-page" data-velo-id="">
     <div class="page">
         <div class="race-topbar">
             <div class="badge">
@@ -14,7 +14,7 @@
                     <circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/>
                     <path d="M15 6a1 1 0 0 0-1-1h-4"/><path d="M5.5 17.5 8 11l4 2 3-6"/><path d="m18.5 17.5-3-6"/>
                 </svg>
-                BIKE B · <span id="player-name-badge"></span>
+                <span id="player-badge-label">BIKE B</span> · <span id="player-name-badge"></span>
             </div>
             <div class="timer-block">
                 <div class="timer-block__label">Verbleibend</div>
@@ -57,24 +57,19 @@
                 </div>
             </div>
 
-            <div class="stat-card stat-card--dark">
+            <div class="stat-card stat-card--dark" id="duel-card">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md)">
-                    <div class="stat-card__label">Duell</div>
+                    <div class="stat-card__label">Duell · Gegner</div>
                     <div class="duel-lead" id="duel-lead">Du führst!</div>
                 </div>
                 <div class="duel-row">
                     <div class="duel-row__header">
-                        <span>Bike B · <span id="player-name"></span></span>
-                        <span class="duel-row__distance" id="duel-distance-b">0.00 km</span>
+                        <span><span id="opponent-label">Bike A</span> · <span id="opponent-name">…</span></span>
+                        <span class="duel-row__distance" id="duel-opponent-distance">0.00 km</span>
                     </div>
-                    <div class="duel-bar"><div class="duel-bar__fill duel-bar__fill--b" id="duel-bar-b" style="width:0%"></div></div>
-                </div>
-                <div class="duel-row">
-                    <div class="duel-row__header">
-                        <span>Bike A · Kai</span>
-                        <span class="duel-row__distance" id="duel-distance-a">0.00 km</span>
+                    <div class="duel-bar">
+                        <div class="duel-bar__fill duel-bar__fill--opponent" id="duel-bar-opponent" style="width:0%"></div>
                     </div>
-                    <div class="duel-bar"><div class="duel-bar__fill duel-bar__fill--a" id="duel-bar-a" style="width:0%"></div></div>
                 </div>
             </div>
         </div>
