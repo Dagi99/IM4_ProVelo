@@ -1,46 +1,37 @@
-const input = document.getElementById('nameInput');
-const count = document.getElementById('count');
-const continueBtn = document.querySelector('.challenge-btn');
-
-async function loadSessionName() {
+const assignedNameEl = document.getElementById("assignedName");
+const nameErrorEl = document.getElementById("nameError");
+const continueBtn = document.getElementById("continueBtn");
+async function assignName() {
     try {
-        const response = await fetch('api/player-session.php?t=' + Date.now());
+        const response = await fetch("api/assign-name.php");
         const result = await response.json();
-        if (result.status === 'success' && result.name && input) {
-            input.value = result.name;
-            if (count) count.textContent = String(result.name.length);
+        if (result.status === "success") {
+            assignedNameEl.textContent = result.name;
+            if (continueBtn) {
+                continueBtn.removeAttribute("aria-disabled");
+                continueBtn.classList.remove("challenge-btn--disabled");
+            }
+            return;
+        }
+        assignedNameEl.textContent = "—";
+        if (nameErrorEl) {
+            nameErrorEl.hidden = false;
+            nameErrorEl.textContent = result.message || "Kein Name verfügbar.";
         }
     } catch (error) {
-        console.error('Failed to load session name:', error);
-    }
-}
-
-async function saveNameAndContinue() {
-    if (!input) return;
-
-    const name = input.value.trim();
-    if (!name) return;
-
-    try {
-        const response = await fetch('api/player-session.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name }),
-        });
-        const result = await response.json();
-        if (result.status === 'success') {
-            window.location.href = 'race.html';
+        assignedNameEl.textContent = "—";
+        if (nameErrorEl) {
+            nameErrorEl.hidden = false;
+            nameErrorEl.textContent = "Fehler beim Laden des Namens.";
         }
-    } catch (error) {
-        console.error('Failed to save name:', error);
+        console.error("Error assigning name:", error);
     }
 }
-
-if (input && count) {
-    input.addEventListener('input', () => {
-        count.textContent = String(input.value.length);
+if (continueBtn) {
+    continueBtn.addEventListener("click", (e) => {
+        if (continueBtn.getAttribute("aria-disabled") === "true") {
+            e.preventDefault();
+        }
     });
 }
-
-continueBtn?.addEventListener('click', saveNameAndContinue);
-loadSessionName();
+assignName();
