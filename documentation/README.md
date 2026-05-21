@@ -77,6 +77,7 @@ Die Installation besteht aus folgenden Komponenten:
 
 #### Komponentenplan & Steckplan
 * **Komponentenplan:** `[NOTIZ: Schaubild einfügen/verlinken, das Komponenten, Sensoren, Aktoren, Dateinamen der Programme und Kommunikationswege zeigt]`
+
 * **Steckplan:** 
 ![Schematic plan of the breadboard with ESP32-C6, Button as Reed-Kontakt, OLED-Display und WS128b 12px LED Ring](/documentation/ressources/Steckplan.png)
 
@@ -88,7 +89,7 @@ Die Installation besteht aus folgenden Komponenten:
 `[NOTIZ: Hier die Verzeichnisstruktur einfügen (z.B. als Baumdiagramm). Wichtig: Jede Datei muss im Kopfbereich eine kurze Zusammenfassung enthalten.]`
 
 ### Datenschnittstelle
-`[NOTIZ: Wie genau kommunizieren WebApp und ESP32 miteinander? HTTP POST-Requests, WebSockets oder MQTT? Bitte Protokoll und Beispiel-Payload dokumentieren]`
+* Der ESP verpackt ca. einmal pro Sekunde die aktuell berechnete Geschwindigkeit in einem JSON-Objekt und sendet es als HTTP Post an die API des Server, welcher diese per PHP in der Datenbank speichert. 
 
 ### ERM (Entity-Relationship-Modell)
 `[NOTIZ: Erklärung der Tabellenstrukturen (z.B. Users, Rides, Admins) sowie das grafische ERM-Schaubild hier einfügen]`
@@ -97,10 +98,21 @@ Die Installation besteht aus folgenden Komponenten:
 `[NOTIZ: Erklärung einfügen, wie die Authentifizierung für den Administratorbereich und das Session-Handling der User gelöst wurde]`
 
 ---
+## 3D-Modelle
+* Um die Bauteile Produktionsgerecht zu gestalten wurden 3D-Modelle erstellt, welche zu den Komponenten passen und es ermöglichen diese am Fahrrad zu befestigen.
+
+* **Displayhalterung:**
+* Für das Display ist eine Halterung vorgesehen, welcher per Kabelbinder am Lenker des Fahrrades montiert werden kann. Das Gehäuse hat Löcher für Kabelbinder (kein Metalldraht!) um am Lenker fixiert zu werden.
+![3D Animation of a display mounting case, rotating](/documentation/ressources/IM4Velo_Box.gif)
+
+* **3D-Modell:** `[NOTIZ: Schaubild einfügen/verlinken, das das 3D-Modell des Projektes zeigt]`
+
+
+---
 
 ## Known Bugs (Bekannte Probleme)
 
-* Wenn das Gerät an einen neuen Ort bewegt wird, kann der Microcontroller keine Verbindung zu einem neuen Netzwerk herstellen ohne das Programm erneut zu flashen
+* Wenn das Gerät an einen neuen Ort bewegt wird, kann der Microcontroller keine Verbindung zu einem neuen Netzwerk herstellen ohne das Programm erneut und angepasst zu flashen.
 * Der Umfang vom Rad als Berechnungsgrundlage für die Geschwindigkeit lässt sich nicht Benutzerseitig verändern.
 * `[NOTIZ: Was funktioniert noch nicht einwandfrei?]`
 * `[NOTIZ: Was ist während der Entwicklung aufgefallen?]`
@@ -117,7 +129,7 @@ Die Installation besteht aus folgenden Komponenten:
 `[NOTIZ: Welche Fehler traten auf, welche Ansätze wurden verworfen, wie sahen die Umplanungen aus?]`
 
 ### KI-Einsatz
-`[NOTIZ: Welche KI-Tools (z. B. ChatGPT, GitHub Copilot) wurden wofür eingesetzt und wie wurde der Nutzen bewertet?]`
+In der Umsetzung dieses Projektes wurde KI in Code-Produktion und Code-Troubleshooting verwendet.
 
 ### Fazit
 `[NOTIZ: Abschliessendes Fazit zum Projektfortschritt und dem Endergebnis bei den Events.]`
