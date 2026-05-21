@@ -108,7 +108,7 @@ Die Installation besteht aus folgenden Komponenten:
 
 * **Displayhalterung:** Für das Display ist eine Halterung vorgesehen, welcher per Kabelbinder am Lenker des Fahrrades montiert werden kann. Das Gehäuse hat Löcher für Kabelbinder (kein Metalldraht!) um am Lenker fixiert zu werden.
 
-* ![3D Animation of a display mounting case, rotating](/documentation/ressources/IM4Velo_Box.gif)
+* ![3D Animation of a display mounting case, rotating](/documentation/ressources/IM4Velo_Display.gif)
 
 * **LED-Ring:** Für den LED-Ring, welcher die Geschwindigkeit wie ein Tacho anzeigen soll, wurde ein Teller-artiges Modell modeliert, in welches der Ring eingelassen werden kann. Auch hier sind Löcher in der Rückseite berücksichtig, um das Kreisförmige Teil fixieren zu können.
 
