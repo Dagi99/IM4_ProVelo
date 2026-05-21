@@ -78,7 +78,7 @@ Die Installation besteht aus folgenden Komponenten:
 #### Komponentenplan & Steckplan
 * **Komponentenplan:** `[NOTIZ: Schaubild einfügen/verlinken, das Komponenten, Sensoren, Aktoren, Dateinamen der Programme und Kommunikationswege zeigt]`
 * **Steckplan:** 
-![Schematic plan of the breadboard with ESP32-C6, Button as Reed-Kontakt, OLED-Display und WS128b 12px LED Ring](/IM4_ProVelo/documentation/ressources/Steckplan.png)
+![Schematic plan of the breadboard with ESP32-C6, Button as Reed-Kontakt, OLED-Display und WS128b 12px LED Ring](/documentation/ressources/Steckplan.png)
 
 ---
 
