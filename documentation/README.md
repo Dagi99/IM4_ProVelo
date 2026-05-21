@@ -14,6 +14,8 @@
 
   Ziel ist es, eine interaktive und motivierende Erfahrung zu schaffen, bei der Besucher\*innen ihre Leistung direkt sehen können. Durch das Tracken von Echtzeitdaten (Geschwindigkeit, Distanz) und das Bereitstellen einer Live-Rangliste entsteht ein Gamification-Ansatz, der zu Bewegung und kleinen Wettkämpfen anspornt.
 
+  Entwickelt wurde ein - theoretisch skalierbares System - welches je Fahrrad eine Microcontroller mit Peripherie benötigt. In unserem Aufbau haben wir zwei Fahrräder umgesetzt.
+
 ---
 
 ### UX & Konzeption
