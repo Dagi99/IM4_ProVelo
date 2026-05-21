@@ -9,6 +9,7 @@ const raceBarFill = document.getElementById("race-bar-fill");
 
 let distanceA = 0;
 let distanceB = 0;
+let topSpeedB = 0;
 let lastPollTime = null;
 let challengeActive = true;
 let remaining = CHALLENGE_DURATION;
@@ -19,6 +20,13 @@ function clamp(value, min, max) {
 
 function formatDistance(km) {
     return km.toFixed(2) + " km";
+}
+
+function updateTopSpeedDisplay() {
+    const statTopSpeed = document.getElementById("stat-top-speed");
+    if (statTopSpeed) {
+        statTopSpeed.textContent = topSpeedB.toFixed(1) + " km/h";
+    }
 }
 
 function updateGauge(speedA, speedB) {
@@ -120,6 +128,10 @@ async function loadSpeed() {
 
             const speedA = parseFloat(result.speeds["1"] || 0);
             const speedB = parseFloat(result.speeds["2"] || 0);
+            if (challengeActive && speedB > topSpeedB) {
+                topSpeedB = speedB;
+                updateTopSpeedDisplay();
+            }
             integrateDistances(speedA, speedB);
             updateGauge(speedA, speedB);
         }
@@ -162,5 +174,6 @@ document.getElementById("simulate-btn")?.addEventListener("click", toggleSimulat
 
 startChallengeTimer();
 updateDistances();
+updateTopSpeedDisplay();
 loadSpeed();
 setInterval(loadSpeed, 1000);
