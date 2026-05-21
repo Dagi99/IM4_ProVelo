@@ -172,6 +172,23 @@ function toggleSimulation() {
 
 document.getElementById("simulate-btn")?.addEventListener("click", toggleSimulation);
 
+async function loadPlayerName() {
+    try {
+        const response = await fetch("api/get-player-name.php");
+        const result = await response.json();
+
+        if (result.status === "success") {
+            const playerName = document.getElementById("player-name");
+            const playerNameBadge = document.getElementById("player-name-badge");
+            if (playerName) playerName.textContent = result.name;
+            if (playerNameBadge) playerNameBadge.textContent = result.name;
+        }
+    } catch (error) {
+        console.error("Error loading player name:", error);
+    }
+}
+
+loadPlayerName();
 startChallengeTimer();
 updateDistances();
 updateTopSpeedDisplay();
