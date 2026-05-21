@@ -33,5 +33,37 @@ async function loadSpeed() {
     }
 }
 
+let simulateInterval = null;
+
+async function simulateTick() {
+    try {
+        const response = await fetch("api/simulate-speed.php?t=" + Date.now());
+        const result = await response.json();
+        if (result.status === "success") {
+            loadSpeed();
+        }
+    } catch (error) {
+        console.error("Error simulating speed:", error);
+    }
+}
+
+function toggleSimulation() {
+    const btn = document.getElementById("simulate-btn");
+    if (!btn) return;
+
+    if (simulateInterval) {
+        clearInterval(simulateInterval);
+        simulateInterval = null;
+        btn.textContent = "Simulate data";
+        return;
+    }
+
+    simulateTick();
+    simulateInterval = setInterval(simulateTick, 1000);
+    btn.textContent = "Stop simulation";
+}
+
+document.getElementById("simulate-btn")?.addEventListener("click", toggleSimulation);
+
 loadSpeed();
 setInterval(loadSpeed, 1000);
