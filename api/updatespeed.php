@@ -2,27 +2,37 @@
 header('Content-Type: application/json');
 include_once("../system/config.php");
 
-$velo_id = "2";
+$displayVeloId = "2";
 
 try {
     $pdo->query("DELETE FROM speed WHERE time < NOW() - INTERVAL 15 MINUTE");
-    $stmt = $pdo ->prepare("SELECT speed FROM speed WHERE velo_id = :velo_id ORDER BY time DESC LIMIT 1");
-    $stmt->execute([':velo_id' => $velo_id]);
-    $data = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($data){
-        echo json_encode([
-            "status" => "success",
-            "speed" => number_format($data['speed'], 1 )
-        ]);
-    }else {
-        echo json_encode([
-            "status" => "error",
-            "message" => "No data"
-        ]);
+
+    $speeds = ["1" => "0.0", "2" => "0.0"];
+
+    $stmt = $pdo->prepare("
+        SELECT s.velo_id, s.speed
+        FROM speed s
+        INNER JOIN (
+            SELECT velo_id, MAX(time) AS max_time
+            FROM speed
+            WHERE velo_id IN (1, 2)
+            GROUP BY velo_id
+        ) latest ON s.velo_id = latest.velo_id AND s.time = latest.max_time
+    ");
+    $stmt->execute();
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $speeds[(string) $row['velo_id']] = number_format($row['speed'], 1);
     }
+
+    echo json_encode([
+        "status" => "success",
+        "speeds" => $speeds,
+        "speed" => $speeds[$displayVeloId],
+    ]);
 } catch (PDOException $e) {
     echo json_encode([
         "status" => "error",
-        "message" => $e->getMessage()
+        "message" => $e->getMessage(),
     ]);
 }
