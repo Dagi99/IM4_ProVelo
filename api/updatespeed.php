@@ -2,7 +2,10 @@
 header('Content-Type: application/json');
 include_once("../system/config.php");
 
-$displayVeloId = "2";
+$displayVeloId = (string) ($_GET['velo_id'] ?? '2');
+if (!in_array($displayVeloId, ['1', '2'], true)) {
+    $displayVeloId = '2';
+}
 
 try {
     $pdo->query("DELETE FROM speed WHERE time < NOW() - INTERVAL 15 MINUTE");

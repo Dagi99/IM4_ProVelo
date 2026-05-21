@@ -3,10 +3,29 @@ session_start();
 header('Content-Type: application/json');
 require_once('../system/config.php');
 
-if (!empty($_SESSION['funky_name'])) {
+$veloId = (int) ($_GET['velo_id'] ?? 0);
+if (!in_array($veloId, [1, 2], true)) {
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'velo_id must be 1 or 2',
+    ]);
+    exit;
+}
+
+if (!isset($_SESSION['players'])) {
+    $_SESSION['players'] = [];
+}
+
+if (!empty($_SESSION['players'][$veloId]['name'])) {
+    $name = $_SESSION['players'][$veloId]['name'];
+    $_SESSION['velo_id'] = $veloId;
+    $_SESSION['player_name'] = $name;
+    $_SESSION['funky_name'] = $name;
+
     echo json_encode([
         'status' => 'success',
-        'name' => $_SESSION['funky_name'],
+        'name' => $name,
+        'velo_id' => $veloId,
     ]);
     exit;
 }
@@ -29,9 +48,9 @@ try {
     }
 
     $update = $pdo->prepare(
-        'UPDATE assigned_names SET is_assigned = 1, assigned_at = NOW() WHERE id = ? AND is_assigned = 0'
+        'UPDATE assigned_names SET is_assigned = 1, assigned_at = NOW(), velo_id = ? WHERE id = ? AND is_assigned = 0'
     );
-    $update->execute([$row['id']]);
+    $update->execute([$veloId, $row['id']]);
 
     if ($update->rowCount() !== 1) {
         $pdo->rollBack();
@@ -43,11 +62,20 @@ try {
     }
 
     $pdo->commit();
-    $_SESSION['funky_name'] = $row['funky_name'];
+
+    $name = $row['funky_name'];
+    $_SESSION['players'][$veloId] = [
+        'name' => $name,
+        'velo_id' => $veloId,
+    ];
+    $_SESSION['velo_id'] = $veloId;
+    $_SESSION['player_name'] = $name;
+    $_SESSION['funky_name'] = $name;
 
     echo json_encode([
         'status' => 'success',
-        'name' => $row['funky_name'],
+        'name' => $name,
+        'velo_id' => $veloId,
     ]);
 } catch (PDOException $e) {
     if ($pdo->inTransaction()) {

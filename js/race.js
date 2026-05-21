@@ -2,19 +2,43 @@ const MAX_ANGLE = 45;
 const MAX_SPEED_DIFF = 10;
 const CHALLENGE_DURATION = 90;
 
+function parseVeloId() {
+    const velo = parseInt(new URLSearchParams(window.location.search).get("velo"), 10);
+    return velo === 1 || velo === 2 ? velo : null;
+}
+
+const veloId = parseVeloId();
+if (!veloId) {
+    window.location.replace("infoBikeB.html");
+    throw new Error("Missing velo parameter");
+}
+
+const PLAYER_VELO_ID = veloId;
+const OPPONENT_VELO_ID = veloId === 1 ? 2 : 1;
+const PLAYER_BIKE_LABEL = veloId === 1 ? "BIKE A" : "BIKE B";
+const OPPONENT_BIKE_LABEL = veloId === 1 ? "Bike B" : "Bike A";
+
 const needle = document.querySelector("#gauge-needle");
 const timerEl = document.getElementById("timer");
 const bikePos = document.getElementById("bikePos");
 const raceBarFill = document.getElementById("race-bar-fill");
+const playerBadgeLabel = document.getElementById("player-badge-label");
 
 let distanceA = 0;
 let distanceB = 0;
-let topSpeedB = 0;
+let topSpeedPlayer = 0;
 let lastPollTime = null;
 let challengeActive = true;
 let remaining = CHALLENGE_DURATION;
 let highscoreSaved = false;
-const PLAYER_VELO_ID = 2;
+
+function getDistancePlayer() {
+    return PLAYER_VELO_ID === 1 ? distanceA : distanceB;
+}
+
+function getDistanceOpponent() {
+    return OPPONENT_VELO_ID === 1 ? distanceA : distanceB;
+}
 
 function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -27,41 +51,39 @@ function formatDistance(km) {
 function updateTopSpeedDisplay() {
     const statTopSpeed = document.getElementById("stat-top-speed");
     if (statTopSpeed) {
-        statTopSpeed.textContent = topSpeedB.toFixed(1) + " km/h";
+        statTopSpeed.textContent = topSpeedPlayer.toFixed(1) + " km/h";
     }
 }
 
-function updateGauge(speedA, speedB) {
+function updateGauge(speedPlayer, speedOpponent) {
     if (!needle) return;
 
-    const diff = speedB - speedA;
+    const diff = speedOpponent - speedPlayer;
     const angle = clamp((diff / MAX_SPEED_DIFF) * MAX_ANGLE, -MAX_ANGLE, MAX_ANGLE);
     needle.style.transform = `translateX(-50%) rotate(${angle}deg)`;
 }
 
 function updateDistances() {
-    const duelDistanceA = document.getElementById("duel-distance-a");
-    const duelDistanceB = document.getElementById("duel-distance-b");
-    const duelBarA = document.getElementById("duel-bar-a");
-    const duelBarB = document.getElementById("duel-bar-b");
+    const duelOpponentDistance = document.getElementById("duel-opponent-distance");
+    const duelBarOpponent = document.getElementById("duel-bar-opponent");
     const duelLead = document.getElementById("duel-lead");
     const statDistance = document.getElementById("stat-distance");
 
-    const distTextA = formatDistance(distanceA);
-    const distTextB = formatDistance(distanceB);
+    const distPlayer = getDistancePlayer();
+    const distOpponent = getDistanceOpponent();
 
-    if (duelDistanceA) duelDistanceA.textContent = distTextA;
-    if (duelDistanceB) duelDistanceB.textContent = distTextB;
-    if (statDistance) statDistance.textContent = distTextB;
+    if (statDistance) statDistance.textContent = formatDistance(distPlayer);
+    if (duelOpponentDistance) duelOpponentDistance.textContent = formatDistance(distOpponent);
 
-    const maxDist = Math.max(distanceA, distanceB, 0.0001);
-    if (duelBarA) duelBarA.style.width = (distanceA / maxDist) * 100 + "%";
-    if (duelBarB) duelBarB.style.width = (distanceB / maxDist) * 100 + "%";
+    const maxDist = Math.max(distPlayer, distOpponent, 0.0001);
+    if (duelBarOpponent) {
+        duelBarOpponent.style.width = (distOpponent / maxDist) * 100 + "%";
+    }
 
     if (duelLead) {
-        if (distanceB > distanceA) {
+        if (distPlayer > distOpponent) {
             duelLead.textContent = "Du führst!";
-        } else if (distanceA > distanceB) {
+        } else if (distOpponent > distPlayer) {
             duelLead.textContent = "Du liegst zurück!";
         } else {
             duelLead.textContent = "Gleichstand!";
@@ -100,7 +122,8 @@ function updateChallengeProgress() {
 }
 
 async function saveHighscore() {
-    if (highscoreSaved || distanceB <= 0) return;
+    const distPlayer = getDistancePlayer();
+    if (highscoreSaved || distPlayer <= 0) return;
     highscoreSaved = true;
 
     try {
@@ -108,7 +131,7 @@ async function saveHighscore() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                distance_km: distanceB,
+                distance_km: distPlayer,
                 velo_id: PLAYER_VELO_ID,
             }),
         });
@@ -141,23 +164,64 @@ function startChallengeTimer() {
     }, 100);
 }
 
-async function loadSpeed() {
+async function loadPlayerName() {
     try {
-        const response = await fetch("api/updatespeed.php?t=" + Date.now());
+        const response = await fetch(`api/get-player-name.php?velo_id=${PLAYER_VELO_ID}`);
         const result = await response.json();
 
         if (result.status === "success") {
-            console.log("DEBUG - Received from DB:", result);
+            const playerNameBadge = document.getElementById("player-name-badge");
+            if (playerNameBadge) playerNameBadge.textContent = result.name;
+        }
+    } catch (error) {
+        console.error("Error loading player name:", error);
+    }
+}
+
+async function loadOpponentName() {
+    const opponentLabel = document.getElementById("opponent-label");
+    const opponentNameEl = document.getElementById("opponent-name");
+    const duelCard = document.getElementById("duel-card");
+
+    try {
+        const response = await fetch(`api/get-opponent-name.php?velo_id=${PLAYER_VELO_ID}`);
+        const result = await response.json();
+
+        if (result.status === "success") {
+            const label = OPPONENT_BIKE_LABEL;
+            if (opponentLabel) opponentLabel.textContent = label;
+            if (opponentNameEl) opponentNameEl.textContent = result.name;
+            if (duelCard) {
+                duelCard.classList.toggle("duel-card--opponent-a", OPPONENT_VELO_ID === 1);
+                duelCard.classList.toggle("duel-card--opponent-b", OPPONENT_VELO_ID === 2);
+            }
+        }
+    } catch (error) {
+        console.error("Error loading opponent name:", error);
+    }
+}
+
+async function loadSpeed() {
+    try {
+        const response = await fetch(
+            `api/updatespeed.php?velo_id=${PLAYER_VELO_ID}&t=${Date.now()}`
+        );
+        const result = await response.json();
+
+        if (result.status === "success") {
             document.querySelector("#speed").textContent = result.speed;
 
             const speedA = parseFloat(result.speeds["1"] || 0);
             const speedB = parseFloat(result.speeds["2"] || 0);
-            if (challengeActive && speedB > topSpeedB) {
-                topSpeedB = speedB;
+            const speedPlayer = PLAYER_VELO_ID === 1 ? speedA : speedB;
+            const speedOpponent = OPPONENT_VELO_ID === 1 ? speedA : speedB;
+
+            if (challengeActive && speedPlayer > topSpeedPlayer) {
+                topSpeedPlayer = speedPlayer;
                 updateTopSpeedDisplay();
             }
             integrateDistances(speedA, speedB);
-            updateGauge(speedA, speedB);
+            updateGauge(speedPlayer, speedOpponent);
         }
     } catch (error) {
         console.error("Error fetching speed:", error);
@@ -194,19 +258,22 @@ function toggleSimulation() {
     btn.textContent = "Stop simulation";
 }
 
-document.getElementById("simulate-btn")?.addEventListener("click", toggleSimulation);
+function initRacePage() {
+    document.body.dataset.veloId = String(PLAYER_VELO_ID);
 
-async function ensurePlayerSession() {
-    try {
-        await fetch("api/player-session.php?t=" + Date.now());
-    } catch (error) {
-        console.error("Failed to init player session:", error);
+    if (playerBadgeLabel) {
+        playerBadgeLabel.textContent = PLAYER_BIKE_LABEL;
     }
+
+    document.getElementById("simulate-btn")?.addEventListener("click", toggleSimulation);
+
+    loadPlayerName();
+    loadOpponentName();
+    startChallengeTimer();
+    updateDistances();
+    updateTopSpeedDisplay();
+    loadSpeed();
+    setInterval(loadSpeed, 1000);
 }
 
-ensurePlayerSession();
-startChallengeTimer();
-updateDistances();
-updateTopSpeedDisplay();
-loadSpeed();
-setInterval(loadSpeed, 1000);
+initRacePage();

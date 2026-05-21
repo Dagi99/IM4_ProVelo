@@ -275,6 +275,16 @@ body {
 .duel-bar__fill--b { background: var(--color-blue); }
 .duel-bar__fill--a { background: #555; }
 
+.duel-bar__fill--opponent { background: var(--color-blue); }
+
+.duel-card--opponent-a .duel-bar__fill--opponent {
+    background: var(--color-orange);
+}
+
+.duel-card--opponent-b .duel-bar__fill--opponent {
+    background: var(--color-blue);
+}
+
 /* ---- Mini stats row ---- */
 .mini-stats-row {
     display: grid;
