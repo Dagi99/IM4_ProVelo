@@ -6,15 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Challenge Name</title>
 
-    <link rel="stylesheet" href="../css/race.css">
-    <link rel="stylesheet" href="../css/challengeName.css">
+    <link rel="stylesheet" href="css/race.css">
+    <link rel="stylesheet" href="css/challengeName.css">
 </head>
 
 <body class="challenge-name-page">
 
 <div class="page challenge-name">
 
-    <a href="../index.html" class="back-link">
+    <a href="infoBikeB.html" class="back-link">
         ← Zurück
     </a>
 
@@ -33,12 +33,13 @@
             id="nameInput"
             type="text"
             maxlength="16"
-            value="Danino"
+            value=""
+            placeholder="Dein Name"
             class="name-input"
         >
 
         <span class="counter">
-            <span id="count">6</span>/16
+            <span id="count">0</span>/16
         </span>
     </div>
 
@@ -50,14 +51,7 @@
 
 </div>
 
-<script>
-    const input = document.getElementById('nameInput');
-    const count = document.getElementById('count');
-
-    input.addEventListener('input', () => {
-        count.textContent = input.value.length;
-    });
-</script>
+<script src="js/challengeName.js"></script>
 
 </body>
 </html>

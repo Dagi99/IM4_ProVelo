@@ -1,0 +1,183 @@
+/* ============================================
+   LEADERBOARD
+   basiert auf race.css (+ Karten aus style.css)
+   ============================================ */
+
+.leaderboard-page {
+    --color-orange-leaderboard: #e65c19;
+    --color-orange-grad: linear-gradient(180deg, #f07840, #e65c19);
+    --color-tab-inactive: #e8edf5;
+
+    min-height: 100vh;
+    background-color: var(--color-bg);
+}
+
+/* ---- Header ---- */
+
+.leaderboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-lg);
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    text-decoration: none;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-md);
+    font-weight: 600;
+}
+
+.back-button svg {
+    flex-shrink: 0;
+}
+
+.home-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--color-text-muted);
+    padding: var(--space-sm);
+    border-radius: var(--radius-md);
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.home-button:hover {
+    color: var(--color-text);
+    background-color: var(--color-tab-inactive);
+}
+
+/* ---- Section & title ---- */
+
+.leaderboard-section {
+    width: 100%;
+}
+
+.leaderboard-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--color-black);
+    margin-bottom: var(--space-lg);
+}
+
+/* ---- Tabs ---- */
+
+.leaderboard-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--color-tab-inactive);
+    border-radius: var(--radius-pill);
+    padding: 4px;
+    margin-bottom: var(--space-lg);
+}
+
+.leaderboard-tab {
+    border: none;
+    background: transparent;
+    border-radius: var(--radius-pill);
+    padding: 12px 16px;
+    font-family: var(--font-body);
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.leaderboard-tab--active {
+    background: var(--color-orange-grad);
+    color: var(--color-white);
+}
+
+/* ---- List & cards ---- */
+
+.leaderboard-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.leaderboard-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    background: var(--color-white);
+    border: 2px solid var(--color-black);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md) var(--space-lg);
+}
+
+.leaderboard-card__left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    min-width: 0;
+}
+
+.leaderboard-card__icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--color-orange-leaderboard);
+    color: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.leaderboard-card__icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.leaderboard-card__info {
+    min-width: 0;
+}
+
+.leaderboard-card__name {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.2;
+}
+
+.leaderboard-card__bike {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin-top: 2px;
+}
+
+.leaderboard-card__distance {
+    flex-shrink: 0;
+    font-size: var(--font-size-md);
+    font-weight: 500;
+    color: var(--color-text);
+    text-align: right;
+}
+
+.leaderboard-empty {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-md);
+    padding: var(--space-xl) var(--space-md);
+}
+
+/* ---- Mobile ---- */
+
+@media (max-width: 768px) {
+    .leaderboard-title {
+        font-size: var(--font-size-xl);
+    }
+
+    .leaderboard-card {
+        padding: var(--space-md);
+    }
+}

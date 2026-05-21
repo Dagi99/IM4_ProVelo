@@ -13,6 +13,8 @@ let topSpeedB = 0;
 let lastPollTime = null;
 let challengeActive = true;
 let remaining = CHALLENGE_DURATION;
+let highscoreSaved = false;
+const PLAYER_VELO_ID = 2;
 
 function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -97,6 +99,27 @@ function updateChallengeProgress() {
     }
 }
 
+async function saveHighscore() {
+    if (highscoreSaved || distanceB <= 0) return;
+    highscoreSaved = true;
+
+    try {
+        const response = await fetch("api/save-highscore.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                distance_km: distanceB,
+                velo_id: PLAYER_VELO_ID,
+            }),
+        });
+        const result = await response.json();
+        console.log("Highscore save:", result);
+    } catch (error) {
+        console.error("Error saving highscore:", error);
+        highscoreSaved = false;
+    }
+}
+
 function startChallengeTimer() {
     if (!timerEl) return;
 
@@ -110,6 +133,7 @@ function startChallengeTimer() {
             challengeActive = false;
             timerEl.textContent = "0.0s";
             updateChallengeProgress();
+            saveHighscore();
             return;
         }
         timerEl.textContent = remaining.toFixed(1) + "s";
@@ -172,6 +196,15 @@ function toggleSimulation() {
 
 document.getElementById("simulate-btn")?.addEventListener("click", toggleSimulation);
 
+async function ensurePlayerSession() {
+    try {
+        await fetch("api/player-session.php?t=" + Date.now());
+    } catch (error) {
+        console.error("Failed to init player session:", error);
+    }
+}
+
+ensurePlayerSession();
 startChallengeTimer();
 updateDistances();
 updateTopSpeedDisplay();
