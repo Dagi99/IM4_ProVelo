@@ -13,6 +13,7 @@
     --color-blue-light: #4d8fff;
     --color-blue-dark:  #0047d4;
     --color-blue-grad:  linear-gradient(135deg, #1a6aff, #0047d4);
+    --color-orange:     #ff8c00;
     --color-text:       #1a1a2e;
     --color-text-muted: #7a8aaa;
     --color-border:     #c8d8ee;
@@ -281,12 +282,29 @@ body {
     margin: 20px auto;
 }
 
+.gauge-label {
+    position: absolute;
+    top: 8px;
+    z-index: 12;
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--color-text);
+}
+
+.gauge-label--a {
+    left: 24px;
+}
+
+.gauge-label--b {
+    right: 24px;
+}
+
 .gauge-background {
     width: 300px;
     height: 300px;
     border-radius: 50%;
-    background: linear-gradient(to right, #4CAF50 50%, #f44336 50%); /* Green vs Red */
-    display: flex;
+    background: linear-gradient(to right, var(--color-orange) 50%, var(--color-blue) 50%);
 }
 
 .needle {

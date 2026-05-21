@@ -1,10 +1,22 @@
 const MAX_ANGLE = 45;
 const MAX_SPEED_DIFF = 10;
+const CHALLENGE_DURATION = 90;
 
 const needle = document.querySelector("#gauge-needle");
+const timerEl = document.getElementById("timer");
+
+let distanceA = 0;
+let distanceB = 0;
+let lastPollTime = null;
+let challengeActive = true;
+let remaining = CHALLENGE_DURATION;
 
 function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
+}
+
+function formatDistance(km) {
+    return km.toFixed(2) + " km";
 }
 
 function updateGauge(speedA, speedB) {
@@ -13,6 +25,70 @@ function updateGauge(speedA, speedB) {
     const diff = speedB - speedA;
     const angle = clamp((diff / MAX_SPEED_DIFF) * MAX_ANGLE, -MAX_ANGLE, MAX_ANGLE);
     needle.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+}
+
+function updateDistances() {
+    const duelDistanceA = document.getElementById("duel-distance-a");
+    const duelDistanceB = document.getElementById("duel-distance-b");
+    const duelBarA = document.getElementById("duel-bar-a");
+    const duelBarB = document.getElementById("duel-bar-b");
+    const duelLead = document.getElementById("duel-lead");
+    const statDistance = document.getElementById("stat-distance");
+
+    const distTextA = formatDistance(distanceA);
+    const distTextB = formatDistance(distanceB);
+
+    if (duelDistanceA) duelDistanceA.textContent = distTextA;
+    if (duelDistanceB) duelDistanceB.textContent = distTextB;
+    if (statDistance) statDistance.textContent = distTextB;
+
+    const maxDist = Math.max(distanceA, distanceB, 0.0001);
+    if (duelBarA) duelBarA.style.width = (distanceA / maxDist) * 100 + "%";
+    if (duelBarB) duelBarB.style.width = (distanceB / maxDist) * 100 + "%";
+
+    if (duelLead) {
+        if (distanceB > distanceA) {
+            duelLead.textContent = "Du führst!";
+        } else if (distanceA > distanceB) {
+            duelLead.textContent = "Du liegst zurück!";
+        } else {
+            duelLead.textContent = "Gleichstand!";
+        }
+    }
+}
+
+function integrateDistances(speedA, speedB) {
+    if (!challengeActive) return;
+
+    const now = Date.now();
+    if (lastPollTime === null) {
+        lastPollTime = now;
+        return;
+    }
+
+    const elapsedSeconds = (now - lastPollTime) / 1000;
+    lastPollTime = now;
+
+    distanceA += speedA * (elapsedSeconds / 3600);
+    distanceB += speedB * (elapsedSeconds / 3600);
+    updateDistances();
+}
+
+function startChallengeTimer() {
+    if (!timerEl) return;
+
+    timerEl.textContent = remaining.toFixed(1) + "s";
+
+    setInterval(() => {
+        remaining -= 0.1;
+        if (remaining <= 0) {
+            remaining = 0;
+            challengeActive = false;
+            timerEl.textContent = "0.0s";
+            return;
+        }
+        timerEl.textContent = remaining.toFixed(1) + "s";
+    }, 100);
 }
 
 async function loadSpeed() {
@@ -26,6 +102,7 @@ async function loadSpeed() {
 
             const speedA = parseFloat(result.speeds["1"] || 0);
             const speedB = parseFloat(result.speeds["2"] || 0);
+            integrateDistances(speedA, speedB);
             updateGauge(speedA, speedB);
         }
     } catch (error) {
@@ -65,5 +142,7 @@ function toggleSimulation() {
 
 document.getElementById("simulate-btn")?.addEventListener("click", toggleSimulation);
 
+startChallengeTimer();
+updateDistances();
 loadSpeed();
 setInterval(loadSpeed, 1000);
