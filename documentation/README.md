@@ -102,12 +102,15 @@ Die Installation besteht aus folgenden Komponenten:
 * Um die Bauteile Produktionsgerecht zu gestalten wurden 3D-Modelle erstellt, welche zu den Komponenten passen und es ermöglichen diese am Fahrrad zu befestigen.
 
 * **Displayhalterung:** Für das Display ist eine Halterung vorgesehen, welcher per Kabelbinder am Lenker des Fahrrades montiert werden kann. Das Gehäuse hat Löcher für Kabelbinder (kein Metalldraht!) um am Lenker fixiert zu werden.
+
 ![3D Animation of a display mounting case, rotating](/documentation/ressources/IM4Velo_Box.gif)
 
 * **LED-Ring:** Für den LED-Ring, welcher die Geschwindigkeit wie ein Tacho anzeigen soll, wurde ein Teller-artiges Modell modeliert, in welches der Ring eingelassen werden kann. Auch hier sind Löcher in der Rückseite berücksichtig, um das Kreisförmige Teil fixieren zu können.
+
 ![3D Animation of a LED ring mounting case, rotating](/documentation/ressources/IM4Velo_LED-Ring.gif)
 
 * **Microcontroller-Box:** Für den Microcontroller wurde eine Box modelliert, welche die Elektronik schützt und Kabeldurchlässe berücksichtigt.
+
 ![3D Animation of a microcontroller case, rotating](/documentation/ressources/IM4Velo_Box.gif)
 
 
