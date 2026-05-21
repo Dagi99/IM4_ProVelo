@@ -81,6 +81,11 @@ Die Installation besteht aus folgenden Komponenten:
 * **Steckplan:** 
 ![Schematic plan of the breadboard with ESP32-C6, Button as Reed-Kontakt, OLED-Display und WS128b 12px LED Ring](/documentation/ressources/Steckplan.png)
 
+* Der Microcontroller ist zentrales Element des Systems und bedient alle anderen Komponenten. Alle untergeordneten Komponenten (OLED-Display, WS128b 12px LED Ring) beziehen Ground, VCC, Daten und ggf. Clock vom Microcontroller. Der Reed-Kontakt wird per Input Pullup-Modus an GPIO erfasst.
+* OLED-Display wird mit SDA an GPIO 21, mit SCL an GPIO 22 angeschlossen.
+* Der Reed-Kontakt wird zwischen 5V und GPIO 4 angeschlossen.
+* Der Datenkontakt des WS128b 12px LED Ring wird an GPIO 7 angeschlossen.
+
 ---
 
 ## Technische Details
@@ -103,15 +108,15 @@ Die Installation besteht aus folgenden Komponenten:
 
 * **Displayhalterung:** Für das Display ist eine Halterung vorgesehen, welcher per Kabelbinder am Lenker des Fahrrades montiert werden kann. Das Gehäuse hat Löcher für Kabelbinder (kein Metalldraht!) um am Lenker fixiert zu werden.
 
-![3D Animation of a display mounting case, rotating](/documentation/ressources/IM4Velo_Box.gif)
+* ![3D Animation of a display mounting case, rotating](/documentation/ressources/IM4Velo_Box.gif)
 
 * **LED-Ring:** Für den LED-Ring, welcher die Geschwindigkeit wie ein Tacho anzeigen soll, wurde ein Teller-artiges Modell modeliert, in welches der Ring eingelassen werden kann. Auch hier sind Löcher in der Rückseite berücksichtig, um das Kreisförmige Teil fixieren zu können.
 
-![3D Animation of a LED ring mounting case, rotating](/documentation/ressources/IM4Velo_LED-Ring.gif)
+* ![3D Animation of a LED ring mounting case, rotating](/documentation/ressources/IM4Velo_LED-Ring.gif)
 
 * **Microcontroller-Box:** Für den Microcontroller wurde eine Box modelliert, welche die Elektronik schützt und Kabeldurchlässe berücksichtigt.
 
-![3D Animation of a microcontroller case, rotating](/documentation/ressources/IM4Velo_Box.gif)
+* ![3D Animation of a microcontroller case, rotating](/documentation/ressources/IM4Velo_Box.gif)
 
 
 ---
