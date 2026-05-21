@@ -10,9 +10,9 @@
 * **Team WebApp:** `[NOTIZ: Namen ergänzen]`
  
 ### Problemstellung & Systemzweck
-  Das Projekt löst kein klassisches Alltagsproblem, sondern adressiert die spielerische Motivation zur körperlichen Aktivität im öffentlichen Raum. Es verbindet physische Bewegung mit digitalem Wettbewerb, um Barrieren abzubauen und Menschen (z. B. auf Events wie dem Polenta- oder Satelfest von Pro Velo) aktiv einzubinden.
+  Das Projekt löst kein klassisches Alltagsproblem, sondern ist spezifisch auf eine Installation im öffentlichen Raum angelegt. Es verbindet die physische Bewegung auf einem Fahrrad mit der digitalen Erfassung in einem digitalen Wettbewerb. Die Installation wird entwickelt für die "Polenta" und dem "Satelfest" von Pro Velo in Chur.
 
-  Ziel ist es, eine interaktive und motivierende Erfahrung zu schaffen, bei der Besucher\*innen ihre Leistung direkt erleben können. Durch das Tracken von Echtzeitdaten (Geschwindigkeit, Distanz) und das Bereitstellen einer Live-Rangliste entsteht ein Gamification-Ansatz, der zu Bewegung und kleinen Wettkämpfen anspornt.
+  Ziel ist es, eine interaktive und motivierende Erfahrung zu schaffen, bei der Besucher\*innen ihre Leistung direkt sehen können. Durch das Tracken von Echtzeitdaten (Geschwindigkeit, Distanz) und das Bereitstellen einer Live-Rangliste entsteht ein Gamification-Ansatz, der zu Bewegung und kleinen Wettkämpfen anspornt.
 
 ---
 
@@ -24,12 +24,12 @@
 
 #### Features und Produktlogik
 * **Angedachte Features:**
-  * Fahrer-Anmeldung mit einem selbst gewählten Namen vor der Fahrt.
   * Echtzeit-Erfassung von Geschwindigkeit und Distanz über ein stationäres Fahrrad.
   * Live-Visualisierung der Fahrdaten auf einer Webapp.
+  * Fahrer-Anmeldung mit einem selbst gewählten Namen vor der Fahrt.
   * Bestenliste/Rangliste mit den höchsten erreichten Geschwindigkeiten.
   * Separater, passwortgeschützter Administratorbereich zur Steuerung und Datenbereinigung.
-  * Reduziertes physisches Display (OLED) für Core-Daten
+  * Reduziertes physisches Display am Lenker für Core-Daten
 * **Nicht umgesetzte Features:**
   `[NOTIZ: Welche Features wurden nicht umgesetzt und warum? Bitte hier ergänzen]`
 
@@ -60,8 +60,9 @@ Die Installation besteht aus folgenden Komponenten:
 * Stationäres, aufgebocktes Fahrrad. Je Fahrrad:
 * **ESP32-C6**  Zentrale Steuereinheit
 * **Reed-Kontakt und zugehöriger Magnet an Speiche** (Erfassung der Rad- bzw. Pedalumdrehungen)
-* **OLED-Display** (Direkte Anzeige der Geschwindigkeit vor Ort)
-* **WS128b LED Ring** (Visuelle Darstellung der Geschwindigkeit)
+* **OLED-Display** (Direkte Anzeige der Geschwindigkeit am Rad)
+* **WS128b 12px LED Ring** (Visuelle Darstellung der Geschwindigkeit)
+* **3D Druck Bauteile** (als Gehäuse und Montage)
 
 #### Kommunikationsprozess der Komponenten
 1. **Pedalbewegung:** Beim Tretten bewegt sich ein Magnet am Reed-Kontakt vorbei und schliesst den Schalter-Kontakt
@@ -72,21 +73,7 @@ Die Installation besteht aus folgenden Komponenten:
 6. **Webapp-Darstellung:** Die Webapp greift auf die Datenbank zu und visualisiert Daten und Ranglisten live.
 
 
-``
-
-[Pedalbewegung/Magnet]
-│
-▼
-[Reed-Kontakt] ──(Digitales Signal)──► [ESP32-C6]
-│
-┌─────────────────────┴─────────────────────┐
-▼ (I²C)                                     ▼ (WLAN)
-[OLED-Display]                              [Datenbank / Server]
-(Geschwindigkeit & Status)                              │
-▼
-[Webapp / Smartphone]
-
-``
+![Not-accurate diagram of the data flow in the project](./ressources/Flowdiagramm.pngpng)
 
 #### Komponentenplan & Steckplan
 * **Komponentenplan:** `[NOTIZ: Schaubild einfügen/verlinken, das Komponenten, Sensoren, Aktoren, Dateinamen der Programme und Kommunikationswege zeigt]`
