@@ -101,8 +101,7 @@ Die Installation besteht aus folgenden Komponenten:
 ## 3D-Modelle
 * Um die Bauteile Produktionsgerecht zu gestalten wurden 3D-Modelle erstellt, welche zu den Komponenten passen und es ermöglichen diese am Fahrrad zu befestigen.
 
-* **Displayhalterung:**
-* Für das Display ist eine Halterung vorgesehen, welcher per Kabelbinder am Lenker des Fahrrades montiert werden kann. Das Gehäuse hat Löcher für Kabelbinder (kein Metalldraht!) um am Lenker fixiert zu werden.
+* **Displayhalterung:**Für das Display ist eine Halterung vorgesehen, welcher per Kabelbinder am Lenker des Fahrrades montiert werden kann. Das Gehäuse hat Löcher für Kabelbinder (kein Metalldraht!) um am Lenker fixiert zu werden.
 ![3D Animation of a display mounting case, rotating](/documentation/ressources/IM4Velo_Box.gif)
 
 * **3D-Modell:** `[NOTIZ: Schaubild einfügen/verlinken, das das 3D-Modell des Projektes zeigt]`
