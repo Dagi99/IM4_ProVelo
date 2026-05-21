@@ -22,31 +22,17 @@
         BIKE B
     </div>
 
-    <h1>Wie heisst du?</h1>
+    <h1>Dein Name</h1>
 
     <p class="subtitle">
-        Erscheint auf der Rangliste.
+        Wird zufällig vergeben und erscheint auf der Rangliste.
     </p>
 
-    <div class="input-wrap">
-        <input
-            id="nameInput"
-            type="text"
-            maxlength="16"
-            value=""
-            placeholder="Dein Name"
-            class="name-input"
-        >
-
-        <span class="counter">
-            <span id="count">0</span>/16
-        </span>
-    </div>
+    <div class="name-display" id="assignedName">Wird geladen…</div>
+    <p class="name-error" id="nameError" hidden></p>
 
     <div class="bottom-actions">
-        <button class="btn challenge-btn">
-            Weiter →
-        </button>
+        <a href="race.html" class="btn challenge-btn challenge-btn--disabled" id="continueBtn" aria-disabled="true">Weiter →</a>
     </div>
 
 </div>
