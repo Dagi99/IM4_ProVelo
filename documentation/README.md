@@ -73,7 +73,7 @@ Die Installation besteht aus folgenden Komponenten:
 6. **Webapp-Darstellung:** Die Webapp greift auf die Datenbank zu und visualisiert Daten und Ranglisten live.
 
 
-![Not-accurate diagram of the data flow in the project](./ressources/Flowdiagramm.pngpng)
+![Not-accurate diagram of the data flow in the project](ressources/Flowdiagramm.png)
 
 #### Komponentenplan & Steckplan
 * **Komponentenplan:** `[NOTIZ: Schaubild einfügen/verlinken, das Komponenten, Sensoren, Aktoren, Dateinamen der Programme und Kommunikationswege zeigt]`
