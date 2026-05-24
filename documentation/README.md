@@ -147,3 +147,12 @@ In der Umsetzung dieses Projektes wurde KI in Code-Produktion und Code-Troublesh
 
 ### Fazit
 `[NOTIZ: Abschliessendes Fazit zum Projektfortschritt und dem Endergebnis bei den Events.]`
+
+
+Notizen für den finanlen Reflexionstext:
+
+* Mark: Vor allem die Konzentration auf den Designaspekte des Prototyp war und ist für mich gewöhnungsbedürftig. Die Zeit und der Umfang des Kurses reicht nicht wirklich aus, um einen Prototypen vollständig zu entwickeln. Ein qualitativer Proof-of-Konzept hätte für den Lernerfolg deutlich größeres Potenzial.
+
+Notizen für den finalen Fazit-Text:
+* Mark: Das Projekt war eine gute Gelegenheit, die Arbeit im Team zu üben. Grade Kommunikation kann ein Knackpunkt sein. Im großen und ganzen bin ich aber zufrieden mit dem Ergebnis. Die Rahmenbedingungen waren z.T. eher ungünstig, weil Informationen über die Anforderungen an das Produkt und die Einsatzumgebung nicht gesammelt zur Verfügung standen.
+
