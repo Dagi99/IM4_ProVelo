@@ -38,6 +38,9 @@ const duelCard = document.getElementById("duel-card");
 const statSpeed = document.getElementById("speed");
 const statDistance = document.getElementById("stat-distance");
 const statTopSpeed = document.getElementById("stat-top-speed");
+const raceStatusEl = document.getElementById("race-status");
+
+let redirectedToLeaderboard = false;
 
 function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -70,6 +73,16 @@ function formatDistance(km) {
 function renderStatus(status) {
     const player = status.player;
     const opponent = status.opponent;
+
+    if (raceStatusEl) {
+        if (status.state === "waiting") {
+            raceStatusEl.textContent = "Warte auf den Gegner…";
+        } else if (status.state === "running") {
+            raceStatusEl.textContent = "Challenge läuft";
+        } else if (status.state === "finished") {
+            raceStatusEl.textContent = "Challenge beendet";
+        }
+    }
 
     // Labels
     const playerBikeLabel = PLAYER_VELO_ID === 1 ? "BIKE A" : "BIKE B";
@@ -119,6 +132,14 @@ function renderStatus(status) {
     const distanceA = (player.velo_id === 1 ? distPlayer : distOpponent);
     const distanceB = (player.velo_id === 2 ? distPlayer : distOpponent);
     updateGaugeByLead(distanceB - distanceA);
+
+    if (!redirectedToLeaderboard && status.state === "finished") {
+        redirectedToLeaderboard = true;
+        // Give the server a moment to persist results
+        setTimeout(() => {
+            window.location.href = "leaderboard.html";
+        }, 1200);
+    }
 }
 
 async function sendHeartbeat() {
