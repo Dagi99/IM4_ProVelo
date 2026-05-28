@@ -41,6 +41,8 @@ const statTopSpeed = document.getElementById("stat-top-speed");
 const raceStatusEl = document.getElementById("race-status");
 
 let redirectedToLeaderboard = false;
+let lastState = null;
+let lastStartedAt = null;
 
 function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -99,6 +101,12 @@ function renderStatus(status) {
     // Timer/progress
     setTimerAndProgress(status.remaining_s, status.duration_s);
 
+    // Reset redirect guard when a new challenge starts
+    if (status.started_at && status.started_at !== lastStartedAt) {
+        lastStartedAt = status.started_at;
+        redirectedToLeaderboard = false;
+    }
+
     // Stat card (player)
     if (statSpeed) statSpeed.textContent = (player.speed_kmh || 0).toFixed(1);
     if (statDistance) statDistance.textContent = formatDistance(player.distance_km || 0);
@@ -133,13 +141,21 @@ function renderStatus(status) {
     const distanceB = (player.velo_id === 2 ? distPlayer : distOpponent);
     updateGaugeByLead(distanceB - distanceA);
 
-    if (!redirectedToLeaderboard && status.state === "finished") {
+    // Only redirect when we observe a transition to finished (avoid immediate redirect
+    // when loading a page after a previous challenge already ended).
+    if (
+        !redirectedToLeaderboard &&
+        lastState === "running" &&
+        status.state === "finished"
+    ) {
         redirectedToLeaderboard = true;
         // Give the server a moment to persist results
         setTimeout(() => {
             window.location.href = "leaderboard.html";
         }, 1200);
     }
+
+    lastState = status.state;
 }
 
 async function sendHeartbeat() {
