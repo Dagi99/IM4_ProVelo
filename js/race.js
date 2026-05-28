@@ -113,8 +113,12 @@ function renderStatus(status) {
         duelCard.classList.toggle("duel-card--opponent-b", OPPONENT_VELO_ID === 2);
     }
 
-    // Gauge based on lead (distance diff, opponent - player)
-    updateGaugeByLead(distOpponent - distPlayer);
+    // Gauge should always point to the global leader side:
+    // - left/orange when Bike A (velo_id=1) leads
+    // - right/blue when Bike B (velo_id=2) leads
+    const distanceA = (player.velo_id === 1 ? distPlayer : distOpponent);
+    const distanceB = (player.velo_id === 2 ? distPlayer : distOpponent);
+    updateGaugeByLead(distanceB - distanceA);
 }
 
 async function sendHeartbeat() {
