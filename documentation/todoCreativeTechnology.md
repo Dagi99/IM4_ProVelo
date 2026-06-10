@@ -1,20 +1,20 @@
 # IM4_ProVelo – offene Aufgaben
 
-##Organisation
+## Organisation
 - Velo
 - LED
 - Rüttelmotor
 
-##Kommunikation
+## Kommunikation
 - ESP → Touch Designer (via OSC)
 
-##Steuerung (Touch Designer)
+## Steuerung (Touch Designer)
 - LED
 - Rüttelmotor
 
 ---
 
-##Plan LED
+## Plan LED
 
 - **LED Strip am Velo vorne** – der Gewinner leuchtet auf
 - **Rüttelmotor** – startet ab einer gewissen Geschwindigkeit
