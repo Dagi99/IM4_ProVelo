@@ -1,8 +1,20 @@
-ToDo:
-Organisation Velo, LED, Rüttelmotor
-Kommunikation ESP -> Touch Designer (mit OSC)
-Touch Designer Steuerung LED / RÜttelmotor
+# IM4_ProVelo – offene Aufgaben
 
-Plan LED:
-LED Strip an Velo vorne, der Gewinner leuchtet.
-Ab gewisse Geschwindigkeit start Rüttelmotor
+##Organisation
+- Velo
+- LED
+- Rüttelmotor
+
+##Kommunikation
+- ESP → Touch Designer (via OSC)
+
+##Steuerung (Touch Designer)
+- LED
+- Rüttelmotor
+
+---
+
+##Plan LED
+
+- **LED Strip am Velo vorne** – der Gewinner leuchtet auf
+- **Rüttelmotor** – startet ab einer gewissen Geschwindigkeit
