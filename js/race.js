@@ -182,35 +182,8 @@ async function pollStatus() {
     }
 }
 
-let simulateInterval = null;
-
-async function simulateTick() {
-    try {
-        await fetch("api/simulate-speed.php?t=" + Date.now());
-    } catch (error) {
-        console.error("Error simulating speed:", error);
-    }
-}
-
-function toggleSimulation() {
-    const btn = document.getElementById("simulate-btn");
-    if (!btn) return;
-
-    if (simulateInterval) {
-        clearInterval(simulateInterval);
-        simulateInterval = null;
-        btn.textContent = "Simulate data";
-        return;
-    }
-
-    simulateTick();
-    simulateInterval = setInterval(simulateTick, 1000);
-    btn.textContent = "Stop simulation";
-}
-
 function init() {
     document.body.dataset.veloId = String(PLAYER_VELO_ID);
-    document.getElementById("simulate-btn")?.addEventListener("click", toggleSimulation);
 
     // Heartbeat 1s, status poll 1s (as requested)
     sendHeartbeat();

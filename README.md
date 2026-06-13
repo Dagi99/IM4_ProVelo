@@ -141,7 +141,7 @@ IM4_ProVelo/
 ├── login.html / register.html / admin.html
 ├── api/                    → PHP-Backend
 │   ├── challenge-status.php, challenge-heartbeat.php, assign-name.php
-│   ├── leaderboard.php, save-highscore.php
+│   ├── leaderboard.php
 │   ├── login.php, logout.php, protected.php, register.php
 │   └── admin/delete-highscore.php
 ├── js/                     → Frontend-Logik (race.js, leaderboard.js, admin.js, …)
@@ -185,7 +185,8 @@ Die Datenbank besteht aus **7 Tabellen** in einer MariaDB-Instanz. Es gibt keine
 
 **Hinweis:** `users` kann in der Produktion zusätzlich `firstname`/`lastname` enthalten (`profile.php`); in `system/db.sql` sind nur `id`, `email`, `password` definiert.
 
-
+[ERM Velo-Installation](/documentation/ressources/ERM.png)
+`[NOTIZ: Erklärung der Tabellenstrukturen (z.B. Users, Rides, Admins) sowie das grafische ERM-Schaubild hier einfügen]`
 
 ### Authentifizierung
 

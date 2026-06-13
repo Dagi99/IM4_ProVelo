@@ -209,8 +209,7 @@ try {
                         // challenge_results may not exist; ignore if not used.
                     }
 
-                    // 2) Save distance leaderboard using existing highscores table (best-only logic handled in save-highscore.php,
-                    // but we replicate minimal best logic here to avoid client-side posts).
+                    // 2) Save distance leaderboard (best-only logic inline below)
                     $bestStmt = $pdo->prepare('SELECT MAX(distance_km) AS best FROM highscores WHERE player_name = ? AND velo_id = ?');
                     $insertHs = $pdo->prepare('INSERT INTO highscores (player_name, velo_id, distance_km) VALUES (?, ?, ?)');
 

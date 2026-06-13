@@ -104,13 +104,6 @@ body {
 
 .btn:active { transform: scale(0.98); }
 
-.btn-simulate {
-    background: var(--color-blue-grad);
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
 .btn-danger-outline {
     background: var(--color-white);
     color: #e02020;
