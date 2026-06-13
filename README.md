@@ -155,7 +155,11 @@ Notizen für den finanlen Reflexionstext:
 
 Kamil: Wir haben uns für ein anspruchsvolles Projekt entschieden und dabei viel gelernt. Besonders spannend war die Zusammenarbeit zwischen dem Webapp- und dem Physical-Computing-Team. Das Projekt erforderte viel Zeit und Aufwand, da zahlreiche Herausforderungen und unerwartete Fehler gelöst werden mussten.
 
+Fadri: Physical Computing in der Praxis anzuwenden, war eine sehr gute Ergänzung zum bisherigen Stoff. Dass aus der ursprünglichen Idee ein umfangreicheres Projekt entstanden ist, machte die Arbeit zwar aufwendiger, aber auch deutlich spannender. Beim nächsten Mal würde ich allerdings mein persönliches Zeitmanagement noch etwas verbessern.
+
 Notizen für den finalen Fazit-Text:
 * Mark: Das Projekt war eine gute Gelegenheit, die Arbeit im Team zu üben. Grade Kommunikation kann ein Knackpunkt sein. Im großen und ganzen bin ich aber zufrieden mit dem Ergebnis. Die Rahmenbedingungen waren z.T. eher ungünstig, weil Informationen über die Anforderungen an das Produkt und die Einsatzumgebung nicht gesammelt zur Verfügung standen.
 
 Kamil: Insgesamt war das Projekt sehr lehrreich. Trotz des hohen Zeitaufwands und der zahlreichen Herausforderungen konnten wir viele praktische Erfahrungen sammeln und unser Wissen erweitern. Die Arbeit an einem komplexen Projekt hat uns gezeigt, wie wichtig eine gute Planung, Ausdauer und systematische Fehlersuche sind. Rückblickend sind wir mit dem Ergebnis zufrieden und konnten sowohl fachlich als auch persönlich viel dazulernen.
+
+Fadri:Das Projekt hat gezeigt, dass die Kommunikation bei einem solchen Vorhaben schwierig sein kann. Auch die Planung hätte im Vorfeld besser sein können, um den Aufwand gezielter abzufangen. Trotz dieser organisatorischen Herausforderungen und einiger technischer Hürden haben wir am Ende eine funktionierende Installation umgesetzt. Insgesamt bin ich mit dem Resultat zufrieden.
