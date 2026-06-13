@@ -17,13 +17,22 @@ try {
         : '';
 
     $sql = "
-        SELECT
-            player_name,
-            velo_id,
-            MAX(distance_km) AS distance_km
-        FROM highscores
-        WHERE 1 = 1 {$dateFilter}
-        GROUP BY player_name, velo_id
+        SELECT id, player_name, velo_id, distance_km, created_at
+        FROM (
+            SELECT
+                id,
+                player_name,
+                velo_id,
+                distance_km,
+                created_at,
+                ROW_NUMBER() OVER (
+                    PARTITION BY player_name, velo_id
+                    ORDER BY distance_km DESC, created_at DESC, id DESC
+                ) AS rn
+            FROM highscores
+            WHERE 1 = 1 {$dateFilter}
+        ) ranked
+        WHERE rn = 1
         ORDER BY distance_km DESC
         LIMIT 50
     ";
@@ -33,10 +42,12 @@ try {
 
     $entries = array_map(static function (array $row): array {
         return [
+            'id' => (int) $row['id'],
             'name' => $row['player_name'],
             'bike' => (int) $row['velo_id'] === 2 ? 'Bike B' : 'Bike A',
             'velo_id' => (int) $row['velo_id'],
             'distance_km' => (float) $row['distance_km'],
+            'created_at' => $row['created_at'],
         ];
     }, $rows);
 
