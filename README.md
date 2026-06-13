@@ -47,10 +47,47 @@
 
 `[NOTIZ: Hier kommt eine verständliche Schritt-für-Schritt-Anleitung für Aussenstehende rein.]`
 
-1. **Infrastruktur:** `[NOTIZ: Welche Server-Infrastruktur/Node-Version/PHP-Version wird benötigt?]`
-2. **Webserver-Installation:** `[NOTIZ: Befehle wie npm install / Composer install oder Klon-Anweisungen hier dokumentieren]`
-3. **Datenbank-Import:** `[NOTIZ: Wie wird die SQL-Datei importiert?]`
-4. **Datenbank-Credentials:** `[NOTIZ: In welcher Datei (.env / config.php) müssen die DB-Zugangsdaten eingetragen werden?]`
+1. **Infrastruktur:**
+- Webserver mit **PHP 8.x** (getestet mit PHP 8.4) und **MariaDB 10.6** (oder MySQL 8.x)
+- Schreibzugriff auf PHP-Sessions (Standard-Session-Handling für Login/Admin)
+- Optional: **HTTPS** für den Produktivbetrieb (empfohlen für Admin-Login)
+- Kein Node.js / npm / Composer erforderlich.
+2. **Webserver-Installation:**
+1. Repository klonen:
+      ```bash
+      git clone <repository-url>
+      cd IM4_ProVelo
+      ```
+   2. Gesamten Projektordner per **SFTP** ins Webroot des Hostings hochladen
+   3. Sicherstellen, dass folgende Pfade erreichbar sind:
+      - `index.html` → leitet auf `leaderboard.html` weiter
+      - `api/` → PHP-Backend (Login, Challenge, Rangliste, Admin)
+      - `PhysicalComputing/api/load.php` → Empfängt ESP-Geschwindigkeitsdaten
+   4. Keine weiteren Build-Schritte nötig (kein `npm install`, kein `composer install`).
+3. **Datenbank-Import:**
+   1. In **phpMyAdmin** (oder per CLI) eine leere Datenbank anlegen.
+   2. SQL-Dateien **in dieser Reihenfolge** importieren (Tab „SQL“ → Inhalt einfügen → Ausführen):
+      | Reihenfolge | Datei | Zweck |
+      |-------------|-------|--------|
+      | 1 | [`system/db.sql`](system/db.sql) | Tabelle `users` (Admin-Login) |
+      | 2 | [`system/speed.sql`](system/speed.sql) | Tabelle `speed` (ESP-Telemetrie) |
+      | 3 | [`resources/sql/assigned_names.sql`](resources/sql/assigned_names.sql) | Tabelle `assigned_names` (Spielernamen) |
+      | 4 | [`system/highscores.sql`](system/highscores.sql) | Rangliste |
+      | 5 | [`resources/sql/challenge_state.sql`](resources/sql/challenge_state.sql) | Challenge-Status |
+      | 6 | [`resources/sql/challenge_presence.sql`](resources/sql/challenge_presence.sql) | Anwesenheit der Bikes |
+      | 7 | [`resources/sql/challenge_results.sql`](resources/sql/challenge_results.sql) | Optional: detaillierte Ergebnisse |
+   3. Admin-Benutzer anlegen über `register.html`
+      ```
+4. **Datenbank-Credentials:**
+- Zugangsdaten in [`system/config.php`](system/config.php) eintragen:
+     ```php
+     $host = 'localhost';      // z. B. db-Host des Providers
+     $db   = 'deine_datenbank';
+     $user = 'dein_db_user';
+     $pass = 'dein_db_passwort';
+     ```
+   - Es gibt **keine** `.env`-Datei; alle PHP-APIs binden diese Datei per `require_once` ein.
+   - Nach dem Upload: Seite `leaderboard.html` öffnen (Rangliste) und `login.html` (Admin). Bei Verbindungsfehlern erscheint eine Meldung aus `config.php`.
 5. **Inbetriebnahme des physischen Artefakts:** Der ESP32 wird wie definert verkabelt. Anschliessend wird der Microcontroller per USB-Verbindung mit dem Computer verbunden. Zum Beispiel mit der Software *Arduino IDE* kann das Programm *speedometer.ino* hochgeladen werden. Zuvor muss in der IDE im Programmcode in Zeile 69 die *Velo-ID* festlegen (1 für Velo A, 2 für Velo B). In Zeile 50 bis 52 müssen die WLAN-Credentials und die Server-URL wie im Muster eingetragen werden.
 
 ---
