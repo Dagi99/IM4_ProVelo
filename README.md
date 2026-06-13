@@ -159,6 +159,31 @@ Systemübersicht: [Komponentenplan](/documentation/ressources/Komponentenplan.pn
 * Der ESP verpackt ca. einmal pro Sekunde die aktuell berechnete Geschwindigkeit in einem JSON-Objekt und sendet es als HTTP Post an die API des Server, welcher diese per PHP in der Datenbank speichert. 
 
 ### ERM (Entity-Relationship-Modell)
+
+Die Datenbank besteht aus **7 Tabellen** in einer MariaDB-Instanz. Es gibt keine separate Tabelle für Fahrräder: **Bike A** und **Bike B** werden über `velo_id` (1 bzw. 2) in mehreren Tabellen unterschieden.
+
+**Entitäten**
+
+| Tabelle | Zweck |
+|---------|--------|
+| `users` | Admin-Benutzer (Login für Highscore-Verwaltung) |
+| `speed` | Rohe Geschwindigkeits-Telemetrie vom ESP (kurzlebig, ~15 Min.) |
+| `assigned_names` | Pool zufälliger Spielernamen vor dem Rennen |
+| `highscores` | Rangliste: Distanz-Ergebnisse pro Spieler und Bike |
+| `challenge_state` | Globaler Challenge-Status (genau eine Zeile, id=1) |
+| `challenge_presence` | Heartbeat pro Bike (Anwesenheit am Rennen) |
+| `challenge_results` | Optional: Detail-Ergebnis pro Challenge-Runde |
+
+**Logische Beziehungen**
+
+- **`velo_id`** verknüpft `speed`, `challenge_presence`, `highscores`, `challenge_results` und (bei Zuweisung) `assigned_names` mit demselben physischen Fahrrad (1 = A, 2 = B).
+- **`assigned_names` → `highscores`:** Beim Rennende wird der Spielername als Text in `highscores.player_name` gespeichert (Kopie, kein FK).
+- **`challenge_state` → `challenge_results`:** Ergebnisse gehören zur Challenge-Runde über denselben `started_at`-Zeitstempel.
+- **`users`:** Steht isoliert; nur für Admin-Login, nicht für Besucher am Fahrrad.
+
+**Hinweis:** `users` kann in der Produktion zusätzlich `firstname`/`lastname` enthalten (`profile.php`); in `system/db.sql` sind nur `id`, `email`, `password` definiert.
+
+[ERM Velo-Installation](/documentation/ressources/ERM.png)
 `[NOTIZ: Erklärung der Tabellenstrukturen (z.B. Users, Rides, Admins) sowie das grafische ERM-Schaubild hier einfügen]`
 
 ### Authentifizierung
