@@ -21,8 +21,6 @@
 ### UX & Konzeption
 
 * **Figma:** [Link zum Figma](https://www.figma.com/design/lTifdIONmofy3zx2MQEjBC/IM-4-%E2%80%93-App-Konzeption-Velo-Race?node-id=78-325&t=3EO7N0VVxFRgnQxb-1)
-* **User Flow & Screen Flow:**
-  `[NOTIZ: Screenshot aus Figma hier einfügen oder verlinken]`
 
 #### Features und Produktlogik
 * **Angedachte Features:**
@@ -33,19 +31,17 @@
   * Separater, passwortgeschützter Administratorbereich zur Steuerung und Datenbereinigung.
   * Reduziertes physisches Display am Lenker für Core-Daten
 * **Nicht umgesetzte Features:**
-  `[NOTIZ: Welche Features wurden nicht umgesetzt und warum? Bitte hier ergänzen]`
+  * Benutzerdefinierte Namen wurden nicht implementiert. Nutzer\*innen bekommen einen zufälligen Namen zugeteilt.
 
 ---
 
 ## Setup
 
-* **WebApp:** [Link zur Website](http://link.zur.website) `[NOTIZ: Echten Link einfügen]`  
+* **WebApp:** [Link zur Website](https://provelo-allegra.piltoverprints.ch/leaderboard.html)
 * **Video-Dokumentation:** [Link zum Video auf Youtube](http://link.zum.video) `[NOTIZ: Echten Link einfügen]` 
 
 
 ### Installationsanleitung
-
-`[NOTIZ: Hier kommt eine verständliche Schritt-für-Schritt-Anleitung für Aussenstehende rein.]`
 
 1. **Infrastruktur:**
 - Webserver mit **PHP 8.x** (getestet mit PHP 8.4) und **MariaDB 10.6** (oder MySQL 8.x)
@@ -88,7 +84,10 @@
      ```
    - Es gibt **keine** `.env`-Datei; alle PHP-APIs binden diese Datei per `require_once` ein.
    - Nach dem Upload: Seite `leaderboard.html` öffnen (Rangliste) und `login.html` (Admin). Bei Verbindungsfehlern erscheint eine Meldung aus `config.php`.
-5. **Inbetriebnahme des physischen Artefakts:** Der ESP32 wird wie definert verkabelt. Anschliessend wird der Microcontroller per USB-Verbindung mit dem Computer verbunden. Zum Beispiel mit der Software *Arduino IDE* kann das Programm *speedometer.ino* hochgeladen werden. Zuvor muss in der IDE im Programmcode in Zeile 69 die *Velo-ID* festlegen (1 für Velo A, 2 für Velo B). In Zeile 50 bis 52 müssen die WLAN-Credentials und die Server-URL wie im Muster eingetragen werden.
+5. **Inbetriebnahme des physischen Artefakts:** Der ESP32 wird wie angegeben verkabelt. Anschliessend wird der Microcontroller per USB-Verbindung mit dem Computer verbunden. Zum Beispiel mit der Software *Arduino IDE* kann das Programm *speedometer.ino* hochgeladen werden.
+Zuvor muss
+- in der IDE im Programmcode in Zeile 69 die *Velo-ID* festlegen (1 für Velo A, 2 für Velo B).
+- in der IDE im Programmcode in Zeile 50 bis 52 müssen die *WLAN-Credentials* und die *Server-URL* wie im Muster eingetragen werden.
 
 ---
 
@@ -112,14 +111,14 @@ Die Installation besteht aus folgenden Komponenten:
 6. **Webapp-Darstellung:** Die Webapp greift auf die Datenbank zu und visualisiert Daten und Ranglisten live.
 
 
-![Not-accurate diagram of the data flow in the project](/documentation/ressources/Flowdiagramm.png)
+![Nicht akkurate Darstellung des Datenflusses im Projekt](/documentation/ressources/Flowdiagramm.png)
 
 #### Komponentenplan & Steckplan
 * **Komponentenplan:** `[NOTIZ: Schaubild einfügen/verlinken, das Komponenten, Sensoren, Aktoren, Dateinamen der Programme und Kommunikationswege zeigt]`
 ![Placeholder Picture](/documentation/ressources/Komponentenplan.png)
 
 * **Steckplan:** 
-![Schematic plan of the breadboard with ESP32-C6, Button as Reed-Kontakt, OLED-Display und WS128b 12px LED Ring](/documentation/ressources/Steckplan.png)
+![Schematische Darstellung des Aufbaus auf dem Breadbord mit ESP32-C6, Taster als Reed-Kontakt, OLED-Display und WS128b 12px LED Ring](/documentation/ressources/Steckplan.png)
 
 * Der Microcontroller ist zentrales Element des Systems und bedient alle anderen Komponenten. Alle untergeordneten Komponenten (OLED-Display, WS128b 12px LED Ring) beziehen Ground, VCC, Daten und ggf. Clock vom Microcontroller. Der Reed-Kontakt wird per Input Pullup-Modus an GPIO erfasst.
 * OLED-Display wird mit **SDA an GPIO 21, mit SCL an GPIO 22** angeschlossen.
@@ -131,8 +130,6 @@ Die Installation besteht aus folgenden Komponenten:
 ## Technische Details
 
 ### Projektstruktur / Code-Struktur
-
-Jede Quellcodedatei beginnt mit einem **Kopfkommentar** (HTML `<!-- -->`, PHP/JS `/** */`, CSS/SQL `/*` bzw. `--`), der den Zweck der Datei in ein bis drei Sätzen auf Deutsch beschreibt.
 
 ```
 IM4_ProVelo/
@@ -188,12 +185,10 @@ Systemübersicht: [Komponentenplan](/documentation/ressources/Komponentenplan.pn
 
 ## Known Bugs (Bekannte Probleme)
 
-* Wenn das Gerät an einen neuen Ort bewegt wird, kann der Microcontroller keine Verbindung zu einem neuen Netzwerk herstellen ohne das Programm erneut und angepasst zu flashen.
+* Wenn das Gerät an einen neuen Ort bewegt wird, kann der Microcontroller keine Verbindung zu einem neuen Netzwerk herstellen ohne das Programm erneut in der IDE anzupassen und zu flashen.
 * Der Umfang vom Rad als Berechnungsgrundlage für die Geschwindigkeit lässt sich nicht Benutzerseitig verändern.
-* `[NOTIZ: Was funktioniert noch nicht einwandfrei?]`
-* `[NOTIZ: Was ist während der Entwicklung aufgefallen?]`
-* `[NOTIZ: Welche Optimierungen könnten in einer Version 2.0 vorgenommen werden?]`
-
+* Das Flashen des Microcontrollers hat seine Tücken da der Code zwei Prozesse im ESP32 implementiert. Es ist wichtig, dass das korrekte Board in der IDE ausgewählt wird.
+* Wichtig ist eine stabile Anbringung am Rad, damit die Sensoren korrekt funktionieren und die Komponenten sich nicht lösen.
 ---
 
 ## Umsetzungsprozess
