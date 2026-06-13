@@ -1,6 +1,5 @@
 const MAX_ANGLE = 45;
-const MAX_SPEED_DIFF = 10;
-const CHALLENGE_DURATION = 90;
+const MAX_DIFF_KM = 0.05; // 50m gap -> full needle deflection
 
 function parseVeloId() {
     const velo = parseInt(new URLSearchParams(window.location.search).get("velo"), 10);
@@ -15,216 +14,167 @@ if (!veloId) {
 
 const PLAYER_VELO_ID = veloId;
 const OPPONENT_VELO_ID = veloId === 1 ? 2 : 1;
-const PLAYER_BIKE_LABEL = veloId === 1 ? "BIKE A" : "BIKE B";
-const OPPONENT_BIKE_LABEL = veloId === 1 ? "Bike B" : "Bike A";
 
 const needle = document.querySelector("#gauge-needle");
 const timerEl = document.getElementById("timer");
 const bikePos = document.getElementById("bikePos");
 const raceBarFill = document.getElementById("race-bar-fill");
+
 const playerBadgeLabel = document.getElementById("player-badge-label");
+const playerNameBadge = document.getElementById("player-name-badge");
 
-let distanceA = 0;
-let distanceB = 0;
-let topSpeedPlayer = 0;
-let lastPollTime = null;
-let challengeActive = true;
-let remaining = CHALLENGE_DURATION;
-let highscoreSaved = false;
+const playerLabel = document.getElementById("player-label");
+const playerName = document.getElementById("player-name");
+const playerDistanceEl = document.getElementById("duel-player-distance");
+const playerBarEl = document.getElementById("duel-bar-player");
 
-function getDistancePlayer() {
-    return PLAYER_VELO_ID === 1 ? distanceA : distanceB;
-}
+const opponentLabel = document.getElementById("opponent-label");
+const opponentName = document.getElementById("opponent-name");
+const opponentDistanceEl = document.getElementById("duel-opponent-distance");
+const opponentBarEl = document.getElementById("duel-bar-opponent");
+const duelLead = document.getElementById("duel-lead");
+const duelCard = document.getElementById("duel-card");
 
-function getDistanceOpponent() {
-    return OPPONENT_VELO_ID === 1 ? distanceA : distanceB;
-}
+const statSpeed = document.getElementById("speed");
+const statDistance = document.getElementById("stat-distance");
+const statTopSpeed = document.getElementById("stat-top-speed");
+const raceStatusEl = document.getElementById("race-status");
+
+let redirectedToLeaderboard = false;
+let lastState = null;
+let lastStartedAt = null;
 
 function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
 }
 
-function formatDistance(km) {
-    return km.toFixed(2) + " km";
-}
-
-function updateTopSpeedDisplay() {
-    const statTopSpeed = document.getElementById("stat-top-speed");
-    if (statTopSpeed) {
-        statTopSpeed.textContent = topSpeedPlayer.toFixed(1) + " km/h";
-    }
-}
-
-function updateGauge(speedPlayer, speedOpponent) {
+function updateGaugeByLead(diffKmOpponentMinusPlayer) {
     if (!needle) return;
-
-    const diff = speedOpponent - speedPlayer;
-    const angle = clamp((diff / MAX_SPEED_DIFF) * MAX_ANGLE, -MAX_ANGLE, MAX_ANGLE);
+    const angle = clamp((diffKmOpponentMinusPlayer / MAX_DIFF_KM) * MAX_ANGLE, -MAX_ANGLE, MAX_ANGLE);
     needle.style.transform = `translateX(-50%) rotate(${angle}deg)`;
 }
 
-function updateDistances() {
-    const duelOpponentDistance = document.getElementById("duel-opponent-distance");
-    const duelBarOpponent = document.getElementById("duel-bar-opponent");
-    const duelLead = document.getElementById("duel-lead");
-    const statDistance = document.getElementById("stat-distance");
+function setTimerAndProgress(remainingS, durationS) {
+    if (timerEl && remainingS !== null && remainingS !== undefined) {
+        timerEl.textContent = remainingS.toFixed(1) + "s";
+    }
 
-    const distPlayer = getDistancePlayer();
-    const distOpponent = getDistanceOpponent();
+    const progressPercent = remainingS === null || remainingS === undefined
+        ? 0
+        : clamp(((durationS - remainingS) / durationS) * 100, 0, 100);
+    const bikeLeft = remainingS !== null && remainingS <= 0 ? 100 : 2 + progressPercent * 0.96;
 
-    if (statDistance) statDistance.textContent = formatDistance(distPlayer);
-    if (duelOpponentDistance) duelOpponentDistance.textContent = formatDistance(distOpponent);
+    if (raceBarFill) raceBarFill.style.width = progressPercent + "%";
+    if (bikePos) bikePos.style.left = bikeLeft + "%";
+}
+
+function formatDistance(km) {
+    return (km || 0).toFixed(2) + " km";
+}
+
+function renderStatus(status) {
+    const player = status.player;
+    const opponent = status.opponent;
+
+    if (raceStatusEl) {
+        if (status.state === "waiting") {
+            raceStatusEl.textContent = "Warte auf den Gegner…";
+        } else if (status.state === "running") {
+            raceStatusEl.textContent = "Challenge läuft";
+        } else if (status.state === "finished") {
+            raceStatusEl.textContent = "Challenge beendet";
+        }
+    }
+
+    // Labels
+    const playerBikeLabel = PLAYER_VELO_ID === 1 ? "BIKE A" : "BIKE B";
+    const opponentBikeLabel = OPPONENT_VELO_ID === 1 ? "Bike A" : "Bike B";
+    if (playerBadgeLabel) playerBadgeLabel.textContent = playerBikeLabel;
+    if (playerLabel) playerLabel.textContent = opponentBikeLabel === "Bike A" ? "Bike B" : "Bike A";
+    if (opponentLabel) opponentLabel.textContent = opponentBikeLabel;
+
+    // Names
+    if (playerNameBadge) playerNameBadge.textContent = status.names?.[String(PLAYER_VELO_ID)] || "";
+    if (playerName) playerName.textContent = status.names?.[String(PLAYER_VELO_ID)] || "…";
+    if (opponentName) opponentName.textContent = status.names?.[String(OPPONENT_VELO_ID)] || "…";
+
+    // Timer/progress
+    setTimerAndProgress(status.remaining_s, status.duration_s);
+
+    // Reset redirect guard when a new challenge starts
+    if (status.started_at && status.started_at !== lastStartedAt) {
+        lastStartedAt = status.started_at;
+        redirectedToLeaderboard = false;
+    }
+
+    // Stat card (player)
+    if (statSpeed) statSpeed.textContent = (player.speed_kmh || 0).toFixed(1);
+    if (statDistance) statDistance.textContent = formatDistance(player.distance_km || 0);
+    if (statTopSpeed) statTopSpeed.textContent = (player.top_speed_kmh || 0).toFixed(1) + " km/h";
+
+    // Duel card (both)
+    const distPlayer = player.distance_km || 0;
+    const distOpponent = opponent.distance_km || 0;
+
+    if (playerDistanceEl) playerDistanceEl.textContent = formatDistance(distPlayer);
+    if (opponentDistanceEl) opponentDistanceEl.textContent = formatDistance(distOpponent);
 
     const maxDist = Math.max(distPlayer, distOpponent, 0.0001);
-    if (duelBarOpponent) {
-        duelBarOpponent.style.width = (distOpponent / maxDist) * 100 + "%";
-    }
+    if (playerBarEl) playerBarEl.style.width = (distPlayer / maxDist) * 100 + "%";
+    if (opponentBarEl) opponentBarEl.style.width = (distOpponent / maxDist) * 100 + "%";
 
     if (duelLead) {
-        if (distPlayer > distOpponent) {
-            duelLead.textContent = "Du führst!";
-        } else if (distOpponent > distPlayer) {
-            duelLead.textContent = "Du liegst zurück!";
-        } else {
-            duelLead.textContent = "Gleichstand!";
-        }
+        if (distPlayer > distOpponent) duelLead.textContent = "Du führst!";
+        else if (distOpponent > distPlayer) duelLead.textContent = "Du liegst zurück!";
+        else duelLead.textContent = "Gleichstand!";
     }
+
+    if (duelCard) {
+        duelCard.classList.toggle("duel-card--opponent-a", OPPONENT_VELO_ID === 1);
+        duelCard.classList.toggle("duel-card--opponent-b", OPPONENT_VELO_ID === 2);
+    }
+
+    // Gauge should always point to the global leader side:
+    // - left/orange when Bike A (velo_id=1) leads
+    // - right/blue when Bike B (velo_id=2) leads
+    const distanceA = (player.velo_id === 1 ? distPlayer : distOpponent);
+    const distanceB = (player.velo_id === 2 ? distPlayer : distOpponent);
+    updateGaugeByLead(distanceB - distanceA);
+
+    // Only redirect when we observe a transition to finished (avoid immediate redirect
+    // when loading a page after a previous challenge already ended).
+    if (
+        !redirectedToLeaderboard &&
+        lastState === "running" &&
+        status.state === "finished"
+    ) {
+        redirectedToLeaderboard = true;
+        // Give the server a moment to persist results
+        setTimeout(() => {
+            window.location.href = "leaderboard.html";
+        }, 1200);
+    }
+
+    lastState = status.state;
 }
 
-function integrateDistances(speedA, speedB) {
-    if (!challengeActive) return;
-
-    const now = Date.now();
-    if (lastPollTime === null) {
-        lastPollTime = now;
-        return;
-    }
-
-    const elapsedSeconds = (now - lastPollTime) / 1000;
-    lastPollTime = now;
-
-    distanceA += speedA * (elapsedSeconds / 3600);
-    distanceB += speedB * (elapsedSeconds / 3600);
-    updateDistances();
-}
-
-function updateChallengeProgress() {
-    const elapsed = CHALLENGE_DURATION - remaining;
-    const progressPercent = Math.min(100, (elapsed / CHALLENGE_DURATION) * 100);
-    const bikeLeft = remaining <= 0 ? 100 : 2 + progressPercent * 0.96;
-
-    if (raceBarFill) {
-        raceBarFill.style.width = progressPercent + "%";
-    }
-    if (bikePos) {
-        bikePos.style.left = bikeLeft + "%";
-    }
-}
-
-async function saveHighscore() {
-    const distPlayer = getDistancePlayer();
-    if (highscoreSaved || distPlayer <= 0) return;
-    highscoreSaved = true;
-
+async function sendHeartbeat() {
     try {
-        const response = await fetch("api/save-highscore.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                distance_km: distPlayer,
-                velo_id: PLAYER_VELO_ID,
-            }),
-        });
-        const result = await response.json();
-        console.log("Highscore save:", result);
-    } catch (error) {
-        console.error("Error saving highscore:", error);
-        highscoreSaved = false;
+        await fetch(`api/challenge-heartbeat.php?velo_id=${PLAYER_VELO_ID}&t=${Date.now()}`);
+    } catch (e) {
+        // ignore
     }
 }
 
-function startChallengeTimer() {
-    if (!timerEl) return;
-
-    timerEl.textContent = remaining.toFixed(1) + "s";
-    updateChallengeProgress();
-
-    setInterval(() => {
-        remaining -= 0.1;
-        if (remaining <= 0) {
-            remaining = 0;
-            challengeActive = false;
-            timerEl.textContent = "0.0s";
-            updateChallengeProgress();
-            saveHighscore();
-            return;
-        }
-        timerEl.textContent = remaining.toFixed(1) + "s";
-        updateChallengeProgress();
-    }, 100);
-}
-
-async function loadPlayerName() {
+async function pollStatus() {
     try {
-        const response = await fetch(`api/get-player-name.php?velo_id=${PLAYER_VELO_ID}`);
-        const result = await response.json();
-
-        if (result.status === "success") {
-            const playerNameBadge = document.getElementById("player-name-badge");
-            if (playerNameBadge) playerNameBadge.textContent = result.name;
+        const res = await fetch(`api/challenge-status.php?velo_id=${PLAYER_VELO_ID}&t=${Date.now()}`);
+        const json = await res.json();
+        if (json.status === "success") {
+            renderStatus(json);
         }
-    } catch (error) {
-        console.error("Error loading player name:", error);
-    }
-}
-
-async function loadOpponentName() {
-    const opponentLabel = document.getElementById("opponent-label");
-    const opponentNameEl = document.getElementById("opponent-name");
-    const duelCard = document.getElementById("duel-card");
-
-    try {
-        const response = await fetch(`api/get-opponent-name.php?velo_id=${PLAYER_VELO_ID}`);
-        const result = await response.json();
-
-        if (result.status === "success") {
-            const label = OPPONENT_BIKE_LABEL;
-            if (opponentLabel) opponentLabel.textContent = label;
-            if (opponentNameEl) opponentNameEl.textContent = result.name;
-            if (duelCard) {
-                duelCard.classList.toggle("duel-card--opponent-a", OPPONENT_VELO_ID === 1);
-                duelCard.classList.toggle("duel-card--opponent-b", OPPONENT_VELO_ID === 2);
-            }
-        }
-    } catch (error) {
-        console.error("Error loading opponent name:", error);
-    }
-}
-
-async function loadSpeed() {
-    try {
-        const response = await fetch(
-            `api/updatespeed.php?velo_id=${PLAYER_VELO_ID}&t=${Date.now()}`
-        );
-        const result = await response.json();
-
-        if (result.status === "success") {
-            document.querySelector("#speed").textContent = result.speed;
-
-            const speedA = parseFloat(result.speeds["1"] || 0);
-            const speedB = parseFloat(result.speeds["2"] || 0);
-            const speedPlayer = PLAYER_VELO_ID === 1 ? speedA : speedB;
-            const speedOpponent = OPPONENT_VELO_ID === 1 ? speedA : speedB;
-
-            if (challengeActive && speedPlayer > topSpeedPlayer) {
-                topSpeedPlayer = speedPlayer;
-                updateTopSpeedDisplay();
-            }
-            integrateDistances(speedA, speedB);
-            updateGauge(speedPlayer, speedOpponent);
-        }
-    } catch (error) {
-        console.error("Error fetching speed:", error);
+    } catch (e) {
+        console.error("Status poll failed:", e);
     }
 }
 
@@ -232,11 +182,7 @@ let simulateInterval = null;
 
 async function simulateTick() {
     try {
-        const response = await fetch("api/simulate-speed.php?t=" + Date.now());
-        const result = await response.json();
-        if (result.status === "success") {
-            loadSpeed();
-        }
+        await fetch("api/simulate-speed.php?t=" + Date.now());
     } catch (error) {
         console.error("Error simulating speed:", error);
     }
@@ -258,22 +204,15 @@ function toggleSimulation() {
     btn.textContent = "Stop simulation";
 }
 
-function initRacePage() {
+function init() {
     document.body.dataset.veloId = String(PLAYER_VELO_ID);
-
-    if (playerBadgeLabel) {
-        playerBadgeLabel.textContent = PLAYER_BIKE_LABEL;
-    }
-
     document.getElementById("simulate-btn")?.addEventListener("click", toggleSimulation);
 
-    loadPlayerName();
-    loadOpponentName();
-    startChallengeTimer();
-    updateDistances();
-    updateTopSpeedDisplay();
-    loadSpeed();
-    setInterval(loadSpeed, 1000);
+    // Heartbeat 1s, status poll 1s (as requested)
+    sendHeartbeat();
+    pollStatus();
+    setInterval(sendHeartbeat, 1000);
+    setInterval(pollStatus, 1000);
 }
 
-initRacePage();
+init();

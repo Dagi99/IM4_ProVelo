@@ -76,6 +76,7 @@ try {
         'status' => 'success',
         'name' => $name,
         'velo_id' => $veloId,
+        'assigned_at' => (new DateTime('now'))->format('Y-m-d H:i:s'),
     ]);
 } catch (PDOException $e) {
     if ($pdo->inTransaction()) {
