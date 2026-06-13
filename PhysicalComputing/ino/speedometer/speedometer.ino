@@ -8,7 +8,7 @@
 
 // Dieser Sketch misst die Anzahl der Kontaktschliessungen des Reed-Sensors,
 // berechnet daraus die Geschwindigkeit und zeigt sie auf dem Display an.
-// Zusaetzlich werden die Geschwindigkeitswerte regelmaessig an die Datenbank geschickt.
+// Zusätzlich werden die Geschwindigkeitswerte regelmäßig an die Datenbank geschickt.
 
 // =====================================================
 // Init OLED Display
