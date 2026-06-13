@@ -7,7 +7,7 @@
 * **Themenfeld:** Interaktive Velo-Installation (Bewegung, Wettbewerb & digitale Visualisierung)
 * **Name des Projekts:** `Interaktive Velo-Installation`   
 * **Team Physical Computing:** `, Mark Hamann`   
-* **Team WebApp:** `[NOTIZ: Namen ergänzen]`
+* **Team WebApp:** `Danino Giger, Kamil Matyja`
  
 ### Problemstellung & Systemzweck
   Das Projekt löst kein klassisches Alltagsproblem, sondern ist spezifisch auf eine Installation im öffentlichen Raum angelegt. Es verbindet die physische Bewegung auf einem Fahrrad mit der digitalen Erfassung in einem digitalen Wettbewerb. Die Installation wird entwickelt für die "Polenta" und dem "Satelfest" von Pro Velo in Chur.
