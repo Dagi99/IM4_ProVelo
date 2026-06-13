@@ -5,8 +5,8 @@
 
 * **Modul:** Interaktive Medien 4 an der Fachhochschule Graubünden (FS26)  
 * **Themenfeld:** Interaktive Velo-Installation (Bewegung, Wettbewerb & digitale Visualisierung)
-* **Name des Projekts:** `Interaktive Velo-Installation`   
-* **Team Physical Computing:** `, Mark Hamann`   Kamil Matyja`
+* **Name des Projekts:** Interaktive Velo-Installation
+* **Team Physical Computing:** Mark Hamann, Kamil Matyja
 * **Team WebApp:** `[NOTIZ: Namen ergänzen]`
  
 ### Problemstellung & Systemzweck
