@@ -6,17 +6,12 @@
 #include <Adafruit_SH110X.h>
 #include <Adafruit_NeoPixel.h>
 
-// Dieser Sketch misst die Anzahl der Kontaktschliessungen des Reed-Sensors,
-// berechnet daraus die Geschwindigkeit und zeigt sie auf dem Display an.
-// Zusätzlich werden die Geschwindigkeitswerte regelmäßig an die Datenbank geschickt.
-
 // =====================================================
 // Init OLED Display
 // =====================================================
 
 #define SCREEN_WIDTH   128
 #define SCREEN_HEIGHT   64
-
 #define DISPLAY_SDA    21
 #define DISPLAY_CLOCK  22
 
@@ -46,52 +41,48 @@ Adafruit_NeoPixel strip(
 // Init WiFi / Database
 // =====================================================
 
-//WLAN Zugangsdaten
 const char* ssid = "Marks iPhone";
 const char* pass = "passwort";
 const char* serverURL = "https://provelo-allegra.piltoverprints.ch/PhysicalComputing/api/load.php";
 
-// Nach wie vielen Millisekunden erneut WLAN probiert wird
 #define WIFI_RECONNECT_INTERVAL 5000
-// Delay wie oft die aktuelle Geschwindigkeit an den Server geschickt wird
 #define DATABASE_SEND_INTERVAL 1000
-// Entprellung des Reed-Sensors
 #define REED_DEBOUNCE_TIME 100
 
 // =====================================================
 // Fahrrad Einstellungen
 // =====================================================
 
-// Rad Umfang in Metern (Float)
 #define WHEEL_CIRCUMFERENCE 2.1
-
-// ID vom Velo, damit in der DB mehrere Velos unterschieden werden koennen
 #define VELO_ID 1
-
-// Max Skala LED Ring
 #define MAX_RING_SPEED 50.0
-
-// Maximal darstellbare Geschwindigkeit auf dem Display
 #define MAX_DISPLAY_SPEED 60.0
 
 // =====================================================
-// Variablen für Funktioun, Debouncing und Troubleshooting
+// Variablen für Funktionen, Debouncing und Troubleshooting
 // =====================================================
 
-unsigned long lastPulseTime = 0;
 unsigned long lastDisplayUpdate = 0;
 unsigned long lastWiFiReconnectAttempt = 0;
 unsigned long lastDatabaseSend = 0;
-unsigned long lastDebounceTime = 0;
 
-// speedKm ist die aktuell berechnete Geschwindigkeit
+// Für den Stand-Check im Loop (4 Sekunden)
+unsigned long lastPulseTime = 0; 
+
 float speedKmh = 0.0;
-
-bool lastReedState = HIGH;
 bool wifiConnected = false;
-
-// Falls etwas schieflaeuft, wird diese Meldung auf dem OLED angezeigt
 String displayErrorMessage = "Error";
+
+// =====================================================
+// Neue Variablen für den Hardware-Interrupt (ISR)
+// =====================================================
+
+volatile unsigned long isrLastPulseTime = 0;
+volatile unsigned long isrDeltaTime = 0;
+volatile bool newSpeedReady = false;
+
+// TaskHandle für den Datenbank-Upload auf Kern 0
+TaskHandle_t uploadTaskHandle;
 
 // =====================================================
 // Übersicht über verwendeten Funktionen
@@ -107,18 +98,52 @@ void updateLedRing();
 void updateDisplay();
 
 // =====================================================
+// Die Interrupt-Service-Routine (ISR)
+// =====================================================
+
+void IRAM_ATTR reedISR() {
+  unsigned long currentTime = millis();
+  
+  // Entprellung
+  if (currentTime - isrLastPulseTime >= REED_DEBOUNCE_TIME) {
+    if (isrLastPulseTime > 0) {
+      // Berechne die Zeit für exakt eine Radumdrehung sicher im Interrupt
+      isrDeltaTime = currentTime - isrLastPulseTime;
+      newSpeedReady = true;
+    }
+    isrLastPulseTime = currentTime;
+  }
+}
+
+// =====================================================
+// Die Task für Kern 0 (WLAN & Datenbank)
+// =====================================================
+
+void uploadTask(void * parameter) {
+  for(;;) { 
+    // WLAN-Status prüfen und ggf. neu verbinden (blockiert jetzt nur Kern 0)
+    ensureWiFiConnected();
+
+    // Datenbank-Upload Interval
+    if (millis() - lastDatabaseSend >= DATABASE_SEND_INTERVAL && speedKmh > 0) {
+      sendSpeedToDatabase(speedKmh);
+      lastDatabaseSend = millis();
+    }
+    
+    // Dem Watchdog-Timer des ESP32 Zeit zum Atmen geben (Verhindert Abstürze)
+    vTaskDelay(10 / portTICK_PERIOD_MS); 
+  }
+}
+
+// =====================================================
 // Setup/ESP Init
 // =====================================================
 
 void setup() {
-
   Serial.begin(115200);
 
   // Protokoll des Displays starten
   Wire.begin(DISPLAY_SDA, DISPLAY_CLOCK);
-
-  // Reed-Sensor Pin starten
-  pinMode(REED_PIN, INPUT_PULLUP);
 
   // Display initialisieren
   if (!display.begin(0x3C, true)) {
@@ -137,97 +162,85 @@ void setup() {
 
   // Startanimation abspielen
   showStartupAnimation();
+  
   // Versuch WLAN Verbindung
   connectWiFi();
+
+  // Reed-Sensor initialisieren und Interrupt aktivieren (FALLING = HIGH zu LOW)
+  pinMode(REED_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(REED_PIN), reedISR, FALLING);
+
+  // Startet den Upload-Task auf Kern 0
+  xTaskCreatePinnedToCore(
+    uploadTask,       // Die Funktion der Task
+    "UploadTask",     // Name der Task
+    10000,            // Stack-Größe
+    NULL,             // Parameter
+    1,                // Priorität
+    &uploadTaskHandle,// Handle
+    0                 // Läuft auf Kern 0
+  );
 
   Serial.println("System started");
 }
 
 // =====================================================
-// Loop
+// Loop (Läuft auf Kern 1 - Nur für Anzeige & Mathe)
 // =====================================================
 
 void loop() {
 
-  //Auslesen des Reed-Sensors
-  bool reedState = digitalRead(REED_PIN);
+  // Prüfen, ob der Interrupt eine neue Geschwindigkeit registriert hat
+  if (newSpeedReady) {
+    
+    // Interrupts kurz pausieren, um die Variable sicher zu lesen
+    noInterrupts();
+    unsigned long currentDelta = isrDeltaTime;
+    newSpeedReady = false;
+    interrupts();
 
-  // Wenn der Reed-Sensor von HIGH auf LOW wechselt, zaehlen wir das als eine Radumdrehung
-  if (lastReedState == HIGH && reedState == LOW) {
+    // Berechnung
+    float timeSeconds = currentDelta / 1000.0;
+    float speedMs = WHEEL_CIRCUMFERENCE / timeSeconds;
+    speedKmh = speedMs * 3.6;
 
-    unsigned long currentTime = millis();
-
-    // Entprellung: Nur Impulse verarbeiten, die genuegend Zeit seit dem letzten haben
-    if (currentTime - lastDebounceTime >= REED_DEBOUNCE_TIME) {
-
-      // Debounce-Zimer aktualisieren
-      lastDebounceTime = currentTime;
-
-      // Beim ersten Impuls koennen wir noch keine Geschwindigkeit berechnen, weil noch kein Vergleichswert vorhanden ist
-      if (lastPulseTime > 0) {
-
-        unsigned long deltaTime = currentTime - lastPulseTime;
-
-        if (deltaTime > 0) {
-
-          // Zeitdifferenz in Sekunden umrechnen
-          float timeSeconds = deltaTime / 1000.0;
-
-          // Aus Weg / Zeit zuerst m/s berechnen
-          float speedMs =
-            WHEEL_CIRCUMFERENCE / timeSeconds;
-
-          // Danach von m/s auf km/h umrechnen
-          speedKmh = speedMs * 3.6;
-
-          // Falls der Wert zu hoch wird, auf Anzeige-Maximum begrenzen
-          if (speedKmh > MAX_DISPLAY_SPEED) {
-            speedKmh = MAX_DISPLAY_SPEED;
-          }
-
-          Serial.print("Speed: ");
-          Serial.print(speedKmh);
-          Serial.println(" km/h");
-        }
-      }
-      //Festhalten, wann der letzte Impuls war
-      lastPulseTime = currentTime;
+    if (speedKmh > MAX_DISPLAY_SPEED) {
+      speedKmh = MAX_DISPLAY_SPEED;
     }
+
+    Serial.print("Speed: ");
+    Serial.print(speedKmh);
+    Serial.println(" km/h");
+    
+    // lastPulseTime aktualisieren für den Stand-Check
+    lastPulseTime = millis(); 
   }
 
-  // Speichern des aktuellen Zustands für den nächsten Durchlauf
-  lastReedState = reedState;
-
-  // Wenn länger nichts kommt, gehen wir davon aus, dass das Velo steht
+  // Wenn länger als 4 Sekunden kein Impuls kommt, Velo steht
   if (millis() - lastPulseTime > 4000) {
     speedKmh = 0;
   }
 
-  // Intervall basiertes schreiben der Geschwindigkeit in die Datenbank
-  if (millis() - lastDatabaseSend >= DATABASE_SEND_INTERVAL && speedKmh > 0) {
-    sendSpeedToDatabase(speedKmh);
-    lastDatabaseSend = millis();
-  }
-
-  // Ausgaben aktualisieren
-  ensureWiFiConnected();
+  // Ausgaben aktualisieren (laufen jetzt absolut flüssig)
   updateLedRing();
   updateDisplay();
 }
+
+// =====================================================
+// Hilfsfunktionen
+// =====================================================
 
 void connectWiFi() {
   Serial.printf("Verbinde mit WLAN %s\n", ssid);
   WiFi.begin(ssid, pass);
   int attempts = 0;
 
-  // Mehrere Versuche machen, bevor ein Fehler angezeigt wird
   while (WiFi.status() != WL_CONNECTED && attempts < 40) {
     delay(500);
     Serial.print(".");
     attempts++;
   }
 
-  // Erfolg melden
   if (WiFi.status() == WL_CONNECTED) {
     wifiConnected = true;
     clearDisplayError();
@@ -235,7 +248,6 @@ void connectWiFi() {
     return;
   }
 
-  // Fehler melden
   wifiConnected = false;
   setDisplayError("Keine WLAN\nVerbindung");
   Serial.println("\nWiFi Verbindung fehlgeschlagen");
@@ -257,7 +269,6 @@ bool ensureWiFiConnected() {
   wifiConnected = false;
   setDisplayError("Keine WLAN\nVerbindung");
 
-  // Nicht in jedem Loop sofort neu verbinden, sonst blockiert der Sketch zu stark
   if (millis() - lastWiFiReconnectAttempt >= WIFI_RECONNECT_INTERVAL) {
     lastWiFiReconnectAttempt = millis();
     connectWiFi();
@@ -265,19 +276,16 @@ bool ensureWiFiConnected() {
   return WiFi.status() == WL_CONNECTED;
 }
 
-// Sende die Geschwindigkeit an die Datenbank
 bool sendSpeedToDatabase(float speedValue) {
-  if (!ensureWiFiConnected()) {
+  if (!wifiConnected) {
     return false;
   }
 
-  // JSON fuer das PHP-Backend zusammenbauen
   JSONVar dataObject;
   dataObject["velo_id"] = VELO_ID;
   dataObject["wert"] = speedValue;
   String jsonString = JSON.stringify(dataObject);
 
-  // HTTP POST an die API schicken
   HTTPClient http;
   http.begin(serverURL);
   http.addHeader("Content-Type", "application/json");
@@ -288,17 +296,15 @@ bool sendSpeedToDatabase(float speedValue) {
     if (displayErrorMessage == "Kein Zugriff\nauf Datenbank") {
       clearDisplayError();
     }
-    Serial.printf("HTTP Response code: %d\n", httpResponseCode);
-    String response = http.getString();
-    if (response.length() > 0) {
-      Serial.println("Response: " + response);
-    }
+    // Auskommentiert, damit der Serial Monitor nicht überflutet wird,
+    // kann zum Debuggen wieder aktiviert werden.
+    // Serial.printf("HTTP Response code: %d\n", httpResponseCode);
     http.end();
     return true;
   }
 
   setDisplayError("Kein Zugriff\nauf Datenbank");
-
+  
   if (httpResponseCode > 0) {
     Serial.printf("HTTP Fehler: %d\n", httpResponseCode);
   } else {
@@ -319,8 +325,6 @@ void clearDisplayError() {
 
 void showStartupAnimation() {
   strip.clear();
-
-  // LEDs laufen einmal von gruen nach rot hoch
   for (int i = 0; i < STRIP_COUNT; i++) {
     int red = map(i, 0, STRIP_COUNT - 1, 0, 255);
     int green = map(i, 0, STRIP_COUNT - 1, 255, 0);
@@ -328,14 +332,12 @@ void showStartupAnimation() {
     strip.show();
     delay(80);
   }
-
   delay(250);
   strip.clear();
   strip.show();
 }
 
 void updateLedRing() {
-  // Je schneller das Velo ist, desto mehr LEDs leuchten
   int ledsToLight = map(
     constrain(speedKmh, 0, MAX_RING_SPEED),
     0,
@@ -347,7 +349,6 @@ void updateLedRing() {
   strip.clear();
 
   for (int i = 0; i < ledsToLight; i++) {
-    // Verlauf von gruen zu rot
     int red = map(i, 0, STRIP_COUNT - 1, 0, 255);
     int green = map(i, 0, STRIP_COUNT - 1, 255, 0);
     strip.setPixelColor(i, strip.Color(red, green, 0));
@@ -357,14 +358,12 @@ void updateLedRing() {
 }
 
 void updateDisplay() {
-  // Display nicht in jedem Loop neu zeichnen, damit es ruhiger laeuft
   if (millis() - lastDisplayUpdate <= 200) {
     return;
   }
 
   display.clearDisplay();
 
-  // Anzeige von Fehlermeldungen
   if (displayErrorMessage.length() > 0) {
     display.setTextSize(1);
     display.setCursor(0, 0);
@@ -381,7 +380,6 @@ void updateDisplay() {
   display.setCursor(0, 0);
   display.println("Speed");
 
-  //  Geschwindigkeitsanzeige
   display.setTextSize(5);
   display.setCursor(0, 18);
 
