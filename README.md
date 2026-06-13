@@ -176,7 +176,7 @@ Die Datenbank besteht aus **7 Tabellen** in einer MariaDB-Instanz. Es gibt keine
 
 **Logische Beziehungen**
 
-[ERM Velo-Installation](/documentation/ressources/ERM.png)
+![ERM Velo-Installation](/documentation/ressources/ERM.png)
 
 - **`velo_id`** verknüpft `speed`, `challenge_presence`, `highscores`, `challenge_results` und (bei Zuweisung) `assigned_names` mit demselben physischen Fahrrad (1 = A, 2 = B).
 - **`assigned_names` → `highscores`:** Beim Rennende wird der Spielername als Text in `highscores.player_name` gespeichert (Kopie, kein FK).
