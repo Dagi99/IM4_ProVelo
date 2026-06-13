@@ -162,6 +162,43 @@ Systemübersicht: [Komponentenplan](/documentation/ressources/Komponentenplan.pn
 `[NOTIZ: Erklärung der Tabellenstrukturen (z.B. Users, Rides, Admins) sowie das grafische ERM-Schaubild hier einfügen]`
 
 ### Authentifizierung
+
+Das System unterscheidet zwei getrennte Session-Konzepte: **öffentlicher Challenge-Betrieb** (Besucher am Fahrrad) und **geschützter Admin-Bereich** (Highscores verwalten).
+
+#### Admin-Bereich (Login)
+
+Der Admin-Zugang schützt ausschliesslich die Verwaltung der Rangliste — nicht die öffentlichen Seiten wie Rangliste, Rennen oder Namens-Zuweisung.
+
+**Registrierung und Login**
+- Neue Admins registrieren sich über `register.html` → `api/register.php`.
+- Das Passwort wird serverseitig mit `password_hash()` gehasht und in der Tabelle `users` gespeichert (`system/db.sql`).
+- Der Login über `login.html` → `api/login.php` prüft E-Mail und Passwort mit `password_verify()`.
+- Bei Erfolg startet PHP eine **Session** und speichert `user_id` und `email` in `$_SESSION`.
+- Zur Absicherung wird die Session-ID nach Login mit `session_regenerate_id()` erneuert; das Session-Cookie ist `HttpOnly`.
+
+**Geschützte Seiten und APIs**
+- `admin.html` lädt `js/auth.js`, das beim Seitenaufruf `api/protected.php` abfragt (`credentials: "include"`).
+- Ist keine gültige Session vorhanden, antwortet `protected.php` mit **HTTP 401** — der Browser wird zu `login.html` weitergeleitet.
+- Auch serverseitig geschützt: z. B. `api/admin/delete-highscore.php` prüft `isset($_SESSION['user_id'])` und lehnt unautorisierte Requests ab.
+- **Logout:** `logout.js` ruft `api/logout.php` auf, leert und zerstört die Session, danach Redirect zu `login.html`.
+
+**Rollenmodell**
+- Es gibt **keine separate Admin-Rolle** in der Datenbank: **jeder eingeloggte Benutzer** aus `users` gilt als Admin und darf Highscores löschen.
+
+#### Challenge-Spieler (ohne Login)
+
+Besucher am Fahrrad müssen sich **nicht** anmelden.
+
+- Auf `challengeName.html` vergibt `api/assign-name.php` einen **Zufallsnamen** aus `assigned_names` und speichert ihn in der **PHP-Session** pro Bike (`velo_id` 1 oder 2).
+- Der Name bleibt für diese Browser-Session erhalten (`$_SESSION['players']`, `player_name`).
+- Challenge-Logik und Rangliste-Speicherung laufen über `api/challenge-status.php` serverseitig; die öffentliche Rangliste (`leaderboard.html`) ist ohne Login erreichbar.
+
+#### Sicherheitshinweise
+
+- Echte Autorisierung passiert **immer serverseitig** (PHP prüft die Session); Frontend-Redirects in `auth.js` sind nur UX.
+- Admin-APIs dürfen sensible Aktionen nicht allein im Frontend verstecken — Löschen ist nur mit gültiger Session möglich.
+- Für Produktion wird **HTTPS** empfohlen (`session.cookie_secure` in `login.php` ist vorbereitet, aber auskommentiert).
+- ESP-Daten (`PhysicalComputing/api/load.php`) und öffentliche Challenge-APIs sind **nicht** admin-geschützt (Installation im öffentlichen Raum).
 `[NOTIZ: Erklärung einfügen, wie die Authentifizierung für den Administratorbereich und das Session-Handling der User gelöst wurde]`
 
 ---
