@@ -1,73 +1,158 @@
-# 🔑👤 Authentifizierung Minimal (Boilerplate)
 
-![Static Badge](https://img.shields.io/badge/Sprache-PHP-%23f7df1e)
-![Static Badge](https://img.shields.io/badge/Kurs-MMP_IM4-blue)
-![Last Changed](https://img.shields.io/endpoint?url=https://badges.crazy-internet.ch/im4_example.php)
+# README: Interaktive Velo-Installation
 
-> 🎨 Dieses Boilerplate kann entweder in einem Code-Along Schritt für Schritt gemeinsam erarbeitet werden oder fixfertig auf einem Webserver installiert werden.
+## Kurzbeschreibung des Projekts
 
-Dieses Repository beinhaltet ein vollständiges, minimales Authenzifizierungs-System basierend auf PHP als Backend und HTML/CSS/JS als Frontend.
+* **Modul:** Interaktive Medien 4 an der Fachhochschule Graubünden (FS26)  
+* **Themenfeld:** Interaktive Velo-Installation (Bewegung, Wettbewerb & digitale Visualisierung)
+* **Name des Projekts:** `Interaktive Velo-Installation`   
+* **Team Physical Computing:** `, Mark Hamann`   
+* **Team WebApp:** `[NOTIZ: Namen ergänzen]`
+ 
+### Problemstellung & Systemzweck
+  Das Projekt löst kein klassisches Alltagsproblem, sondern ist spezifisch auf eine Installation im öffentlichen Raum angelegt. Es verbindet die physische Bewegung auf einem Fahrrad mit der digitalen Erfassung in einem digitalen Wettbewerb. Die Installation wird entwickelt für die "Polenta" und dem "Satelfest" von Pro Velo in Chur.
 
-Es ermöglicht Benutzern das `Registrieren`, `Anmelden`, `Abmelden` und den Zugriff auf eine `geschützte Seite` nach erfolgreicher Authentifizierung.
+  Ziel ist es, eine interaktive und motivierende Erfahrung zu schaffen, bei der Besucher\*innen ihre Leistung direkt sehen können. Durch das Tracken von Echtzeitdaten (Geschwindigkeit, Distanz) und das Bereitstellen einer Live-Rangliste entsteht ein Gamification-Ansatz, der zu Bewegung und kleinen Wettkämpfen anspornt.
 
-Eine einfache Erklärung des Login-Ablaufs mit Sessions und Cookies findest du in [`sessions.md`](sessions.md).
+  Entwickelt wurde ein - theoretisch skalierbares System - welches je Fahrrad eine Microcontroller mit Peripherie benötigt. In unserem Aufbau haben wir zwei Fahrräder umgesetzt.
 
-# 🏁 Live - Version
+---
 
-Du kannst Homely unter folgendem Link testen:
+### UX & Konzeption
 
-[https://im4.crazy-internet.ch/](https://im4.crazy-internet.ch/)
+* **Figma:** [Link zum Figma](https://www.figma.com/design/lTifdIONmofy3zx2MQEjBC/IM-4-%E2%80%93-App-Konzeption-Velo-Race?node-id=78-325&t=3EO7N0VVxFRgnQxb-1) `[NOTIZ: Echten Link einfügen]`
+* **User Flow & Screen Flow:**
+  `[NOTIZ: Screenshot aus Figma hier einfügen oder verlinken]`
 
-## ⚙️ Installation
+#### Features und Produktlogik
+* **Angedachte Features:**
+  * Echtzeit-Erfassung von Geschwindigkeit und Distanz über ein stationäres Fahrrad.
+  * Live-Visualisierung der Fahrdaten auf einer Webapp.
+  * Fahrer-Anmeldung mit einem selbst gewählten Namen vor der Fahrt.
+  * Bestenliste/Rangliste mit den höchsten erreichten Geschwindigkeiten.
+  * Separater, passwortgeschützter Administratorbereich zur Steuerung und Datenbereinigung.
+  * Reduziertes physisches Display am Lenker für Core-Daten
+* **Nicht umgesetzte Features:**
+  `[NOTIZ: Welche Features wurden nicht umgesetzt und warum? Bitte hier ergänzen]`
 
-Um dieses Boilerplate auf dem eigenen Web-Server zu installieren, führe folgende Schritte aus:
+---
 
-### 1. Download
+## Setup
 
-- [Klone das Repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) über GitHub oder [downloade das Repository als ZIP Datei](https://docs.github.com/en/repositories/working-with-files/using-files/downloading-source-code-archives) auf deinen eigenen Computer.
+* **WebApp:** [Link zur Website](http://link.zur.website) `[NOTIZ: Echten Link einfügen]`  
+* **Video-Dokumentation:** [Link zum Video auf Youtube](http://link.zum.video) `[NOTIZ: Echten Link einfügen]` 
 
-### 2. Datenbank
 
-- Erstelle eine neue Datenbank bei deinem Hoster (z.B. [Infomaniak](https://www.infomaniak.com/de/support/faq/1981/mysqlmariadb-benutzer-und-datenbanken-verwalten)).
+### Installationsanleitung WebApp
 
-- Importiere die Datei `system/database.sql` in die neue Datenbank, um die `users` Tabelle zu erstellen.
+`[NOTIZ: Hier kommt eine verständliche Schritt-für-Schritt-Anleitung für Aussenstehende rein.]`
 
-### 3. Code
+1. **Infrastruktur:** `[NOTIZ: Welche Server-Infrastruktur/Node-Version/PHP-Version wird benötigt?]`
+2. **Webserver-Installation:** `[NOTIZ: Befehle wie npm install / Composer install oder Klon-Anweisungen hier dokumentieren]`
+3. **Datenbank-Import:** `[NOTIZ: Wie wird die SQL-Datei importiert?]`
+4. **Datenbank-Credentials:** `[NOTIZ: In welcher Datei (.env / config.php) müssen die DB-Zugangsdaten eingetragen werden?]`
+5. **Inbetriebnahme des physischen Artefakts:** `[NOTIZ: Wie wird der ESP32 geflasht? Wo trägt man die WLAN-Credentials im Code ein?]`
 
-- Benenne die Datei `system/config.php.blank` in `system/config.php` um.
+---
 
-- Passe die Datenbankverbindungsdaten in der Datei `system/config.php` an.
+### Bauanleitung Physical Computing
 
-### 4. FTP Connect
+#### Komponenten & Bauteile
+Die Installation besteht aus folgenden Komponenten:
+* Stationäres, aufgebocktes Fahrrad. Je Fahrrad:
+* **ESP32-C6**  Zentrale Steuereinheit
+* **Reed-Kontakt und zugehöriger Magnet an Speiche** (Erfassung der Rad- bzw. Pedalumdrehungen)
+* **OLED-Display** (Direkte Anzeige der Geschwindigkeit am Rad)
+* **WS128b 12px LED Ring** (Visuelle Darstellung der Geschwindigkeit)
+* **3D Druck Bauteile** (als Gehäuse und Montage)
 
-- Erstelle eine neue FTP Verbindung mit dem SFTP Plugin gemäss [Anleitung im MMP 101](https://github.com/Interaktive-Medien/101-MMP/blob/main/resources/sftp.md).
+#### Kommunikationsprozess der Komponenten
+1. **Pedalbewegung:** Beim Tretten bewegt sich ein Magnet am Reed-Kontakt vorbei und schliesst den Schalter-Kontakt
+2. **Erfassung:** Der Reed-Kontakt (eingestellt im *Input-Pullup-Modus*) registriert das Signal an einem GPIO-Pin des ESP32-C6.
+3. **Verarbeitung:** Der ESP32-C6 berechnet aus den Impulsen in Echtzeit Geschwindigkeit und Distanz.
+4. **Lokale Anzeige:** Die aktuelle Geschwindigkeit wird auf dem OLED-Display und LED-Ring ausgegeben.
+5. **Übertragung:** Die Daten werden alle Sekunde per WLAN an einen Server gesendet und in der Datenbank gespeichert.
+6. **Webapp-Darstellung:** Die Webapp greift auf die Datenbank zu und visualisiert Daten und Ranglisten live.
 
-# 📁 Struktur
 
-## 🎨 Frontend
+![Not-accurate diagram of the data flow in the project](/documentation/ressources/Flowdiagramm.png)
 
-### root (Basis-Verzeichnis)
+#### Komponentenplan & Steckplan
+* **Komponentenplan:** `[NOTIZ: Schaubild einfügen/verlinken, das Komponenten, Sensoren, Aktoren, Dateinamen der Programme und Kommunikationswege zeigt]`
+![Placeholder Picture](/documentation/ressources/Komponentenplan.png)
 
-- beinhaltet alle HTML-Dateien des Frontends.
-- beinhaltet die `.gitignore` Datei, welche die Dateien und Verzeichnisse ausblendet, die nicht auf GitHub hochgeladen werden sollen.
+* **Steckplan:** 
+![Schematic plan of the breadboard with ESP32-C6, Button as Reed-Kontakt, OLED-Display und WS128b 12px LED Ring](/documentation/ressources/Steckplan.png)
 
-### js
+* Der Microcontroller ist zentrales Element des Systems und bedient alle anderen Komponenten. Alle untergeordneten Komponenten (OLED-Display, WS128b 12px LED Ring) beziehen Ground, VCC, Daten und ggf. Clock vom Microcontroller. Der Reed-Kontakt wird per Input Pullup-Modus an GPIO erfasst.
+* OLED-Display wird mit **SDA an GPIO 21, mit SCL an GPIO 22** angeschlossen.
+* Der Reed-Kontakt wird **zwischen 5V und GPIO 4** angeschlossen.
+* Der Datenkontakt des WS128b 12px LED Ring wird an **GPIO 7** angeschlossen.
 
-- beinhaltet alle JavaScript-Dateien des Frontends.
+---
 
-### css
+## Technische Details
 
-- beinhaltet alle CSS-Dateien des Frontends.
+### Projektstruktur / Code-Struktur
+`[NOTIZ: Hier die Verzeichnisstruktur einfügen (z.B. als Baumdiagramm). Wichtig: Jede Datei muss im Kopfbereich eine kurze Zusammenfassung enthalten.]`
 
-## 🤖 Backend
+### Datenschnittstelle
+* Der ESP verpackt ca. einmal pro Sekunde die aktuell berechnete Geschwindigkeit in einem JSON-Objekt und sendet es als HTTP Post an die API des Server, welcher diese per PHP in der Datenbank speichert. 
 
-### api
+### ERM (Entity-Relationship-Modell)
+`[NOTIZ: Erklärung der Tabellenstrukturen (z.B. Users, Rides, Admins) sowie das grafische ERM-Schaubild hier einfügen]`
 
-- Beinhaltet alle API-Endpunkte des Backends.
-- Diese Dateien werden von `JavaScript` aufgerufen und geben eine Antwort an `JavaScript` zurück.
+### Authentifizierung
+`[NOTIZ: Erklärung einfügen, wie die Authentifizierung für den Administratorbereich und das Session-Handling der User gelöst wurde]`
 
-### system
+---
+## 3D-Modelle
+* Um die Bauteile Produktionsgerecht zu gestalten wurden 3D-Modelle erstellt, welche zu den Komponenten passen und es ermöglichen diese am Fahrrad zu befestigen.
 
-- Beinhaltet die Konfigurationsdatei für die Datenbankverbindung.
-- Beinhaltet die Datei `database.sql`, die die `users` Tabelle erstellt.
-- Beinhaltet die Datei `config.php`, die die Konfiguration des Backends enthält.
+* **Displayhalterung:** Für das Display ist eine Halterung vorgesehen, welcher per Kabelbinder am Lenker des Fahrrades montiert werden kann. Das Gehäuse hat Löcher für Kabelbinder (kein Metalldraht!) um am Lenker fixiert zu werden.
+
+* ![3D Animation of a display mounting case, rotating](/documentation/ressources/IM4Velo_Display.gif)
+
+* **LED-Ring:** Für den LED-Ring, welcher die Geschwindigkeit wie ein Tacho anzeigen soll, wurde ein Teller-artiges Modell modeliert, in welches der Ring eingelassen werden kann. Auch hier sind Löcher in der Rückseite berücksichtig, um das Kreisförmige Teil fixieren zu können.
+
+* ![3D Animation of a LED ring mounting case, rotating](/documentation/ressources/IM4Velo_LED-Ring.gif)
+
+* **Microcontroller-Box:** Für den Microcontroller wurde eine Box modelliert, welche die Elektronik schützt und Kabeldurchlässe berücksichtigt.
+
+* ![3D Animation of a microcontroller case, rotating](/documentation/ressources/IM4Velo_Box.gif)
+
+
+---
+
+## Known Bugs (Bekannte Probleme)
+
+* Wenn das Gerät an einen neuen Ort bewegt wird, kann der Microcontroller keine Verbindung zu einem neuen Netzwerk herstellen ohne das Programm erneut und angepasst zu flashen.
+* Der Umfang vom Rad als Berechnungsgrundlage für die Geschwindigkeit lässt sich nicht Benutzerseitig verändern.
+* `[NOTIZ: Was funktioniert noch nicht einwandfrei?]`
+* `[NOTIZ: Was ist während der Entwicklung aufgefallen?]`
+* `[NOTIZ: Welche Optimierungen könnten in einer Version 2.0 vorgenommen werden?]`
+
+---
+
+## Umsetzungsprozess
+
+### Reflexion / Erfahrung / Lernfortschritt
+`[NOTIZ: Was wurde gelernt? Würdet ihr es wieder so machen? Was lief gut/schlecht?]`
+
+### Herausforderungen & Lösungen
+`[NOTIZ: Welche Fehler traten auf, welche Ansätze wurden verworfen, wie sahen die Umplanungen aus?]`
+
+### KI-Einsatz
+In der Umsetzung dieses Projektes wurde KI in Code-Produktion und Code-Troubleshooting verwendet.
+
+### Fazit
+`[NOTIZ: Abschliessendes Fazit zum Projektfortschritt und dem Endergebnis bei den Events.]`
+
+
+Notizen für den finanlen Reflexionstext:
+
+* Mark: Vor allem die Konzentration auf den Designaspekte des Prototyp war und ist für mich gewöhnungsbedürftig. Die Zeit und der Umfang des Kurses reicht nicht wirklich aus, um einen Prototypen vollständig zu entwickeln. Ein qualitativer Proof-of-Konzept hätte für den Lernerfolg deutlich größeres Potenzial.
+
+Notizen für den finalen Fazit-Text:
+* Mark: Das Projekt war eine gute Gelegenheit, die Arbeit im Team zu üben. Grade Kommunikation kann ein Knackpunkt sein. Im großen und ganzen bin ich aber zufrieden mit dem Ergebnis. Die Rahmenbedingungen waren z.T. eher ungünstig, weil Informationen über die Anforderungen an das Produkt und die Einsatzumgebung nicht gesammelt zur Verfügung standen.
+
