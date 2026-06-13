@@ -8,9 +8,7 @@
 
 # Webapp
 - Integration Datenbank für Reifendurchmesser
-- Löschung von Datensätzen älter als 1 Stunde außer Highscores
 - Admin-Seite
-- Rangliste
 
 
 

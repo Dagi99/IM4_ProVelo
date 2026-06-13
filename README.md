@@ -20,7 +20,7 @@
 
 ### UX & Konzeption
 
-* **Figma:** [Link zum Figma](https://www.figma.com/design/lTifdIONmofy3zx2MQEjBC/IM-4-%E2%80%93-App-Konzeption-Velo-Race?node-id=78-325&t=3EO7N0VVxFRgnQxb-1) `[NOTIZ: Echten Link einfügen]`
+* **Figma:** [Link zum Figma](https://www.figma.com/design/lTifdIONmofy3zx2MQEjBC/IM-4-%E2%80%93-App-Konzeption-Velo-Race?node-id=78-325&t=3EO7N0VVxFRgnQxb-1)
 * **User Flow & Screen Flow:**
   `[NOTIZ: Screenshot aus Figma hier einfügen oder verlinken]`
 
@@ -43,7 +43,7 @@
 * **Video-Dokumentation:** [Link zum Video auf Youtube](http://link.zum.video) `[NOTIZ: Echten Link einfügen]` 
 
 
-### Installationsanleitung WebApp
+### Installationsanleitung
 
 `[NOTIZ: Hier kommt eine verständliche Schritt-für-Schritt-Anleitung für Aussenstehende rein.]`
 
@@ -51,7 +51,7 @@
 2. **Webserver-Installation:** `[NOTIZ: Befehle wie npm install / Composer install oder Klon-Anweisungen hier dokumentieren]`
 3. **Datenbank-Import:** `[NOTIZ: Wie wird die SQL-Datei importiert?]`
 4. **Datenbank-Credentials:** `[NOTIZ: In welcher Datei (.env / config.php) müssen die DB-Zugangsdaten eingetragen werden?]`
-5. **Inbetriebnahme des physischen Artefakts:** `[NOTIZ: Wie wird der ESP32 geflasht? Wo trägt man die WLAN-Credentials im Code ein?]`
+5. **Inbetriebnahme des physischen Artefakts:** Der ESP32 wird wie definert verkabelt. Anschliessend wird der Microcontroller per USB-Verbindung mit dem Computer verbunden. Zum Beispiel mit der Software *Arduino IDE* kann das Programm *speedometer.ino* hochgeladen werden. Zuvor muss in der IDE im Programmcode in Zeile 69 die *Velo-ID* festlegen (1 für Velo A, 2 für Velo B). In Zeile 50 bis 52 müssen die WLAN-Credentials und die Server-URL wie im Muster eingetragen werden.
 
 ---
 

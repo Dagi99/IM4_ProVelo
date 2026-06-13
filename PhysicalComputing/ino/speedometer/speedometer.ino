@@ -47,8 +47,8 @@ Adafruit_NeoPixel strip(
 // =====================================================
 
 //WLAN Zugangsdaten
-const char* ssid = "tinkergarden";
-const char* pass = "strenggeheim";
+const char* ssid = "Marks iPhone";
+const char* pass = "passwort";
 const char* serverURL = "https://provelo-allegra.piltoverprints.ch/PhysicalComputing/api/load.php";
 
 // Nach wie vielen Millisekunden erneut WLAN probiert wird
@@ -157,38 +157,42 @@ void loop() {
 
     unsigned long currentTime = millis();
 
-    // Beim ersten Impuls koennen wir noch keine Geschwindigkeit berechnen, weil noch kein Vergleichswert vorhanden ist
-    if (lastPulseTime > 0) {
+    // Entprellung: Nur Impulse verarbeiten, die genuegend Zeit seit dem letzten haben
+    if (currentTime - lastDebounceTime >= REED_DEBOUNCE_TIME) {
 
-      unsigned long deltaTime = currentTime - lastPulseTime;
+      // Debounce-Zimer aktualisieren
+      lastDebounceTime = currentTime;
 
-      if (deltaTime > 0) {
+      // Beim ersten Impuls koennen wir noch keine Geschwindigkeit berechnen, weil noch kein Vergleichswert vorhanden ist
+      if (lastPulseTime > 0) {
 
-        // Zeitdifferenz in Sekunden umrechnen
-        float timeSeconds = deltaTime / 1000.0;
+        unsigned long deltaTime = currentTime - lastPulseTime;
 
-        // Aus Weg / Zeit zuerst m/s berechnen
-        float speedMs =
-          WHEEL_CIRCUMFERENCE / timeSeconds;
+        if (deltaTime > 0) {
 
-        // Danach von m/s auf km/h umrechnen
-        speedKmh = speedMs * 3.6;
+          // Zeitdifferenz in Sekunden umrechnen
+          float timeSeconds = deltaTime / 1000.0;
 
-        // Falls der Wert zu hoch wird, auf Anzeige-Maximum begrenzen
-        if (speedKmh > MAX_DISPLAY_SPEED) {
-          speedKmh = MAX_DISPLAY_SPEED;
+          // Aus Weg / Zeit zuerst m/s berechnen
+          float speedMs =
+            WHEEL_CIRCUMFERENCE / timeSeconds;
+
+          // Danach von m/s auf km/h umrechnen
+          speedKmh = speedMs * 3.6;
+
+          // Falls der Wert zu hoch wird, auf Anzeige-Maximum begrenzen
+          if (speedKmh > MAX_DISPLAY_SPEED) {
+            speedKmh = MAX_DISPLAY_SPEED;
+          }
+
+          Serial.print("Speed: ");
+          Serial.print(speedKmh);
+          Serial.println(" km/h");
         }
-
-        Serial.print("Speed: ");
-        Serial.print(speedKmh);
-        Serial.println(" km/h");
       }
+      //Festhalten, wann der letzte Impuls war
+      lastPulseTime = currentTime;
     }
-    //Festhalten, wann der letzte Impuls war
-    lastPulseTime = currentTime;
-
-    // Kurze Pause gegen Prellen
-    delay(20);
   }
 
   // Speichern des aktuellen Zustands für den nächsten Durchlauf
