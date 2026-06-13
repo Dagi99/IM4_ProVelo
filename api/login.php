@@ -2,8 +2,8 @@
 /**
  * login.php — Admin-Login per POST (E-Mail/Passwort), setzt PHP-Session (user_id, email).
  */
-ini_set('session.cookie_httponly', 1);
-// ini_set('session.cookie_secure', 1); // if using HTTPS
+
+ini_set('session.cookie_secure', 1); // if using HTTPS
 session_start();
 header('Content-Type: application/json');
 
