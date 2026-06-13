@@ -174,7 +174,7 @@ Der Admin-Zugang schützt ausschliesslich die Verwaltung der Rangliste — nicht
 - Das Passwort wird serverseitig mit `password_hash()` gehasht und in der Tabelle `users` gespeichert (`system/db.sql`).
 - Der Login über `login.html` → `api/login.php` prüft E-Mail und Passwort mit `password_verify()`.
 - Bei Erfolg startet PHP eine **Session** und speichert `user_id` und `email` in `$_SESSION`.
-- Zur Absicherung wird die Session-ID nach Login mit `session_regenerate_id()` erneuert; das Session-Cookie ist `HttpOnly`.
+- Zur Absicherung wird die Session-ID nach Login mit `session_regenerate_id()` erneuert; das Session-Cookie ist `secure`.
 
 **Geschützte Seiten und APIs**
 - `admin.html` lädt `js/auth.js`, das beim Seitenaufruf `api/protected.php` abfragt (`credentials: "include"`).
