@@ -185,9 +185,6 @@ Die Datenbank besteht aus **7 Tabellen** in einer MariaDB-Instanz. Es gibt keine
 
 **Hinweis:** `users` kann in der Produktion zusätzlich `firstname`/`lastname` enthalten (`profile.php`); in `system/db.sql` sind nur `id`, `email`, `password` definiert.
 
-[ERM Velo-Installation](/documentation/ressources/ERM.png)
-`[NOTIZ: Erklärung der Tabellenstrukturen (z.B. Users, Rides, Admins) sowie das grafische ERM-Schaubild hier einfügen]`
-
 ### Authentifizierung
 
 Das System unterscheidet zwei getrennte Session-Konzepte: **öffentlicher Challenge-Betrieb** (Besucher am Fahrrad) und **geschützter Admin-Bereich** (Highscores verwalten).
