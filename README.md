@@ -231,29 +231,23 @@ Besucher am Fahrrad müssen sich **nicht** anmelden.
 ## Umsetzungsprozess
 
 ### Reflexion / Erfahrung / Lernfortschritt
-`[NOTIZ: Was wurde gelernt? Würdet ihr es wieder so machen? Was lief gut/schlecht?]`
+
+Im Verlauf des Projekts konnten zahlreiche praktische Erfahrungen gesammelt und vorhandenes Wissen erweitert werden. Besonders wertvoll war die Verbindung zwischen Webentwicklung und Physical Computing, wodurch die Zusammenarbeit zwischen unterschiedlichen technischen Bereichen erprobt werden konnte. Die Umsetzung eines anspruchsvollen Projekts brachte viele neue Erkenntnisse, insbesondere im Bereich der Integration verschiedener Systeme, der Problemlösung und der iterativen Entwicklung.
+
+Ein wichtiger Lernaspekt war die Erkenntnis, dass die Entwicklung eines vollständigen und ausgereiften Prototyps innerhalb des zeitlichen Rahmens eines Kurses nur begrenzt realistisch ist. Rückblickend hätte eine stärkere Fokussierung auf einen qualitativen Proof-of-Concept möglicherweise einen höheren Lernerfolg ermöglicht. Gleichzeitig zeigte das Projekt, wie wichtig eine realistische Planung, klare Priorisierung und ein effizientes Zeitmanagement bei komplexen Entwicklungsprojekten sind.
 
 ### Herausforderungen & Lösungen
-`[NOTIZ: Welche Fehler traten auf, welche Ansätze wurden verworfen, wie sahen die Umplanungen aus?]`
+
+Während der Umsetzung traten verschiedene technische und organisatorische Herausforderungen auf. Die Kombination aus Webapplikation und Physical Computing führte zu unerwarteten Fehlern und einem erhöhten Aufwand bei der Fehlersuche und Integration der einzelnen Komponenten. Viele Probleme konnten durch systematisches Testen, wiederholte Anpassungen und eine iterative Vorgehensweise gelöst werden.
+
+Auch die Projektorganisation stellte eine Herausforderung dar. Die Anforderungen an das Endprodukt sowie die Bedingungen der späteren Einsatzumgebung waren nicht zu Beginn vollständig definiert, wodurch während der Entwicklung Umplanungen notwendig wurden. Dies verdeutlichte die Bedeutung einer frühzeitigen Anforderungsanalyse, einer kontinuierlichen Kommunikation und einer flexiblen Projektplanung.
 
 ### KI-Einsatz
-In der Umsetzung dieses Projektes wurde KI in Code-Produktion und Code-Troubleshooting verwendet.
+
+In der Umsetzung dieses Projektes wurde KI sowohl zur Unterstützung der Code-Produktion als auch beim Troubleshooting und der Fehlersuche eingesetzt. KI diente dabei als Hilfsmittel zur Analyse von Problemen, zur Erarbeitung von Lösungsansätzen und zur Beschleunigung wiederkehrender Entwicklungsaufgaben.
 
 ### Fazit
-`[NOTIZ: Abschliessendes Fazit zum Projektfortschritt und dem Endergebnis bei den Events.]`
 
+Das Projekt war insgesamt eine sehr lehrreiche Erfahrung und bot die Möglichkeit, die Zusammenarbeit im Team sowie die praktische Umsetzung eines komplexen technischen Systems zu vertiefen. Dabei wurde deutlich, wie entscheidend eine gute Kommunikation, eine sorgfältige Planung und eine strukturierte Vorgehensweise für den Erfolg eines Projekts sind.
 
-Notizen für den finanlen Reflexionstext:
-
-* Mark: Vor allem die Konzentration auf den Designaspekte des Prototyp war und ist für mich gewöhnungsbedürftig. Die Zeit und der Umfang des Kurses reicht nicht wirklich aus, um einen Prototypen vollständig zu entwickeln. Ein qualitativer Proof-of-Konzept hätte für den Lernerfolg deutlich größeres Potenzial.
-
-Kamil: Wir haben uns für ein anspruchsvolles Projekt entschieden und dabei viel gelernt. Besonders spannend war die Zusammenarbeit zwischen dem Webapp- und dem Physical-Computing-Team. Das Projekt erforderte viel Zeit und Aufwand, da zahlreiche Herausforderungen und unerwartete Fehler gelöst werden mussten.
-
-Fadri: Physical Computing in der Praxis anzuwenden, war eine sehr gute Ergänzung zum bisherigen Stoff. Dass aus der ursprünglichen Idee ein umfangreicheres Projekt entstanden ist, machte die Arbeit zwar aufwendiger, aber auch deutlich spannender. Beim nächsten Mal würde ich allerdings mein persönliches Zeitmanagement noch etwas verbessern.
-
-Notizen für den finalen Fazit-Text:
-* Mark: Das Projekt war eine gute Gelegenheit, die Arbeit im Team zu üben. Grade Kommunikation kann ein Knackpunkt sein. Im großen und ganzen bin ich aber zufrieden mit dem Ergebnis. Die Rahmenbedingungen waren z.T. eher ungünstig, weil Informationen über die Anforderungen an das Produkt und die Einsatzumgebung nicht gesammelt zur Verfügung standen.
-
-Kamil: Insgesamt war das Projekt sehr lehrreich. Trotz des hohen Zeitaufwands und der zahlreichen Herausforderungen konnten wir viele praktische Erfahrungen sammeln und unser Wissen erweitern. Die Arbeit an einem komplexen Projekt hat uns gezeigt, wie wichtig eine gute Planung, Ausdauer und systematische Fehlersuche sind. Rückblickend sind wir mit dem Ergebnis zufrieden und konnten sowohl fachlich als auch persönlich viel dazulernen.
-
-Fadri:Das Projekt hat gezeigt, dass die Kommunikation bei einem solchen Vorhaben schwierig sein kann. Auch die Planung hätte im Vorfeld besser sein können, um den Aufwand gezielter abzufangen. Trotz dieser organisatorischen Herausforderungen und einiger technischer Hürden haben wir am Ende eine funktionierende Installation umgesetzt. Insgesamt bin ich mit dem Resultat zufrieden.
+Trotz organisatorischer Schwierigkeiten, begrenzter Rahmenbedingungen und verschiedener technischer Hürden konnte eine funktionierende Installation realisiert werden. Insgesamt ist das Ergebnis zufriedenstellend und der Projektverlauf ermöglichte sowohl fachliche als auch methodische Weiterentwicklungen.
