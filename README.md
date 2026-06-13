@@ -114,8 +114,8 @@ Die Installation besteht aus folgenden Komponenten:
 ![Nicht akkurate Darstellung des Datenflusses im Projekt](/documentation/ressources/Flowdiagramm.png)
 
 #### Komponentenplan & Steckplan
-* **Komponentenplan:** `[NOTIZ: Schaubild einfügen/verlinken, das Komponenten, Sensoren, Aktoren, Dateinamen der Programme und Kommunikationswege zeigt]`
-![Placeholder Picture](/documentation/ressources/Komponentenplan.png)
+* **Komponentenplan:** 
+![Schematische Darstellung der Komponenten-Kommunikation](/documentation/ressources/Komponentenplan.png)
 
 * **Steckplan:** 
 ![Schematische Darstellung des Aufbaus auf dem Breadbord mit ESP32-C6, Taster als Reed-Kontakt, OLED-Display und WS128b 12px LED Ring](/documentation/ressources/Steckplan.png)
@@ -176,6 +176,8 @@ Die Datenbank besteht aus **7 Tabellen** in einer MariaDB-Instanz. Es gibt keine
 
 **Logische Beziehungen**
 
+[ERM Velo-Installation](/documentation/ressources/ERM.png)
+
 - **`velo_id`** verknüpft `speed`, `challenge_presence`, `highscores`, `challenge_results` und (bei Zuweisung) `assigned_names` mit demselben physischen Fahrrad (1 = A, 2 = B).
 - **`assigned_names` → `highscores`:** Beim Rennende wird der Spielername als Text in `highscores.player_name` gespeichert (Kopie, kein FK).
 - **`challenge_state` → `challenge_results`:** Ergebnisse gehören zur Challenge-Runde über denselben `started_at`-Zeitstempel.
@@ -183,8 +185,7 @@ Die Datenbank besteht aus **7 Tabellen** in einer MariaDB-Instanz. Es gibt keine
 
 **Hinweis:** `users` kann in der Produktion zusätzlich `firstname`/`lastname` enthalten (`profile.php`); in `system/db.sql` sind nur `id`, `email`, `password` definiert.
 
-[ERM Velo-Installation](/documentation/ressources/ERM.png)
-`[NOTIZ: Erklärung der Tabellenstrukturen (z.B. Users, Rides, Admins) sowie das grafische ERM-Schaubild hier einfügen]`
+
 
 ### Authentifizierung
 
