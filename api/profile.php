@@ -1,5 +1,7 @@
 <?php
-// index.php (API that returns JSON about the logged-in user)
+/**
+ * profile.php — Gibt Profildaten des eingeloggten Benutzers als JSON zurück.
+ */
 session_start();
  
 include_once("../system/config.php");

@@ -1,4 +1,7 @@
 <?php
+/**
+ * defaultpage.php — Hosting-Standardseite (Infomaniak/Hostpoint); leitet zur Hauptdomain weiter.
+ */
 
 $domain = strtr( $_SERVER["HTTP_HOST"], array("www." => ""));
 

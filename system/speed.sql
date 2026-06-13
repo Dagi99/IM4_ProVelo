@@ -1,5 +1,5 @@
--- Raw speed telemetry from ESP (PhysicalComputing/api/load.php)
--- Import before system/highscores.sql
+-- speed.sql — Rohe Speed-Telemetrie vom ESP (PhysicalComputing/api/load.php).
+-- Import: Schritt 2, vor system/highscores.sql.
 
 CREATE TABLE IF NOT EXISTS `speed` (
   `id` INT NOT NULL AUTO_INCREMENT,

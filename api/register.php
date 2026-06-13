@@ -1,5 +1,7 @@
 <?php
-// register.php
+/**
+ * register.php — Registriert neuen Admin-Benutzer per POST (E-Mail, Passwort gehasht).
+ */
 session_start();
 header('Content-Type: application/json');
 

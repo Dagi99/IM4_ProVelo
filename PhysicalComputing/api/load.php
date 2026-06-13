@@ -1,9 +1,8 @@
 <?php
-/*****************************************************
- * Kapitel 12: Website2DB > Schritt 2: Website -> DB
- * load.php
- * Empfängt JSON-Daten und speichert sie in die DB
- *****************************************************/
+/**
+ * load.php — Empfängt JSON vom ESP (velo_id, wert) und schreibt in Tabelle speed.
+ * Löscht Einträge älter als 15 Minuten.
+ */
 
 require_once("../../system/config.php");
 

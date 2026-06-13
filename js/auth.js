@@ -1,3 +1,6 @@
+/**
+ * auth.js — Prüft die Session via api/protected.php; leitet bei 401 zu login.html weiter.
+ */
 
 async function checkAuth() {
   try {

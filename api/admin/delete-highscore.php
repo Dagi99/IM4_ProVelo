@@ -1,6 +1,6 @@
 <?php
 /**
- * Delete a single highscores row (admin: any logged-in user).
+ * delete-highscore.php — Löscht einen Highscore-Eintrag (Admin: jeder eingeloggte Benutzer, POST id).
  */
 ini_set('session.cookie_httponly', 1);
 session_start();

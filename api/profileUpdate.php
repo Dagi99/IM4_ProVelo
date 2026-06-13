@@ -1,4 +1,7 @@
 <?php
+/**
+ * profileUpdate.php — Speichert Profilfelder des eingeloggten Benutzers per POST.
+ */
 session_start ();
 require_once '../system/config.php';
 

@@ -1,5 +1,5 @@
--- Highscores for Bike Challenge leaderboard
--- Import after speed table exists in your database.
+-- highscores.sql — Rangliste: beste Distanz pro Spieler und Bike.
+-- Import: Schritt 4, nach system/speed.sql und assigned_names.sql.
 
 CREATE TABLE IF NOT EXISTS `highscores` (
   `id` INT NOT NULL AUTO_INCREMENT,

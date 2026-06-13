@@ -1,4 +1,6 @@
-// logout.js
+/**
+ * logout.js — Beendet die Session via api/logout.php und leitet zu login.html weiter.
+ */
 document.getElementById("logoutBtn").addEventListener("click", async (e) => {
   // Prevent the default button behavior
   e.preventDefault();

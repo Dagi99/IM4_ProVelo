@@ -131,7 +131,32 @@ Die Installation besteht aus folgenden Komponenten:
 ## Technische Details
 
 ### Projektstruktur / Code-Struktur
-`[NOTIZ: Hier die Verzeichnisstruktur einfügen (z.B. als Baumdiagramm). Wichtig: Jede Datei muss im Kopfbereich eine kurze Zusammenfassung enthalten.]`
+
+Jede Quellcodedatei beginnt mit einem **Kopfkommentar** (HTML `<!-- -->`, PHP/JS `/** */`, CSS/SQL `/*` bzw. `--`), der den Zweck der Datei in ein bis drei Sätzen auf Deutsch beschreibt.
+
+```
+IM4_ProVelo/
+├── index.html              → Weiterleitung zur Rangliste
+├── leaderboard.html        → Öffentliche Rangliste
+├── infoBikeA.html / infoBikeB.html
+├── challengeName.html      → Spielername zuweisen (?velo=1|2)
+├── race.html               → 90s-Duell
+├── login.html / register.html / admin.html
+├── api/                    → PHP-Backend
+│   ├── challenge-status.php, challenge-heartbeat.php, assign-name.php
+│   ├── leaderboard.php, save-highscore.php
+│   ├── login.php, logout.php, protected.php, register.php
+│   └── admin/delete-highscore.php
+├── js/                     → Frontend-Logik (race.js, leaderboard.js, admin.js, …)
+├── css/                    → Styles (style.css, race.css, leaderboard.css, …)
+├── system/                 → config.php, db.sql, speed.sql, highscores.sql
+├── resources/sql/          → Challenge-Tabellen, assigned_names.sql
+└── PhysicalComputing/
+    ├── ino/speedometer/speedometer.ino
+    └── api/load.php        → ESP-Empfang
+```
+
+Systemübersicht: [Komponentenplan](/documentation/ressources/Komponentenplan.png) · [Datenfluss ESP](/documentation/ressources/Flowdiagramm.png)
 
 ### Datenschnittstelle
 * Der ESP verpackt ca. einmal pro Sekunde die aktuell berechnete Geschwindigkeit in einem JSON-Objekt und sendet es als HTTP Post an die API des Server, welcher diese per PHP in der Datenbank speichert. 

@@ -1,4 +1,7 @@
 <?php
+/**
+ * get-player-name.php — Gibt den Spielernamen aus der Session für velo_id zurück (GET ?velo_id).
+ */
 session_start();
 header('Content-Type: application/json');
 

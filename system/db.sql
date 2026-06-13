@@ -1,5 +1,5 @@
--- db.sql
--- Create the database and the users table
+-- db.sql — Tabelle users für Admin-Login (E-Mail, gehashtes Passwort).
+-- Import: Schritt 1 der Installationsanleitung.
 
 CREATE TABLE IF NOT EXISTS `users` (
   `id` INT NOT NULL AUTO_INCREMENT,

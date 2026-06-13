@@ -1,3 +1,7 @@
+/*
+ * speedometer.ino — ESP32-C6: Reed-Sensor → Geschwindigkeit, OLED + LED-Ring, WLAN → load.php.
+ * VELO_ID 1 = Bike A, VELO_ID 2 = Bike B (pro Fahrrad separat flashen).
+ */
 #include <Wire.h>
 #include <WiFi.h>
 #include <HTTPClient.h>

@@ -1,4 +1,7 @@
 <?php
+/**
+ * get-opponent-name.php — Gibt den Gegner-Namen für das jeweilige Bike zurück (GET ?velo_id).
+ */
 header('Content-Type: application/json');
 require_once('../system/config.php');
 

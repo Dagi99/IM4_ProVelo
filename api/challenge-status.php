@@ -1,9 +1,7 @@
 <?php
 /**
- * Server-authoritative race status:
- * - starts when both bikes have assigned names AND both are present
- * - computes live speed/top speed/distance (trapezoidal integration) per bike
- * - saves results once when finished (idempotent)
+ * challenge-status.php — Serverseitiger Challenge-Status: Start, Live-Speed/Distanz, Ergebnis-Speicherung.
+ * Startet wenn beide Bikes Namen haben und anwesend sind; speichert Highscores idempotent.
  */
 header('Content-Type: application/json');
 require_once '../system/config.php';

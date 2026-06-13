@@ -1,5 +1,7 @@
 <?php
-// config.php
+/**
+ * config.php — Vorlage für PDO-Datenbankverbindung (Kopie als config.php anlegen).
+ */
 $host = 'localhost';
 $db   = 'myapp';  // Change to your DB name
 $user = 'root';   // Change to your DB user

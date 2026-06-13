@@ -1,3 +1,6 @@
+/**
+ * challengeName.js — Holt Zufallsnamen von api/assign-name.php, Weiterleitung zu race.html (?velo=1|2).
+ */
 const assignedNameEl = document.getElementById("assignedName");
 const nameErrorEl = document.getElementById("nameError");
 const continueBtn = document.getElementById("continueBtn");
