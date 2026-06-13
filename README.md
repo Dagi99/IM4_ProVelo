@@ -51,7 +51,7 @@
 2. **Webserver-Installation:**
 1. Repository klonen:
       ```bash
-      git clone <repository-url>
+      git clone <https://github.com/Dagi99/IM4_ProVelo.git>
       cd IM4_ProVelo
       ```
    2. Gesamten Projektordner per **SFTP** ins Webroot des Hostings hochladen
@@ -96,11 +96,11 @@ Zuvor muss
 #### Komponenten & Bauteile
 Die Installation besteht aus folgenden Komponenten:
 * Stationäres, aufgebocktes Fahrrad. Je Fahrrad:
-* **ESP32-C6**  Zentrale Steuereinheit
-* **Reed-Kontakt und zugehöriger Magnet an Speiche** (Erfassung der Rad- bzw. Pedalumdrehungen)
-* **OLED-Display** (Direkte Anzeige der Geschwindigkeit am Rad)
-* **WS128b 12px LED Ring** (Visuelle Darstellung der Geschwindigkeit)
-* **3D Druck Bauteile** (als Gehäuse und Montage)
+   * **ESP32-C6**  Zentrale Steuereinheit
+   * **Reed-Kontakt und zugehöriger Magnet an Speiche** (Erfassung der Rad- bzw. Pedalumdrehungen)
+   * **OLED-Display** (Direkte Anzeige der Geschwindigkeit am Rad)
+   * **WS128b 12px LED Ring** (Visuelle Darstellung der Geschwindigkeit)
+   * **3D Druck Bauteile** (als Gehäuse und Montage)
 
 #### Kommunikationsprozess der Komponenten
 1. **Pedalbewegung:** Beim Tretten bewegt sich ein Magnet am Reed-Kontakt vorbei und schliesst den Schalter-Kontakt
