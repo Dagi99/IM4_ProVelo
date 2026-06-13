@@ -106,6 +106,8 @@ function computeMetrics(PDO $pdo, int $veloId, DateTime $start, DateTime $end): 
 }
 
 try {
+    $pdo->query('DELETE FROM speed WHERE time < NOW() - INTERVAL 15 MINUTE');
+
     $nameA = fetchLatestAssigned($pdo, 1);
     $nameB = fetchLatestAssigned($pdo, 2);
 

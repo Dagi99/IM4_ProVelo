@@ -1,7 +1,7 @@
 
 async function checkAuth() {
   try {
-    const response = await fetch("/api/protected.php", {
+    const response = await fetch("api/protected.php", {
       credentials: "include",
     });
 
