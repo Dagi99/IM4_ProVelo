@@ -27,4 +27,6 @@ $sql = "INSERT INTO speed (velo_id, speed) VALUES (?, ?)";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$velo_id, $wert]);
 
+$pdo->query('DELETE FROM speed WHERE time < NOW() - INTERVAL 15 MINUTE');
+
 ?>
