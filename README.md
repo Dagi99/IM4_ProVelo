@@ -6,7 +6,7 @@
 * **Modul:** Interaktive Medien 4 an der Fachhochschule Graubünden (FS26)  
 * **Themenfeld:** Interaktive Velo-Installation (Bewegung, Wettbewerb & digitale Visualisierung)
 * **Name des Projekts:** `Interaktive Velo-Installation`   
-* **Team Physical Computing:** `, Mark Hamann`   
+* **Team Physical Computing:** `, Mark Hamann`   Kamil Matyja`
 * **Team WebApp:** `[NOTIZ: Namen ergänzen]`
  
 ### Problemstellung & Systemzweck
@@ -153,6 +153,9 @@ Notizen für den finanlen Reflexionstext:
 
 * Mark: Vor allem die Konzentration auf den Designaspekte des Prototyp war und ist für mich gewöhnungsbedürftig. Die Zeit und der Umfang des Kurses reicht nicht wirklich aus, um einen Prototypen vollständig zu entwickeln. Ein qualitativer Proof-of-Konzept hätte für den Lernerfolg deutlich größeres Potenzial.
 
+Kamil: Wir haben uns für ein anspruchsvolles Projekt entschieden und dabei viel gelernt. Besonders spannend war die Zusammenarbeit zwischen dem Webapp- und dem Physical-Computing-Team. Das Projekt erforderte viel Zeit und Aufwand, da zahlreiche Herausforderungen und unerwartete Fehler gelöst werden mussten.
+
 Notizen für den finalen Fazit-Text:
 * Mark: Das Projekt war eine gute Gelegenheit, die Arbeit im Team zu üben. Grade Kommunikation kann ein Knackpunkt sein. Im großen und ganzen bin ich aber zufrieden mit dem Ergebnis. Die Rahmenbedingungen waren z.T. eher ungünstig, weil Informationen über die Anforderungen an das Produkt und die Einsatzumgebung nicht gesammelt zur Verfügung standen.
 
+Kamil: Insgesamt war das Projekt sehr lehrreich. Trotz des hohen Zeitaufwands und der zahlreichen Herausforderungen konnten wir viele praktische Erfahrungen sammeln und unser Wissen erweitern. Die Arbeit an einem komplexen Projekt hat uns gezeigt, wie wichtig eine gute Planung, Ausdauer und systematische Fehlersuche sind. Rückblickend sind wir mit dem Ergebnis zufrieden und konnten sowohl fachlich als auch persönlich viel dazulernen.
