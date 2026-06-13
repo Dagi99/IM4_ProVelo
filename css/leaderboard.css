@@ -21,6 +21,12 @@
     margin-bottom: var(--space-lg);
 }
 
+.leaderboard-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
 .back-button {
     display: inline-flex;
     align-items: center;

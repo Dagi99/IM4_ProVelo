@@ -129,3 +129,25 @@ p { color: #666; margin-bottom: 30px; }
     font-weight: bold;
     cursor: pointer;
 }
+
+.auth-form { text-align: left; }
+.auth-form .form-field { margin-bottom: 16px; }
+.auth-form label { display: block; font-size: 14px; color: #888; margin-bottom: 6px; }
+.auth-form input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #000;
+    border-radius: 12px;
+    font-size: 16px;
+}
+.auth-form input:focus { outline: 2px solid #007bff; outline-offset: 2px; }
+.auth-footer { margin-top: 20px; font-size: 14px; color: #666; }
+.auth-footer a { color: #007bff; font-weight: 600; }
+.auth-actions { margin-top: 8px; }
+.auth-actions .btn-primary,
+.auth-actions .btn-secondary { width: 100%; }
+.button-group .btn-secondary {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+}
