@@ -1,7 +1,6 @@
 <?php
 /**
- * Leaderboard entries (best distance per player per bike).
- * GET ?period=today|alltime
+ * leaderboard.php — Rangliste: bestes Ergebnis pro Spieler und Bike (GET ?period=today|alltime).
  */
 header('Content-Type: application/json');
 require_once '../system/config.php';

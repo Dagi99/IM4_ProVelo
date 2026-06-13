@@ -1,4 +1,7 @@
 <?php
+/**
+ * updatespeed.php — Legacy: liefert neueste Speed-Werte pro Bike und löscht Einträge älter als 15 Min.
+ */
 header('Content-Type: application/json');
 include_once("../system/config.php");
 

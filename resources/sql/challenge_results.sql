@@ -1,4 +1,6 @@
--- Optional: detailed per-challenge results (distance + top speed)
+-- challenge_results.sql — Optional: Detail-Ergebnisse pro Challenge (Distanz, Topspeed).
+-- Import: Schritt 7 (optional).
+
 CREATE TABLE IF NOT EXISTS challenge_results (
   id INT AUTO_INCREMENT PRIMARY KEY,
   started_at TIMESTAMP NOT NULL,

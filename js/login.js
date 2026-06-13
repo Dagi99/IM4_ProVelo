@@ -1,4 +1,6 @@
-// login.js
+/**
+ * login.js — Sendet Login-Formular an api/login.php, leitet bei Erfolg zu admin.html weiter.
+ */
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 

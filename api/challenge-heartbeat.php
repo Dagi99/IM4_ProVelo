@@ -1,4 +1,7 @@
 <?php
+/**
+ * challenge-heartbeat.php — Aktualisiert Anwesenheit (challenge_presence) für Challenge-Start (GET ?velo_id).
+ */
 header('Content-Type: application/json');
 require_once '../system/config.php';
 

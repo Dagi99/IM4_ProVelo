@@ -1,6 +1,6 @@
 <?php
 /**
- * Save challenge result if it is a new personal best for this player + bike.
+ * save-highscore.php — Speichert Challenge-Ergebnis nur bei neuem Personalbest (Spieler + Bike).
  */
 ini_set('session.cookie_httponly', 1);
 session_start();

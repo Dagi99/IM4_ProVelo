@@ -1,8 +1,6 @@
 <?php
 /**
- * Challenge player name in PHP session.
- * GET: returns name (creates random name for new session).
- * POST: { "name": "..." } updates name (max 16 chars).
+ * player-session.php — Spielername in PHP-Session (GET: lesen/erzeugen, POST: setzen, max. 16 Zeichen).
  */
 ini_set('session.cookie_httponly', 1);
 session_start();

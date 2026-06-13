@@ -1,5 +1,5 @@
--- Random player names for Bike Challenge (api/assign-name.php)
--- Import after system/speed.sql, before system/highscores.sql
+-- assigned_names.sql — Zufalls-Spielernamen für api/assign-name.php inkl. Beispieldaten.
+-- Import: Schritt 3, nach system/speed.sql, vor system/highscores.sql.
 
 CREATE TABLE IF NOT EXISTS `assigned_names` (
   `id` INT NOT NULL AUTO_INCREMENT,

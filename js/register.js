@@ -1,4 +1,6 @@
-// register.js
+/**
+ * register.js — Registrierungsformular; sendet an api/register.php, leitet zu login.html weiter.
+ */
 document
   .getElementById("registerForm")
   .addEventListener("submit", async (e) => {

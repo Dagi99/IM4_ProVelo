@@ -1,5 +1,7 @@
 <?php
-// index.php (API that returns JSON about the logged-in user)
+/**
+ * protected.php — Prüft ob Benutzer eingeloggt ist; gibt user_id/email als JSON zurück oder 401.
+ */
 session_start();
 
 if (!isset($_SESSION['user_id'])) {

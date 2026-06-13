@@ -1,3 +1,7 @@
+/**
+ * race.js — Pollt Challenge-Status und Heartbeat, aktualisiert Renn-UI,
+ * leitet nach Rennende auf leaderboard.html weiter (race.html, ?velo=1|2).
+ */
 const MAX_ANGLE = 45;
 const MAX_DIFF_KM = 0.05; // 50m gap -> full needle deflection
 

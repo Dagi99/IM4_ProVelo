@@ -1,7 +1,6 @@
 <?php
 /**
- * Dev-only: insert one simulated speed tick for Bike A (1) and Bike B (2).
- * Called from race.html while simulation is active.
+ * simulate-speed.php — Entwicklung: simulierte Speed-Ticks für Bike A/B (race.html, Test ohne ESP).
  */
 header('Content-Type: application/json');
 require_once('../system/config.php');

@@ -1,4 +1,7 @@
 <?php
+/**
+ * assign-name.php — Weist zufälligen Namen aus assigned_names zu (GET ?velo_id=1|2), speichert in Session.
+ */
 session_start();
 header('Content-Type: application/json');
 require_once('../system/config.php');

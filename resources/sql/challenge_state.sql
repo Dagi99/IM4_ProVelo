@@ -1,4 +1,6 @@
--- Shared challenge state (single row id=1)
+-- challenge_state.sql — Singleton-Zeile (id=1) für Challenge-Timer und Ergebnis-Status.
+-- Import: Schritt 5.
+
 CREATE TABLE IF NOT EXISTS challenge_state (
   id TINYINT PRIMARY KEY DEFAULT 1,
   started_at TIMESTAMP NULL DEFAULT NULL,

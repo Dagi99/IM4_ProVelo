@@ -1,5 +1,7 @@
 <?php
-// logout.php
+/**
+ * logout.php — Beendet die PHP-Session und gibt JSON-Erfolg zurück.
+ */
 session_start();
 $_SESSION = [];
 session_destroy();

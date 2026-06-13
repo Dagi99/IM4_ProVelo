@@ -1,4 +1,6 @@
-// profile.js
+/**
+ * profile.js — Lädt und speichert Profildaten via api/profile.php und api/profileUpdate.php.
+ */
 
 async function loadProfile () {
     

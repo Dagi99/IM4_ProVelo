@@ -1,3 +1,6 @@
+/**
+ * admin.js — Lädt Highscore-Liste, löscht Einträge via api/admin/delete-highscore.php (admin.html).
+ */
 const listEl = document.querySelector('.admin-list');
 const tabs = document.querySelectorAll('.leaderboard-tab');
 let activePeriod = 'today';
