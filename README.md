@@ -38,7 +38,7 @@
 ## Setup
 
 * **WebApp:** [Link zur Website](https://provelo-allegra.piltoverprints.ch/leaderboard.html)
-* **Video-Dokumentation:** [Link zum Video auf Youtube](http://link.zum.video) `[NOTIZ: Echten Link einfügen]` 
+* **Video-Dokumentation:** [Link zum Video auf Youtube](https://youtu.be/euy03_3Im-A)
 
 
 ### Installationsanleitung
