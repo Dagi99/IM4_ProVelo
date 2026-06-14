@@ -45,8 +45,8 @@ Adafruit_NeoPixel strip(
 // Init WiFi / Database
 // =====================================================
 
-const char* ssid = "Marks iPhone";
-const char* pass = "passwort";
+const char* ssid = "tinkergarden";
+const char* pass = "strenggeheim";
 const char* serverURL = "https://provelo-allegra.piltoverprints.ch/PhysicalComputing/api/load.php";
 
 #define WIFI_RECONNECT_INTERVAL 5000
@@ -58,7 +58,7 @@ const char* serverURL = "https://provelo-allegra.piltoverprints.ch/PhysicalCompu
 // =====================================================
 
 #define WHEEL_CIRCUMFERENCE 2.1
-#define VELO_ID 1
+#define VELO_ID 2
 #define MAX_RING_SPEED 50.0
 #define MAX_DISPLAY_SPEED 60.0
 
