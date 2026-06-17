@@ -411,11 +411,11 @@
    }
  
    display.setTextSize(1);
-   display.setCursor(0, 0);
+   display.setCursor(12, 0);
    display.println("Speed");
  
    display.setTextSize(5);
-   display.setCursor(0, 18);
+   display.setCursor(12, 18);
  
    if (speedKmh < 10) {
      display.print(" ");
@@ -424,8 +424,8 @@
    display.print((int)speedKmh);
  
    display.setTextSize(2);
-   display.setCursor(95, 45);
-   display.print("km");
+   display.setCursor(80, 45);
+   display.print("km/h");
  
    display.display();
    lastDisplayUpdate = millis();
