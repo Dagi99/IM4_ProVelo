@@ -6,8 +6,8 @@
 * **Modul:** Interaktive Medien 4 an der Fachhochschule Graubünden (FS26)  
 * **Themenfeld:** Interaktive Velo-Installation (Bewegung, Wettbewerb & digitale Visualisierung)
 * **Name des Projekts:** Interaktive Velo-Installation
-* **Team Physical Computing:** Mark Hamann, Kamil Matyja
-* **Team WebApp:** `[NOTIZ: Namen ergänzen]`
+* **Team Physical Computing:** Mark Hamann, Fadri Collet
+* **Team WebApp:** Kamil Matyja, Danino Giger
  
 ### Problemstellung & Systemzweck
   Das Projekt löst kein klassisches Alltagsproblem, sondern ist spezifisch auf eine Installation im öffentlichen Raum angelegt. Es verbindet die physische Bewegung auf einem Fahrrad mit der digitalen Erfassung in einem digitalen Wettbewerb. Die Installation wird entwickelt für die "Polenta" und dem "Satelfest" von Pro Velo in Chur.
@@ -101,17 +101,24 @@ Die Installation besteht aus folgenden Komponenten:
    * **OLED-Display** (Direkte Anzeige der Geschwindigkeit am Rad)
    * **WS128b 12px LED Ring** (Visuelle Darstellung der Geschwindigkeit)
    * **3D Druck Bauteile** (als Gehäuse und Montage)
+   * **Vibrationsmotor** (haptisches Feedback am ende des Rennens)
+   * **LED-Streifen / Status-LED** (visuelle Rückmeldung über den Rennstatus)
 
 #### Kommunikationsprozess der Komponenten
-1. **Pedalbewegung:** Beim Tretten bewegt sich ein Magnet am Reed-Kontakt vorbei und schliesst den Schalter-Kontakt
-2. **Erfassung:** Der Reed-Kontakt (eingestellt im *Input-Pullup-Modus*) registriert das Signal an einem GPIO-Pin des ESP32-C6.
-3. **Verarbeitung:** Der ESP32-C6 berechnet aus den Impulsen in Echtzeit Geschwindigkeit und Distanz.
-4. **Lokale Anzeige:** Die aktuelle Geschwindigkeit wird auf dem OLED-Display und LED-Ring ausgegeben.
-5. **Übertragung:** Die Daten werden alle Sekunde per WLAN an einen Server gesendet und in der Datenbank gespeichert.
-6. **Webapp-Darstellung:** Die Webapp greift auf die Datenbank zu und visualisiert Daten und Ranglisten live.
-
-
-![Nicht akkurate Darstellung des Datenflusses im Projekt](/documentation/ressources/Flowdiagramm.png)
+1. Pedalbewegung:
+Beim Treten bewegt sich ein Magnet am Reed-Kontakt vorbei und löst ein Signal aus.
+2. Erfassung:
+Der Reed-Kontakt registriert die Radumdrehungen am ESP32-C6.
+3. Verarbeitung:
+Der ESP32 berechnet daraus Geschwindigkeit und Distanz in Echtzeit.
+4. Lokale Anzeige:
+Die aktuelle Geschwindigkeit wird auf dem OLED-Display und dem LED-Ring am Fahrrad dargestellt.
+5. Datenübertragung:
+Die berechneten Werte werden per WLAN an den Server übertragen und in der Datenbank gespeichert.
+6. Externe Aktoren:
+Abhängig vom Spielverlauf werden über eine DMX-Steckdose ein LED-Streifen sowie ein Vibrationsmotor angesteuert. Dadurch erhalten die Teilnehmenden zusätzlich visuelles und haptisches Feedback während des Rennens.
+7. Webapp:
+Die Webanwendung liest die Daten aus der Datenbank aus und aktualisiert die Rangliste sowie die Live-Anzeigen.
 
 #### Komponentenplan & Steckplan
 * **Komponentenplan:** 
@@ -223,7 +230,6 @@ Besucher am Fahrrad müssen sich **nicht** anmelden.
 - Admin-APIs dürfen sensible Aktionen nicht allein im Frontend verstecken — Löschen ist nur mit gültiger Session möglich.
 - Für Produktion wird **HTTPS** empfohlen (`session.cookie_secure` in `login.php` ist vorbereitet, aber auskommentiert).
 - ESP-Daten (`PhysicalComputing/api/load.php`) und öffentliche Challenge-APIs sind **nicht** admin-geschützt (Installation im öffentlichen Raum).
-`[NOTIZ: Erklärung einfügen, wie die Authentifizierung für den Administratorbereich und das Session-Handling der User gelöst wurde]`
 
 ---
 ## 3D-Modelle
