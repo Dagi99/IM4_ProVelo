@@ -8,6 +8,7 @@
 * **Name des Projekts:** Interaktive Velo-Installation
 * **Team Physical Computing:** Mark Hamann, Fadri Collet
 * **Team WebApp:** Kamil Matyja, Danino Giger
+* **Creative Technology:** Kamil Matyja, Danino Giger, Fadri Collet
  
 ### Problemstellung & Systemzweck
   Das Projekt löst kein klassisches Alltagsproblem, sondern ist spezifisch auf eine Installation im öffentlichen Raum angelegt. Es verbindet die physische Bewegung auf einem Fahrrad mit der digitalen Erfassung in einem digitalen Wettbewerb. Die Installation wird entwickelt für die "Polenta" und dem "Satelfest" von Pro Velo in Chur.
@@ -101,24 +102,33 @@ Die Installation besteht aus folgenden Komponenten:
    * **OLED-Display** (Direkte Anzeige der Geschwindigkeit am Rad)
    * **WS128b 12px LED Ring** (Visuelle Darstellung der Geschwindigkeit)
    * **3D Druck Bauteile** (als Gehäuse und Montage)
-   * **Vibrationsmotor** (haptisches Feedback am ende des Rennens)
-   * **LED-Streifen / Status-LED** (visuelle Rückmeldung über den Rennstatus)
+
+##### Zentrale Creative-Technology-Installation
+   * **TouchDesigner** zur Echtzeitverarbeitung der Renndaten
+   * **DMX-Steckdose** als Schnittstelle zur Licht- und Haptiksteuerung
+   * **LED-Streifen** zur Visualisierung des aktuellen Rennverlaufs
+   * **Vibrationsmotor** für haptisches Feedback am Rennende
 
 #### Kommunikationsprozess der Komponenten
+
 1. Pedalbewegung:
-Beim Treten bewegt sich ein Magnet am Reed-Kontakt vorbei und löst ein Signal aus.
-2. Erfassung:
-Der Reed-Kontakt registriert die Radumdrehungen am ESP32-C6.
-3. Verarbeitung:
-Der ESP32 berechnet daraus Geschwindigkeit und Distanz in Echtzeit.
-4. Lokale Anzeige:
-Die aktuelle Geschwindigkeit wird auf dem OLED-Display und dem LED-Ring am Fahrrad dargestellt.
-5. Datenübertragung:
-Die berechneten Werte werden per WLAN an den Server übertragen und in der Datenbank gespeichert.
-6. Externe Aktoren:
-Abhängig vom Spielverlauf werden über eine DMX-Steckdose ein LED-Streifen sowie ein Vibrationsmotor angesteuert. Dadurch erhalten die Teilnehmenden zusätzlich visuelles und haptisches Feedback während des Rennens.
-7. Webapp:
-Die Webanwendung liest die Daten aus der Datenbank aus und aktualisiert die Rangliste sowie die Live-Anzeigen.
+Beim Treten bewegt sich ein Magnet am Reed-Kontakt vorbei und löst ein elektrisches Signal aus.
+2. Erfassung der Radumdrehungen
+Der Reed-Kontakt registriert jede Radumdrehung und übermittelt die Impulse an den ESP32-C6.
+3. Berechnung der Fahrdaten
+Der ESP32-C6 berechnet aus den erfassten Impulsen in Echtzeit die aktuelle Geschwindigkeit und die zurückgelegte Distanz.
+4. Lokale Anzeige am Fahrrad
+Die berechnete Geschwindigkeit wird direkt auf dem OLED-Display angezeigt. Zusätzlich visualisiert ein LED-Ring die Geschwindigkeit durch verschiedene Farbeffekte.
+5. Übertragung an den Server
+Der ESP32-C6 sendet die Messdaten im JSON-Format per WLAN an den Server. Dort werden sie in einer Datenbank gespeichert und für weitere Anwendungen bereitgestellt.
+6. Verarbeitung in TouchDesigner
+TouchDesigner liest die aktuellen Renndaten aus der Datenbank aus und verarbeitet sie in Echtzeit, um die externen Ausgabegeräte anzusteuern.
+7. Visuelles Feedback über den LED-Streifen
+Für die Lichtsteuerung werden die Daten über das Netzwerk an einen Pixel-LED-Controller übertragen. Dieser steuert den LED-Streifen über ein vorgeschaltetes LED Constant Voltage Control Device an. Während des Rennens visualisiert der LED-Streifen den aktuellen Führenden. Bike A wird durch die Farbe Blau und Bike B durch Orange dargestellt. Je nach Vorsprung verändert sich der Farbverlauf dynamisch zwischen beiden Farben.
+8. Haptisches Feedback über den Vibrationsmotor
+Für die Ansteuerung des Vibrationsmotors sendet TouchDesigner die Steuerdaten per ArtNet an einen ArtNet-zu-DMX-Konverter. Dieser erzeugt ein DMX512-Signal, das an einen DMX-Dimmer weitergeleitet wird. Der DMX-Dimmer steuert schliesslich den Vibrationsmotor an. Fünf Sekunden vor Rennende wird der Motor aktiviert und bleibt bis zum Ablauf des Countdowns eingeschaltet. Nach Erreichen von null Sekunden wird er automatisch deaktiviert.
+9. Aktualisierung der Webanwendung
+Parallel dazu liest die Webanwendung die gespeicherten Daten aus der Datenbank aus und aktualisiert fortlaufend die Rangliste sowie die Live-Anzeigen des Rennens.
 
 #### Komponentenplan & Steckplan
 * **Komponentenplan:** 
@@ -256,6 +266,7 @@ Besucher am Fahrrad müssen sich **nicht** anmelden.
 * Der Umfang vom Rad als Berechnungsgrundlage für die Geschwindigkeit lässt sich nicht Benutzerseitig verändern.
 * Das Flashen des Microcontrollers hat seine Tücken da der Code zwei Prozesse im ESP32 implementiert. Es ist wichtig, dass das korrekte Board in der IDE ausgewählt wird.
 * Wichtig ist eine stabile Anbringung am Rad, damit die Sensoren korrekt funktionieren und die Komponenten sich nicht lösen.
+* Laptop stürzt beim öffnen bestimmter touchdesigner sachen ab.
 ---
 
 ## Umsetzungsprozess
@@ -268,16 +279,18 @@ Ein wichtiger Lernaspekt war die Erkenntnis, dass die Entwicklung eines vollstä
 
 ### Herausforderungen & Lösungen
 
-Während der Umsetzung traten verschiedene technische und organisatorische Herausforderungen auf. Die Kombination aus Webapplikation und Physical Computing führte zu unerwarteten Fehlern und einem erhöhten Aufwand bei der Fehlersuche und Integration der einzelnen Komponenten. Viele Probleme konnten durch systematisches Testen, wiederholte Anpassungen und eine iterative Vorgehensweise gelöst werden.
+Während der Umsetzung traten verschiedene technische und organisatorische Herausforderungen auf. Die Kombination aus Webapplikation, Physical Computing und Creative Technology führte zu einem erhöhten Aufwand bei der Integration und Fehlersuche der einzelnen Komponenten. Viele Probleme konnten durch systematisches Testen, wiederholte Anpassungen und eine iterative Vorgehensweise gelöst werden.
 
-Auch die Projektorganisation stellte eine Herausforderung dar. Die Anforderungen an das Endprodukt sowie die Bedingungen der späteren Einsatzumgebung waren nicht zu Beginn vollständig definiert, wodurch während der Entwicklung Umplanungen notwendig wurden. Dies verdeutlichte die Bedeutung einer frühzeitigen Anforderungsanalyse, einer kontinuierlichen Kommunikation und einer flexiblen Projektplanung.
+Auch die praktische Umsetzung erwies sich als anspruchsvoll. Die Elektronik musste platzsparend in einer Transportkiste untergebracht und die Verkabelung möglichst sauber und unsichtbar verlegt werden. Dadurch waren mehrere Anpassungen am Aufbau und an der Positionierung der Komponenten notwendig.
+
+Zudem waren die Anforderungen an das Endprodukt sowie die Bedingungen der späteren Einsatzumgebung zu Beginn noch nicht vollständig definiert. Dies führte während der Entwicklung zu Umplanungen und verdeutlichte die Bedeutung einer guten Kommunikation sowie einer flexiblen Projektplanung.
 
 ### KI-Einsatz
 
-In der Umsetzung dieses Projektes wurde KI sowohl zur Unterstützung der Code-Produktion als auch beim Troubleshooting und der Fehlersuche eingesetzt. KI diente dabei als Hilfsmittel zur Analyse von Problemen, zur Erarbeitung von Lösungsansätzen und zur Beschleunigung wiederkehrender Entwicklungsaufgaben.
+In der Umsetzung dieses Projekts wurde KI sowohl zur Unterstützung der Code-Produktion als auch beim Troubleshooting und der Fehlersuche eingesetzt. Sie diente als Hilfsmittel zur Analyse von Problemen, zur Erarbeitung von Lösungsansätzen und zur Beschleunigung wiederkehrender Entwicklungsaufgaben.
 
 ### Fazit
 
-Das Projekt war insgesamt eine sehr lehrreiche Erfahrung und bot die Möglichkeit, die Zusammenarbeit im Team sowie die praktische Umsetzung eines komplexen technischen Systems zu vertiefen. Dabei wurde deutlich, wie entscheidend eine gute Kommunikation, eine sorgfältige Planung und eine strukturierte Vorgehensweise für den Erfolg eines Projekts sind.
+Das Projekt war insgesamt eine sehr lehrreiche Erfahrung und bot die Möglichkeit, die Zusammenarbeit im Team sowie die praktische Umsetzung eines komplexen technischen Systems zu vertiefen. Besonders die Verbindung von Webentwicklung, Physical Computing und Creative Technology zeigte, wie wichtig eine gute Planung und die Abstimmung zwischen den einzelnen Teilbereichen sind.
 
-Trotz organisatorischer Schwierigkeiten, begrenzter Rahmenbedingungen und verschiedener technischer Hürden konnte eine funktionierende Installation realisiert werden. Insgesamt ist das Ergebnis zufriedenstellend und der Projektverlauf ermöglichte sowohl fachliche als auch methodische Weiterentwicklungen.
+Trotz verschiedener technischer und organisatorischer Herausforderungen konnte eine funktionierende Installation realisiert werden. Insgesamt ist das Ergebnis zufriedenstellend und der Projektverlauf ermöglichte sowohl fachliche als auch methodische Weiterentwicklungen.
