@@ -145,6 +145,69 @@ body {
     line-height: 1.1;
 }
 
+/* ---- Race: opponent wait panel ---- */
+.opponent-wait {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    padding: var(--space-lg) var(--space-md);
+    background: var(--color-white);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 24px rgba(26, 106, 255, 0.08);
+}
+
+.opponent-wait[hidden] {
+    display: none;
+}
+
+.opponent-wait__icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #e8f0ff;
+    color: var(--color-blue);
+    margin-bottom: 4px;
+}
+
+.opponent-wait__title {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.opponent-wait__countdown {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-3xl);
+    font-weight: 500;
+    color: var(--color-blue);
+    line-height: 1;
+}
+
+.opponent-wait__hint {
+    max-width: 28ch;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    line-height: 1.45;
+}
+
+.race-page--opponent-wait .race-bar,
+.race-page--opponent-wait .gauge-container,
+.race-page--opponent-wait .race-cards {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.race-page--opponent-wait .race-status {
+    color: var(--color-blue);
+}
+
 /* ---- Race: status line ---- */
 .race-status {
     font-size: var(--font-size-sm);

@@ -21,6 +21,7 @@ const OPPONENT_VELO_ID = veloId === 1 ? 2 : 1;
 
 const needle = document.querySelector("#gauge-needle");
 const timerEl = document.getElementById("timer");
+const timerLabelEl = document.getElementById("timer-label");
 const bikePos = document.getElementById("bikePos");
 const raceBarFill = document.getElementById("race-bar-fill");
 
@@ -43,6 +44,8 @@ const statSpeed = document.getElementById("speed");
 const statDistance = document.getElementById("stat-distance");
 const statTopSpeed = document.getElementById("stat-top-speed");
 const raceStatusEl = document.getElementById("race-status");
+const opponentWaitPanel = document.getElementById("opponent-wait");
+const opponentWaitCountdownEl = document.getElementById("opponent-wait-countdown");
 
 let redirectedToLeaderboard = false;
 let lastState = null;
@@ -76,12 +79,33 @@ function formatDistance(km) {
     return (km || 0).toFixed(2) + " km";
 }
 
+function setOpponentWaitUi(isWaiting, remainingS) {
+    document.body.classList.toggle("race-page--opponent-wait", isWaiting);
+
+    if (opponentWaitPanel) {
+        opponentWaitPanel.hidden = !isWaiting;
+    }
+
+    if (timerLabelEl) {
+        timerLabelEl.textContent = isWaiting ? "Gegner-Suche" : "Verbleibend";
+    }
+
+    if (isWaiting && remainingS !== null && remainingS !== undefined) {
+        const text = remainingS.toFixed(1) + "s";
+        if (timerEl) timerEl.textContent = text;
+        if (opponentWaitCountdownEl) opponentWaitCountdownEl.textContent = text;
+    }
+}
+
 function renderStatus(status) {
     const player = status.player;
     const opponent = status.opponent;
+    const isOpponentWait = status.mode === "opponent_wait";
+
+    setOpponentWaitUi(isOpponentWait, status.opponent_wait_remaining_s);
 
     if (raceStatusEl) {
-        if (status.mode === "opponent_wait") {
+        if (isOpponentWait) {
             const remaining = status.opponent_wait_remaining_s;
             if (remaining !== null && remaining !== undefined) {
                 raceStatusEl.textContent = `Suche Gegner… ${remaining.toFixed(1)}s`;
@@ -112,13 +136,17 @@ function renderStatus(status) {
     if (opponentName) {
         if (status.mode === "solo") {
             opponentName.textContent = "Kein Gegner";
+        } else if (isOpponentWait) {
+            opponentName.textContent = "Warte…";
         } else {
             opponentName.textContent = status.names?.[String(OPPONENT_VELO_ID)] || "…";
         }
     }
 
-    // Timer/progress
-    setTimerAndProgress(status.remaining_s, status.duration_s);
+    // Timer/progress (challenge timer only while running/finished)
+    if (!isOpponentWait) {
+        setTimerAndProgress(status.remaining_s, status.duration_s);
+    }
 
     // Reset redirect guard when a new challenge starts
     if (status.started_at && status.started_at !== lastStartedAt) {
@@ -143,7 +171,9 @@ function renderStatus(status) {
     if (opponentBarEl) opponentBarEl.style.width = (distOpponent / maxDist) * 100 + "%";
 
     if (duelLead) {
-        if (status.mode === "solo") {
+        if (isOpponentWait) {
+            duelLead.textContent = "Warte auf Gegner";
+        } else if (status.mode === "solo") {
             duelLead.textContent = "Einzelmodus";
         } else if (distPlayer > distOpponent) {
             duelLead.textContent = "Du führst!";
