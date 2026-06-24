@@ -41,17 +41,14 @@ function fetchLatestAssigned(PDO $pdo, int $veloId): ?array
 function isPresent(PDO $pdo, int $veloId): bool
 {
     $stmt = $pdo->prepare(
-        'SELECT last_seen_at
+        'SELECT (last_seen_at >= NOW() - INTERVAL ' . PRESENCE_WINDOW_S . ' SECOND)
          FROM challenge_presence
          WHERE velo_id = ?
          LIMIT 1'
     );
     $stmt->execute([$veloId]);
-    $ts = $stmt->fetchColumn();
-    if (!$ts) return false;
-    $last = new DateTime((string) $ts);
-    $cutoff = new DateTime('-' . PRESENCE_WINDOW_S . ' seconds');
-    return $last >= $cutoff;
+    $present = $stmt->fetchColumn();
+    return (bool) $present;
 }
 
 /**
@@ -224,6 +221,28 @@ try {
                     $soloVeloId = null;
                 }
             }
+
+            // Finished challenge, single player returned — unlock idle state for opponent wait.
+            if ($startedAt !== null && $readyCount === 1) {
+                $pdo->prepare(
+                    'UPDATE challenge_state
+                     SET started_at = NULL,
+                         a_assigned_at = NULL,
+                         b_assigned_at = NULL,
+                         results_saved_for_started_at = NULL,
+                         opponent_wait_started_at = NULL,
+                         mode = \'duel\',
+                         solo_velo_id = NULL
+                     WHERE id = 1'
+                )->execute();
+                $startedAt = null;
+                $aAssignedAt = null;
+                $bAssignedAt = null;
+                $savedFor = null;
+                $opponentWaitStartedAt = null;
+                $mode = 'duel';
+                $soloVeloId = null;
+            }
         }
     }
 
@@ -298,10 +317,14 @@ try {
                 $soloVeloId = $soloBikeId;
             }
         } elseif ($opponentWaitStartedAt !== null) {
-            $pdo->prepare(
-                'UPDATE challenge_state SET opponent_wait_started_at = NULL WHERE id = 1'
-            )->execute();
-            $opponentWaitStartedAt = null;
+            $waitStart = new DateTime($opponentWaitStartedAt);
+            $waitElapsed = (new DateTime('now'))->getTimestamp() - $waitStart->getTimestamp();
+            if ($waitElapsed >= OPPONENT_WAIT_S) {
+                $pdo->prepare(
+                    'UPDATE challenge_state SET opponent_wait_started_at = NULL WHERE id = 1'
+                )->execute();
+                $opponentWaitStartedAt = null;
+            }
         }
     }
 
@@ -429,6 +452,9 @@ try {
             : null,
         'solo_velo_id' => $soloVeloId,
         'ready' => $ready,
+        'ready_count' => $readyCount,
+        'ready_a' => $readyA,
+        'ready_b' => $readyB,
         'presence' => ['1' => $presentA, '2' => $presentB],
         'names' => [
             '1' => $nameA['funky_name'] ?? null,
