@@ -10,6 +10,7 @@ require_once '../system/config.php';
 const DURATION_S = 90;
 const PRESENCE_WINDOW_S = 5;
 const OPPONENT_WAIT_S = 20;
+const POST_FINISH_UNLOCK_GRACE_S = 5;
 
 $veloId = (int) ($_GET['velo_id'] ?? 0);
 if (!in_array($veloId, [1, 2], true)) {
@@ -223,7 +224,12 @@ try {
             }
 
             // Finished challenge, single player returned — unlock idle state for opponent wait.
-            if ($startedAt !== null && $readyCount === 1) {
+            $secondsSinceFinish = $now->getTimestamp() - $finishDt->getTimestamp();
+            if (
+                $startedAt !== null
+                && $readyCount === 1
+                && $secondsSinceFinish >= POST_FINISH_UNLOCK_GRACE_S
+            ) {
                 $pdo->prepare(
                     'UPDATE challenge_state
                      SET started_at = NULL,
