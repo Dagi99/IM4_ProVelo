@@ -1,4 +1,4 @@
-<!-- race.html — 90-Sekunden-Duell; Live-Daten via challenge-status.php und challenge-heartbeat.php (?velo=1|2). -->
+<!-- race.html — 90-Sekunden-Duell oder Einzelmodus; 20s Gegner-Wartezeit bei nur einem Spieler. -->
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -18,14 +18,28 @@
                 <span id="player-badge-label">BIKE B</span> · <span id="player-name-badge"></span>
             </div>
             <div class="timer-block">
-                <div class="timer-block__label">Verbleibend</div>
+                <div class="timer-block__label" id="timer-label">Verbleibend</div>
                 <div class="timer-block__value" id="timer">90.0s</div>
             </div>
         </div>
 
         <div class="race-status" id="race-status">Verbinde…</div>
 
-        <div class="race-bar">
+        <section class="opponent-wait" id="opponent-wait" hidden aria-live="polite">
+            <div class="opponent-wait__icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+            </div>
+            <h2 class="opponent-wait__title">Suche Gegner…</h2>
+            <div class="opponent-wait__countdown" id="opponent-wait-countdown">20.0s</div>
+            <p class="opponent-wait__hint">
+                Ein zweiter Spieler kann noch beitreten. Danach startet die Challenge im Einzelmodus.
+            </p>
+        </section>
+
+        <div class="race-bar" id="race-bar">
             <div class="race-bar__fill" id="race-bar-fill"></div>
             <div class="race-bar__track">
                 <div class="race-bar__bike" id="bikePos">
@@ -36,7 +50,7 @@
                 </div>
             </div>
         </div>
-        <div class="gauge-container">
+        <div class="gauge-container" id="gauge-container">
             <div class="gauge-label gauge-label--a">BIKE A</div>
             <div class="gauge-label gauge-label--b">BIKE B</div>
             <div class="gauge-background"></div>
