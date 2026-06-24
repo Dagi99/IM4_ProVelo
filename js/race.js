@@ -50,6 +50,18 @@ const opponentWaitCountdownEl = document.getElementById("opponent-wait-countdown
 let redirectedToLeaderboard = false;
 let lastState = null;
 let lastStartedAt = null;
+let pollIntervalId = null;
+let heartbeatIntervalId = null;
+
+function scheduleLeaderboardRedirect() {
+    if (redirectedToLeaderboard) return;
+    redirectedToLeaderboard = true;
+    if (pollIntervalId) clearInterval(pollIntervalId);
+    if (heartbeatIntervalId) clearInterval(heartbeatIntervalId);
+    setTimeout(() => {
+        window.location.href = "leaderboard.html";
+    }, 1200);
+}
 
 function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -198,16 +210,11 @@ function renderStatus(status) {
 
     // Only redirect when we observe a transition to finished (avoid immediate redirect
     // when loading a page after a previous challenge already ended).
-    if (
-        !redirectedToLeaderboard &&
+    const shouldRedirect =
         lastState === "running" &&
-        status.state === "finished"
-    ) {
-        redirectedToLeaderboard = true;
-        // Give the server a moment to persist results
-        setTimeout(() => {
-            window.location.href = "leaderboard.html";
-        }, 1200);
+        (status.state === "finished" || status.remaining_s === 0);
+    if (!redirectedToLeaderboard && shouldRedirect) {
+        scheduleLeaderboardRedirect();
     }
 
     lastState = status.state;
@@ -238,8 +245,8 @@ async function init() {
 
     await sendHeartbeat();
     pollStatus();
-    setInterval(sendHeartbeat, 1000);
-    setInterval(pollStatus, 1000);
+    heartbeatIntervalId = setInterval(sendHeartbeat, 1000);
+    pollIntervalId = setInterval(pollStatus, 1000);
 }
 
 init();
