@@ -81,8 +81,17 @@ function renderStatus(status) {
     const opponent = status.opponent;
 
     if (raceStatusEl) {
-        if (status.state === "waiting") {
-            raceStatusEl.textContent = "Warte auf den Gegner…";
+        if (status.mode === "opponent_wait") {
+            const remaining = status.opponent_wait_remaining_s;
+            if (remaining !== null && remaining !== undefined) {
+                raceStatusEl.textContent = `Suche Gegner… ${remaining.toFixed(1)}s`;
+            } else {
+                raceStatusEl.textContent = "Suche Gegner…";
+            }
+        } else if (status.state === "waiting") {
+            raceStatusEl.textContent = status.ready ? "Bereit machen…" : "Verbinde…";
+        } else if (status.state === "running" && status.mode === "solo") {
+            raceStatusEl.textContent = "Einzelmodus – Challenge läuft";
         } else if (status.state === "running") {
             raceStatusEl.textContent = "Challenge läuft";
         } else if (status.state === "finished") {
@@ -100,7 +109,13 @@ function renderStatus(status) {
     // Names
     if (playerNameBadge) playerNameBadge.textContent = status.names?.[String(PLAYER_VELO_ID)] || "";
     if (playerName) playerName.textContent = status.names?.[String(PLAYER_VELO_ID)] || "…";
-    if (opponentName) opponentName.textContent = status.names?.[String(OPPONENT_VELO_ID)] || "…";
+    if (opponentName) {
+        if (status.mode === "solo") {
+            opponentName.textContent = "Kein Gegner";
+        } else {
+            opponentName.textContent = status.names?.[String(OPPONENT_VELO_ID)] || "…";
+        }
+    }
 
     // Timer/progress
     setTimerAndProgress(status.remaining_s, status.duration_s);
@@ -128,9 +143,15 @@ function renderStatus(status) {
     if (opponentBarEl) opponentBarEl.style.width = (distOpponent / maxDist) * 100 + "%";
 
     if (duelLead) {
-        if (distPlayer > distOpponent) duelLead.textContent = "Du führst!";
-        else if (distOpponent > distPlayer) duelLead.textContent = "Du liegst zurück!";
-        else duelLead.textContent = "Gleichstand!";
+        if (status.mode === "solo") {
+            duelLead.textContent = "Einzelmodus";
+        } else if (distPlayer > distOpponent) {
+            duelLead.textContent = "Du führst!";
+        } else if (distOpponent > distPlayer) {
+            duelLead.textContent = "Du liegst zurück!";
+        } else {
+            duelLead.textContent = "Gleichstand!";
+        }
     }
 
     if (duelCard) {
