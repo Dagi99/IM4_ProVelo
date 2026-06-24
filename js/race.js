@@ -233,11 +233,10 @@ async function pollStatus() {
     }
 }
 
-function init() {
+async function init() {
     document.body.dataset.veloId = String(PLAYER_VELO_ID);
 
-    // Heartbeat 1s, status poll 1s (as requested)
-    sendHeartbeat();
+    await sendHeartbeat();
     pollStatus();
     setInterval(sendHeartbeat, 1000);
     setInterval(pollStatus, 1000);
