@@ -59,7 +59,7 @@
  // Init Wifi Udp
  // =======================================================
  WiFiUDP Udp;
- const IPAddress remoteIp(192, 168, 0, 87);  // @todo: TouchDesigner PC IP
+ const IPAddress remoteIp(192, 168, 0, 154);  // @todo: TouchDesigner PC IP
  const unsigned int remotePort = 9000;
  const unsigned int localPort  = 8000;
  
