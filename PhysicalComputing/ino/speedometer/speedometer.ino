@@ -53,7 +53,7 @@
  
  #define WIFI_RECONNECT_INTERVAL 5000
  #define DATABASE_SEND_INTERVAL 1000
- #define REED_DEBOUNCE_TIME 100
+ #define REED_DEBOUNCE_TIME 180
  
  // ======================================================
  // Init Wifi Udp
