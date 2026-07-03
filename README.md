@@ -124,7 +124,7 @@ Die berechnete Geschwindigkeit wird direkt auf dem OLED-Display angezeigt. Zusä
 5. Übertragung an den Server
 Der ESP32-C6 sendet die Messdaten im JSON-Format per WLAN an den Server. Dort werden sie in einer Datenbank gespeichert und für weitere Anwendungen bereitgestellt.
 6. Verarbeitung in TouchDesigner
-TouchDesigner liest die aktuellen Renndaten aus der Datenbank aus und verarbeitet sie in Echtzeit, um die externen Ausgabegeräte anzusteuern.
+Der ESP32-C6 sendet die Daten über OSC. Am Touchdesigner-Notebook werden diese in Echtzeit verarbeitet, um die externen Ausgabegeräte anzusteuern.
 7. Visuelles Feedback über den LED-Streifen
 Für die Lichtsteuerung werden die Daten über das Netzwerk an einen Pixel-LED-Controller übertragen. Dieser steuert den LED-Streifen über ein vorgeschaltetes LED Constant Voltage Control Device an. Während des Rennens visualisiert der LED-Streifen den aktuellen Führenden. Bike A wird durch die Farbe Blau und Bike B durch Orange dargestellt. Je nach Vorsprung verändert sich der Farbverlauf dynamisch zwischen beiden Farben.
 8. Haptisches Feedback über den Vibrationsmotor
