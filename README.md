@@ -1,6 +1,8 @@
 
 # README: Interaktive Velo-Installation
 
+# Link Video: https://youtu.be/D_cJ3fzGLdc?is=ZL6wZXBdauBCqgKt
+
 ## Kurzbeschreibung des Projekts
 
 * **Modul:** Interaktive Medien 4 an der Fachhochschule Graubünden (FS26)  
@@ -283,7 +285,9 @@ Während der Umsetzung traten verschiedene technische und organisatorische Herau
 
 Auch die praktische Umsetzung erwies sich als anspruchsvoll. Die Elektronik musste platzsparend in einer Transportkiste untergebracht und die Verkabelung möglichst sauber und unsichtbar verlegt werden. Dadurch waren mehrere Anpassungen am Aufbau und an der Positionierung der Komponenten notwendig.
 
-Zudem waren die Anforderungen an das Endprodukt sowie die Bedingungen der späteren Einsatzumgebung zu Beginn noch nicht vollständig definiert. Dies führte während der Entwicklung zu Umplanungen und verdeutlichte die Bedeutung einer guten Kommunikation sowie einer flexiblen Projektplanung.
+Zudem waren die Anforderungen an das Endprodukt sowie die Bedingungen der späteren Einsatzumgebung zu Beginn noch nicht vollständig definiert. Dies führte zu mehreren Umplanungen und zeigte die Bedeutung einer flexiblen Projektplanung und einer guten Kommunikation.
+
+Eine der grössten Herausforderungen trat erst nach der Montage der Elektronik am Fahrrad auf. Der Reed-Sensor, die LED-Beleuchtung und die Stromversorgung funktionierten zunächst einzeln problemlos, auch die ersten Tests nach dem Zusammenbau verliefen erfolgreich. Nach der endgültigen Installation am Fahrrad verursachte jedoch das Netzteil Störungen bei der Geschwindigkeitsmessung. Vermutlich wirkten die langen Kabel am Fahrrad wie Antennen und verstärkten elektromagnetische Störungen, wodurch der Reed-Sensor fehlerhafte Signale lieferte. Die Ursache des Problems konnte erst nach längerer Fehlersuche identifiziert werden. Dadurch mussten Teile der Konstruktion überarbeitet, Komponenten neu positioniert und zusätzliche Lösungsansätze getestet werden, was den ursprünglichen Zeitplan deutlich verändert hat.
 
 ### KI-Einsatz
 
