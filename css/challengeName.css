@@ -173,4 +173,8 @@
     .challenge-actions {
         padding-top: 80px;
     }
+
+    .challenge-name .bottom-actions {
+        margin-top: 15px;
+    }
 }
